@@ -1,0 +1,6 @@
+{
+  "name": "Pending & Credit Data Dashboard",
+  "description": "Live Pending & Credit Data Dashboard with automated Google Sheets sync, analytics, branch queue explorer, and morning inspiration.",
+  "requestFramePermissions": [],
+  "majorCapabilities": ["MAJOR_CAPABILITY_SERVER_SIDE_GEMINI_API"]
+}

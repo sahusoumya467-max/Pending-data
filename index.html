@@ -1,0 +1,3714 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Pending & Credit Data Dashboard</title>
+    <!-- Chart.js & Datalabels Plugin -->
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/chartjs-plugin-datalabels@2"></script>
+    <!-- SheetJS for real Excel (.xlsx) file generation -->
+    <script src="https://cdn.jsdelivr.net/npm/xlsx@0.18.5/dist/xlsx.full.min.js"></script>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <style>
+        :root {
+            --primary: #6366f1;
+            --primary-dark: #4f46e5;
+            --primary-gradient: linear-gradient(135deg, #6366f1 0%, #a855f7 100%);
+            --accent-cyan: linear-gradient(135deg, #06b6d4 0%, #3b82f6 100%);
+            --accent-amber: linear-gradient(135deg, #f59e0b 0%, #ea580c 100%);
+            --accent-emerald: linear-gradient(135deg, #10b981 0%, #059669 100%);
+            --accent-purple: linear-gradient(135deg, #8b5cf6 0%, #ec4899 100%);
+            --secondary: #64748b;
+            --bg: #f8fafc;
+            --card-bg: rgba(255, 255, 255, 0.94);
+            --text-dark: #0f172a;
+            --danger: #ef4444;
+            --border: #e2e8f0;
+            --shadow: 0 10px 25px -5px rgba(0, 0, 0, 0.05), 0 8px 10px -6px rgba(0, 0, 0, 0.01);
+            --shadow-hover: 0 20px 30px -5px rgba(99, 102, 241, 0.2), 0 10px 12px -6px rgba(99, 102, 241, 0.12);
+            --cyber-grid: rgba(99, 102, 241, 0.08);
+        }
+
+        * {
+            box-sizing: border-box;
+            margin: 0;
+            padding: 0;
+            font-family: 'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+        }
+
+        body {
+            background: radial-gradient(circle at 10% 20%, rgba(255, 182, 193, 0.75), transparent 45%),
+                        radial-gradient(circle at 90% 15%, rgba(147, 197, 253, 0.8), transparent 45%),
+                        radial-gradient(circle at 50% 50%, rgba(196, 181, 253, 0.7), transparent 50%),
+                        radial-gradient(circle at 80% 85%, rgba(254, 215, 170, 0.8), transparent 45%),
+                        radial-gradient(circle at 20% 80%, rgba(167, 243, 208, 0.75), transparent 45%),
+                        linear-gradient(135deg, #fbcfe8 0%, #e0e7ff 25%, #cffafe 50%, #fef08a 75%, #fed7aa 100%);
+            background-size: 300% 300%;
+            animation: magicalAurora 8s ease infinite;
+            color: var(--text-dark);
+            padding: 20px;
+            min-height: 100vh;
+            overflow-x: hidden;
+            position: relative;
+        }
+
+        body::before {
+            content: '';
+            position: fixed;
+            inset: 0;
+            background-image: 
+                linear-gradient(to right, var(--cyber-grid) 1px, transparent 1px),
+                linear-gradient(to bottom, var(--cyber-grid) 1px, transparent 1px);
+            background-size: 35px 35px;
+            pointer-events: none;
+            z-index: 0;
+        }
+
+        body::after {
+            content: '';
+            position: fixed;
+            top: -100%;
+            left: 0;
+            width: 100%;
+            height: 14px;
+            background: linear-gradient(180deg, transparent, rgba(6, 182, 212, 0.5), rgba(168, 85, 247, 0.8), rgba(244, 63, 94, 0.6), transparent);
+            animation: roboticScanner 8s linear infinite;
+            pointer-events: none;
+            z-index: 1;
+            box-shadow: 0 0 25px rgba(6, 182, 212, 0.6);
+        }
+
+        @keyframes roboticScanner {
+            0% { top: -10%; opacity: 1; }
+            10% { opacity: 1; }
+            90% { opacity: 1; }
+            100% { top: 110%; opacity: 0; }
+        }
+
+        @keyframes magicalAurora {
+            0% { background-position: 0% 50%; }
+            50% { background-position: 100% 50%; }
+            100% { background-position: 0% 50%; }
+        }
+
+        .container {
+            max-width: 1480px;
+            margin: 0 auto;
+            position: relative;
+            z-index: 2;
+        }
+
+        /* NEW LOGIN OVERLAY */
+        #mainLoginOverlay {
+            position: fixed;
+            inset: 0;
+            z-index: 100000;
+            background: rgba(15, 23, 42, 0.95);
+            backdrop-filter: blur(15px);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            transition: opacity 0.5s;
+        }
+
+        .main-login-box {
+            background: #ffffff;
+            padding: 40px;
+            border-radius: 20px;
+            box-shadow: 0 25px 50px -12px rgba(0, 0, 0, 0.5);
+            width: 100%;
+            max-width: 420px;
+            text-align: center;
+            animation: cardWobbleEntry 0.6s cubic-bezier(0.34, 1.56, 0.64, 1);
+        }
+
+        .main-login-box h2 {
+            margin-bottom: 8px;
+            color: #1e293b;
+            font-size: 1.8rem;
+            font-weight: 800;
+        }
+
+        .main-login-box p {
+            color: #64748b;
+            font-size: 0.9rem;
+            margin-bottom: 24px;
+        }
+
+        .main-login-box input {
+            width: 100%;
+            padding: 14px;
+            border: 2px solid #e2e8f0;
+            border-radius: 12px;
+            font-size: 1rem;
+            margin-bottom: 16px;
+            outline: none;
+            transition: border-color 0.3s;
+        }
+
+        .main-login-box input:focus {
+            border-color: #6366f1;
+        }
+
+        .main-login-box button {
+            width: 100%;
+            padding: 14px;
+            background: linear-gradient(135deg, #6366f1, #a855f7);
+            color: white;
+            border: none;
+            border-radius: 12px;
+            font-size: 1.1rem;
+            font-weight: bold;
+            cursor: pointer;
+            box-shadow: 0 4px 15px rgba(99, 102, 241, 0.4);
+            transition: transform 0.2s, box-shadow 0.2s;
+        }
+
+        .main-login-box button:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 6px 20px rgba(99, 102, 241, 0.6);
+        }
+
+        /* NEW WELCOME CATALOGUE */
+        #welcomeCatalogueOverlay {
+            position: fixed;
+            inset: 0;
+            z-index: 99999;
+            background: rgba(15, 23, 42, 0.88);
+            backdrop-filter: blur(8px);
+            display: none;
+            align-items: center;
+            justify-content: center;
+            padding: 20px;
+        }
+
+        .catalogue-box {
+            position: relative;
+            background: #ffffff;
+            border-radius: 24px;
+            overflow: hidden;
+            width: 100%;
+            max-width: 490px;
+            text-align: center;
+            animation: dialogPop 0.45s cubic-bezier(0.34, 1.56, 0.64, 1);
+            box-shadow: 0 25px 60px -15px rgba(0,0,0,0.55), 0 0 35px rgba(16, 185, 129, 0.25);
+            border: 1.5px solid rgba(255, 255, 255, 0.8);
+        }
+
+        .catalogue-close-corner {
+            position: absolute;
+            top: 14px;
+            right: 14px;
+            width: 36px;
+            height: 36px;
+            border-radius: 50%;
+            background: rgba(15, 23, 42, 0.65);
+            color: #ffffff;
+            border: 1.5px solid rgba(255, 255, 255, 0.6);
+            font-size: 1.1rem;
+            cursor: pointer;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            z-index: 20;
+            backdrop-filter: blur(8px);
+            transition: all 0.25s cubic-bezier(0.34, 1.56, 0.64, 1);
+            box-shadow: 0 4px 12px rgba(0, 0, 0, 0.35);
+        }
+
+        .catalogue-close-corner:hover {
+            background: #ef4444;
+            transform: scale(1.1) rotate(90deg);
+            border-color: #fca5a5;
+            box-shadow: 0 6px 16px rgba(239, 68, 68, 0.5);
+        }
+
+        .catalogue-img-wrap {
+            position: relative;
+            width: 100%;
+            height: 250px;
+            overflow: hidden;
+            background: #0f172a;
+        }
+
+        .catalogue-img {
+            width: 100%;
+            height: 100%;
+            object-fit: cover;
+            transition: transform 4s ease;
+        }
+
+        .catalogue-box:hover .catalogue-img {
+            transform: scale(1.05);
+        }
+
+        .catalogue-img-overlay {
+            position: absolute;
+            inset: 0;
+            background: linear-gradient(180deg, rgba(0,0,0,0.15) 0%, transparent 45%, rgba(0,0,0,0.55) 100%);
+            display: flex;
+            align-items: flex-end;
+            padding: 16px;
+            pointer-events: none;
+        }
+
+        .catalogue-badge {
+            background: rgba(255, 255, 255, 0.92);
+            backdrop-filter: blur(8px);
+            color: #065f46;
+            font-size: 0.76rem;
+            font-weight: 800;
+            padding: 5px 14px;
+            border-radius: 20px;
+            display: inline-flex;
+            align-items: center;
+            gap: 6px;
+            box-shadow: 0 4px 12px rgba(0,0,0,0.18);
+        }
+
+        .catalogue-content {
+            padding: 24px 28px 26px;
+        }
+
+        .catalogue-content h2 {
+            color: #059669;
+            font-size: 1.65rem;
+            margin-bottom: 14px;
+            font-weight: 900;
+            letter-spacing: -0.5px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 8px;
+        }
+
+        .sayary-box {
+            background: linear-gradient(135deg, rgba(240, 253, 244, 0.85), rgba(236, 253, 245, 0.5));
+            border: 1.5px dashed #a7f3d0;
+            border-radius: 16px;
+            padding: 15px 18px;
+            margin-bottom: 20px;
+        }
+
+        .catalogue-content p {
+            font-style: italic;
+            color: #334155;
+            line-height: 1.65;
+            font-size: 0.98rem;
+            font-weight: 600;
+            margin: 0;
+        }
+
+        .catalogue-content p strong {
+            display: inline-block;
+            margin-top: 6px;
+            color: #047857;
+            font-weight: 800;
+        }
+
+        .catalogue-actions {
+            display: flex;
+            gap: 12px;
+            justify-content: center;
+        }
+
+        .catalogue-btn {
+            padding: 12px 32px;
+            background: linear-gradient(135deg, #10b981, #059669);
+            color: white;
+            border: none;
+            border-radius: 25px;
+            font-size: 0.95rem;
+            font-weight: 800;
+            cursor: pointer;
+            box-shadow: 0 6px 18px rgba(16, 185, 129, 0.4);
+            transition: all 0.3s cubic-bezier(0.34, 1.56, 0.64, 1);
+            display: inline-flex;
+            align-items: center;
+            gap: 8px;
+        }
+
+        .catalogue-btn:hover {
+            transform: translateY(-2px) scale(1.04);
+            box-shadow: 0 8px 24px rgba(16, 185, 129, 0.6);
+        }
+
+        @keyframes cardWobbleEntry {
+            0% { transform: scale(0.6) rotate(-5deg); opacity: 0; }
+            100% { transform: scale(1) rotate(0deg); opacity: 1; }
+        }
+
+        /* ROBOTIC HUD CONTROLLER TOPBAR */
+        .cyber-hud-status-bar {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            background: linear-gradient(135deg, rgba(15, 23, 42, 0.96) 0%, rgba(30, 27, 75, 0.95) 100%);
+            border: 1.5px solid rgba(6, 182, 212, 0.5);
+            border-radius: 16px;
+            padding: 10px 22px;
+            margin-bottom: 20px;
+            color: #38bdf8;
+            font-size: 0.78rem;
+            letter-spacing: 1px;
+            text-transform: uppercase;
+            box-shadow: 0 0 25px rgba(6, 182, 212, 0.25), inset 0 0 12px rgba(99, 102, 241, 0.2);
+            backdrop-filter: blur(14px);
+            font-family: 'Courier New', Courier, monospace;
+            font-weight: 700;
+            flex-wrap: wrap;
+            gap: 10px;
+        }
+
+        .cyber-hud-left {
+            display: flex;
+            align-items: center;
+            gap: 14px;
+        }
+
+        .robotic-eye-indicator {
+            width: 10px;
+            height: 10px;
+            background: #22c55e;
+            border-radius: 50%;
+            box-shadow: 0 0 10px #22c55e, 0 0 20px #22c55e;
+            animation: roboticBlink 2s infinite;
+        }
+
+        @keyframes roboticBlink {
+            0%, 100% { opacity: 1; transform: scale(1); }
+            50% { opacity: 0.3; transform: scale(0.85); }
+        }
+
+        .mesh-canvas {
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            pointer-events: none;
+            z-index: 0;
+            opacity: 0.45;
+            border-radius: inherit;
+        }
+
+        /* COMPACT / REDUCED TOP HEADER SECTION */
+        header {
+            position: relative;
+            overflow: hidden;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 14px;
+            background: rgba(255, 255, 255, 0.94);
+            backdrop-filter: blur(28px);
+            padding: 12px 20px;
+            border-radius: 18px;
+            box-shadow: 0 10px 25px -5px rgba(99, 102, 241, 0.16), 0 1px 3px rgba(0,0,0,0.05);
+            border: 1.5px solid rgba(255, 255, 255, 0.95);
+            flex-wrap: wrap;
+            gap: 12px;
+        }
+
+        .header-title, .btn-group {
+            position: relative;
+            z-index: 1;
+        }
+
+        .header-title h1 {
+            font-size: 1.35rem;
+            background: linear-gradient(135deg, #1e1b4b 0%, #4338ca 35%, #ec4899 70%, #06b6d4 100%);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            font-weight: 900;
+            letter-spacing: -0.5px;
+            display: flex;
+            align-items: center;
+            gap: 8px;
+        }
+
+        .header-title p {
+            color: var(--secondary);
+            font-size: 0.78rem;
+            margin-top: 2px;
+            font-weight: 600;
+            display: inline-block;
+        }
+
+        .dev-tag {
+            display: inline-flex;
+            align-items: center;
+            gap: 5px;
+            margin-top: 0;
+            margin-left: 8px;
+            font-size: 0.74rem;
+            font-weight: 700;
+            background: linear-gradient(135deg, rgba(238, 242, 255, 0.95), rgba(253, 242, 248, 0.95));
+            color: #4f46e5;
+            padding: 2px 10px;
+            border-radius: 14px;
+            border: 1px solid #c7d2fe;
+            box-shadow: 0 2px 6px rgba(99, 102, 241, 0.12);
+        }
+
+        .btn-group {
+            display: flex;
+            gap: 8px;
+            flex-wrap: wrap;
+        }
+
+        .btn {
+            display: inline-flex;
+            align-items: center;
+            gap: 6px;
+            padding: 7px 14px;
+            border: none;
+            border-radius: 12px;
+            font-weight: 700;
+            cursor: pointer;
+            text-decoration: none;
+            font-size: 0.8rem;
+            transition: all 0.3s cubic-bezier(0.34, 1.56, 0.64, 1);
+            box-shadow: 0 4px 12px rgba(0,0,0,0.08);
+        }
+
+        .btn:hover {
+            transform: translateY(-2px) scale(1.03);
+            box-shadow: 0 8px 18px rgba(99, 102, 241, 0.25);
+        }
+
+        .btn-refresh { background: var(--primary-gradient); color: #fff; }
+        .btn-branch { background: var(--accent-cyan); color: #fff; }
+        .btn-credit { background: var(--accent-emerald); color: #fff; }
+        .btn-home { background: linear-gradient(135deg, #475569, #1e293b); color: #fff; }
+        .btn-matrix { background: linear-gradient(135deg, #059669, #047857); color: #fff; }
+        .btn-emi { background: linear-gradient(135deg, #d97706, #b45309); color: #fff; }
+
+        /* LIVE RUNNING TICKER GRAPHIC BAR */
+        .live-running-ticker-wrap {
+            display: flex;
+            align-items: center;
+            background: linear-gradient(135deg, rgba(30, 27, 75, 0.98) 0%, rgba(15, 23, 42, 0.98) 100%);
+            border: 1.5px solid rgba(168, 85, 247, 0.4);
+            border-radius: 20px;
+            margin-bottom: 22px;
+            overflow: hidden;
+            box-shadow: 0 16px 32px -6px rgba(15, 23, 42, 0.35);
+            position: relative;
+        }
+
+        .ticker-badge-live {
+            display: flex;
+            align-items: center;
+            gap: 8px;
+            background: linear-gradient(135deg, #ef4444, #ec4899);
+            color: #fff;
+            padding: 11px 20px;
+            font-size: 0.84rem;
+            font-weight: 800;
+            text-transform: uppercase;
+            letter-spacing: 0.8px;
+            white-space: nowrap;
+            z-index: 2;
+            box-shadow: 5px 0 22px rgba(239, 68, 68, 0.6);
+        }
+
+        .ticker-badge-credit {
+            display: flex;
+            align-items: center;
+            gap: 8px;
+            background: linear-gradient(135deg, #059669, #10b981);
+            color: #fff;
+            padding: 11px 20px;
+            font-size: 0.84rem;
+            font-weight: 800;
+            text-transform: uppercase;
+            letter-spacing: 0.8px;
+            white-space: nowrap;
+            z-index: 2;
+            box-shadow: 5px 0 22px rgba(16, 185, 129, 0.6);
+        }
+
+        .pulse-radar {
+            width: 10px;
+            height: 10px;
+            background: #fff;
+            border-radius: 50%;
+            box-shadow: 0 0 0 0 rgba(255, 255, 255, 0.7);
+            animation: radarPing 1.5s infinite;
+        }
+
+        @keyframes radarPing {
+            0% { transform: scale(0.95); box-shadow: 0 0 0 0 rgba(255, 255, 255, 0.8); }
+            70% { transform: scale(1.1); box-shadow: 0 0 0 8px rgba(255, 255, 255, 0); }
+            100% { transform: scale(0.95); box-shadow: 0 0 0 0 rgba(255, 255, 255, 0); }
+        }
+
+        .ticker-track {
+            flex: 1;
+            overflow: hidden;
+            position: relative;
+            padding: 9px 0;
+            display: flex;
+        }
+
+        .ticker-content {
+            display: inline-flex;
+            gap: 16px;
+            white-space: nowrap;
+            animation: infiniteSmoothTicker 28s linear infinite;
+            will-change: transform;
+        }
+
+        .ticker-track:hover .ticker-content {
+            animation-play-state: paused;
+        }
+
+        @keyframes infiniteSmoothTicker {
+            0% { transform: translateX(0); }
+            100% { transform: translateX(-50%); }
+        }
+
+        .ticker-item {
+            display: inline-flex;
+            align-items: center;
+            gap: 8px;
+            background: rgba(255, 255, 255, 0.12);
+            border: 1px solid rgba(255, 255, 255, 0.2);
+            padding: 6px 15px;
+            border-radius: 24px;
+            font-size: 0.85rem;
+            color: #f8fafc;
+        }
+
+        .ticker-item strong {
+            color: #38bdf8;
+            font-weight: 700;
+        }
+
+        .ticker-pill-id {
+            background: linear-gradient(135deg, #a855f7, #6366f1);
+            color: #fff;
+            padding: 3px 9px;
+            border-radius: 8px;
+            font-size: 0.76rem;
+            font-weight: 800;
+        }
+
+        .ticker-pill-count {
+            background: linear-gradient(135deg, #f59e0b, #ea580c);
+            color: #fff;
+            padding: 3px 9px;
+            border-radius: 8px;
+            font-size: 0.76rem;
+            font-weight: 800;
+        }
+
+        .ticker-pill-amount {
+            background: linear-gradient(135deg, #10b981, #059669);
+            color: #fff;
+            padding: 3px 9px;
+            border-radius: 8px;
+            font-size: 0.76rem;
+            font-weight: 800;
+        }
+
+        .ticker-pill-rej {
+            background: linear-gradient(135deg, #ef4444, #b91c1c);
+            color: #fff;
+            padding: 3px 9px;
+            border-radius: 8px;
+            font-size: 0.76rem;
+            font-weight: 800;
+        }
+
+        /* 5 COMPACT CARDS IN ONE LINE */
+        .metric-cards-compact-row {
+            display: grid;
+            grid-template-columns: repeat(5, minmax(0, 1fr));
+            gap: 14px;
+            margin-bottom: 24px;
+            perspective: 1200px;
+        }
+
+        @media (max-width: 1200px) {
+            .metric-cards-compact-row {
+                grid-template-columns: repeat(auto-fit, minmax(210px, 1fr));
+            }
+        }
+
+        .compact-metric-card {
+            padding: 16px 16px;
+            border-radius: 20px;
+            display: flex;
+            flex-direction: column;
+            justify-content: space-between;
+            position: relative;
+            overflow: hidden;
+            border: 1.5px solid rgba(255, 255, 255, 0.95);
+            transition: transform 0.4s cubic-bezier(0.34, 1.56, 0.64, 1), box-shadow 0.3s ease;
+            transform-style: preserve-3d;
+            box-shadow: 0 12px 26px -6px rgba(0, 0, 0, 0.08);
+            backdrop-filter: blur(16px);
+            cursor: pointer;
+            min-height: 145px;
+            will-change: transform;
+            animation: floatingCardBob 5s ease-in-out infinite alternate;
+        }
+
+        .card-top { background: linear-gradient(135deg, rgba(254, 243, 199, 0.96) 0%, rgba(254, 215, 170, 0.96) 100%); border-color: rgba(245, 158, 11, 0.45); }
+        .card-pending { background: linear-gradient(135deg, rgba(238, 242, 255, 0.97) 0%, rgba(224, 231, 255, 0.96) 100%); border-color: rgba(99, 102, 241, 0.45); }
+        .card-branch { background: linear-gradient(135deg, rgba(224, 242, 254, 0.97) 0%, rgba(207, 250, 254, 0.96) 100%); border-color: rgba(6, 182, 212, 0.45); }
+        .card-rejection-pie { background: linear-gradient(135deg, rgba(255, 241, 242, 0.97) 0%, rgba(254, 226, 226, 0.96) 100%); border-color: rgba(244, 63, 94, 0.5); }
+        .card-notify { background: linear-gradient(135deg, rgba(250, 232, 255, 0.97) 0%, rgba(243, 232, 255, 0.96) 100%); border-color: rgba(217, 70, 239, 0.45); }
+        .card-jlg { background: linear-gradient(135deg, rgba(209, 250, 229, 0.97) 0%, rgba(204, 251, 241, 0.96) 100%); border-color: rgba(16, 185, 129, 0.45); }
+
+        .compact-metric-card:nth-child(1) { animation-delay: 0s; }
+        .compact-metric-card:nth-child(2) { animation-delay: 0.5s; }
+        .compact-metric-card:nth-child(3) { animation-delay: 1.0s; }
+        .compact-metric-card:nth-child(4) { animation-delay: 1.5s; }
+        .compact-metric-card:nth-child(5) { animation-delay: 2.0s; }
+
+        @keyframes floatingCardBob {
+            0% { transform: translateY(0px); }
+            100% { transform: translateY(-8px); box-shadow: 0 18px 32px -6px rgba(99, 102, 241, 0.25); }
+        }
+
+        .compact-metric-card:hover {
+            transform: translateY(-10px) scale(1.03) !important;
+            box-shadow: 0 24px 38px -6px rgba(99, 102, 241, 0.32);
+        }
+
+        .compact-metric-card.auto-spin-180 { animation: cardSpin180Effect 1.35s cubic-bezier(0.45, 0.05, 0.55, 0.95) forwards !important; }
+
+        @keyframes cardSpin180Effect {
+            0% { transform: rotateY(0deg) scale(1); }
+            50% { transform: rotateY(180deg) scale(1.08); box-shadow: 0 28px 42px -8px rgba(99, 102, 241, 0.38); }
+            100% { transform: rotateY(360deg) scale(1); }
+        }
+
+        .compact-metric-card.is-spinning { animation: manualCardSpin 0.9s cubic-bezier(0.34, 1.56, 0.64, 1) forwards !important; }
+
+        @keyframes manualCardSpin {
+            0% { transform: rotateY(0deg) scale(1); }
+            50% { transform: rotateY(180deg) scale(1.1); }
+            100% { transform: rotateY(360deg) scale(1); }
+        }
+
+        .compact-metric-card::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: -100%;
+            width: 200%;
+            height: 4px;
+            animation: runningSlideshowBar 3.5s linear infinite;
+        }
+
+        @keyframes runningSlideshowBar {
+            0% { transform: translateX(0); }
+            100% { transform: translateX(50%); }
+        }
+
+        .card-top::before { background: linear-gradient(90deg, #f59e0b, #ef4444, #f59e0b); }
+        .card-pending::before { background: linear-gradient(90deg, #6366f1, #d946ef, #6366f1); }
+        .card-branch::before { background: linear-gradient(90deg, #06b6d4, #3b82f6, #06b6d4); }
+        .card-rejection-pie::before { background: linear-gradient(90deg, #f43f5e, #be123c, #f43f5e); }
+        .card-notify::before { background: linear-gradient(90deg, #d946ef, #f43f5e, #d946ef); }
+        .card-jlg::before { background: linear-gradient(90deg, #10b981, #06b6d4, #10b981); }
+
+        .compact-metric-card h3 {
+            font-size: 0.76rem;
+            color: #334155;
+            text-transform: uppercase;
+            letter-spacing: 0.4px;
+            font-weight: 800;
+            display: flex;
+            align-items: center;
+            gap: 6px;
+            z-index: 1;
+            white-space: nowrap;
+            overflow: hidden;
+            text-overflow: ellipsis;
+        }
+
+        .compact-metric-value {
+            font-size: 1.75rem;
+            font-weight: 900;
+            margin: 4px 0;
+            z-index: 1;
+            text-shadow: 0 2px 8px rgba(0,0,0,0.06);
+            line-height: 1.1;
+        }
+
+        .compact-card-sub {
+            color: #64748b;
+            font-size: 0.74rem;
+            font-weight: 600;
+            z-index: 1;
+            white-space: nowrap;
+            overflow: hidden;
+            text-overflow: ellipsis;
+        }
+
+        /* PIE CHART CARD SPECIAL STYLING */
+        .rejection-pie-content {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            gap: 8px;
+            margin-top: 4px;
+            z-index: 1;
+        }
+
+        .rejection-pie-canvas-wrap { width: 68px; height: 68px; position: relative; flex-shrink: 0; }
+        .rejection-pie-stats { display: flex; flex-direction: column; gap: 2px; overflow: hidden; }
+        .rejection-pie-pct { font-size: 1.3rem; font-weight: 900; color: #be123c; line-height: 1.1; }
+        .rejection-pie-detail { font-size: 0.7rem; color: #475569; font-weight: 700; line-height: 1.2; }
+
+        .notif-slideshow-container { position: relative; overflow: hidden; min-height: 38px; margin: 4px 0; display: flex; align-items: center; z-index: 1; }
+        .notif-slideshow-text { font-size: 0.84rem; font-weight: 700; color: #9d174d; display: inline-block; white-space: nowrap; animation: runningSideshowText 14s linear infinite; will-change: transform; }
+        .notif-slideshow-container:hover .notif-slideshow-text { animation-play-state: paused; }
+
+        @keyframes runningSideshowText {
+            0% { transform: translateX(100%); }
+            100% { transform: translateX(-100%); }
+        }
+
+        .top-branch-list { list-style: none; margin-top: 4px; z-index: 1; }
+        .top-branch-item { display: flex; justify-content: space-between; align-items: center; padding: 3px 0; border-bottom: 1px dashed rgba(203, 213, 225, 0.8); font-size: 0.76rem; }
+        .top-branch-item:last-child { border-bottom: none; }
+        .rank-badge { background: linear-gradient(135deg, #fef3c7, #fde68a); color: #b45309; padding: 1px 6px; border-radius: 6px; font-size: 0.7rem; font-weight: 800; margin-right: 4px; }
+
+        /* BUDGET INFOGRAPHIC FLOATING WINDOW CHART SECTION */
+        .analytics-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 18px; margin-bottom: 20px; }
+        @media (max-width: 1024px) { .analytics-grid { grid-template-columns: 1fr; } }
+
+        .floating-window-card {
+            background: rgba(255, 255, 255, 0.94);
+            backdrop-filter: blur(18px);
+            padding: 16px 20px;
+            border-radius: 20px;
+            box-shadow: 0 14px 30px -6px rgba(99, 102, 241, 0.15), 0 4px 12px rgba(0, 0, 0, 0.03);
+            border: 1.5px solid rgba(255, 255, 255, 0.95);
+            position: relative;
+            overflow: hidden;
+            transition: all 0.35s cubic-bezier(0.34, 1.56, 0.64, 1);
+        }
+        .floating-window-card:hover { transform: translateY(-4px); box-shadow: 0 20px 38px -6px rgba(99, 102, 241, 0.22); }
+        .floating-window-header { display: flex; justify-content: space-between; align-items: center; padding-bottom: 10px; margin-bottom: 12px; border-bottom: 1.5px dashed #e2e8f0; position: relative; z-index: 1; }
+        .floating-window-header .dots { display: flex; gap: 6px; }
+        .floating-window-header .dot { width: 10px; height: 10px; border-radius: 50%; display: inline-block; }
+        .dot-red { background: #ff5f56; } .dot-yellow { background: #ffbd2e; } .dot-green { background: #27c93f; }
+        .infographic-tag { font-size: 0.72rem; font-weight: 800; letter-spacing: 0.5px; text-transform: uppercase; padding: 4px 10px; border-radius: 14px; background: #f1f5f9; color: #475569; }
+        .chart-container { position: relative; height: 240px; width: 100%; z-index: 1; }
+        .chart-container canvas { filter: drop-shadow(0 6px 14px rgba(99, 102, 241, 0.15)); }
+
+        .subcat-table-wrap { max-height: 240px; overflow-y: auto; position: relative; z-index: 1; }
+        .subcat-table { width: 100%; border-collapse: collapse; font-size: 0.84rem; }
+        .subcat-table th { background-color: #f8fafc; color: var(--secondary); font-weight: 700; padding: 8px 12px; text-align: left; position: sticky; top: 0; border-bottom: 2px solid var(--border); }
+        .subcat-table td { padding: 8px 12px; border-bottom: 1px solid var(--border); vertical-align: middle; }
+        .subcat-table tfoot td { background-color: #f1f5f9; font-weight: 800; border-top: 2px solid var(--border); color: #1e293b; position: sticky; bottom: 0; padding: 8px 12px; }
+        .progress-bar-bg { background-color: #e2e8f0; border-radius: 6px; height: 8px; width: 100%; overflow: hidden; margin-top: 4px; }
+        .progress-bar-fill { background: var(--primary-gradient); height: 100%; border-radius: 6px; }
+
+        /* COLOURFUL & ANIMATED BRANCH EXPLORER BUTTONS */
+        .branch-matrix-container { display: grid; grid-template-columns: repeat(auto-fill, minmax(150px, 1fr)); gap: 14px; max-height: 320px; overflow-y: auto; padding: 12px 6px; }
+        .branch-node-chip {
+            border: none; padding: 8px 12px; border-radius: 12px; display: flex; align-items: center; justify-content: space-between;
+            cursor: pointer; transition: all 0.35s cubic-bezier(0.34, 1.56, 0.64, 1); position: relative; overflow: hidden;
+            color: #ffffff; box-shadow: 0 8px 20px rgba(0, 0, 0, 0.14); background-size: 200% 200%; animation: chipAuroraPulse 5s ease infinite;
+        }
+        @keyframes chipAuroraPulse { 0% { background-position: 0% 50%; } 50% { background-position: 100% 50%; } 100% { background-position: 0% 50%; } }
+        .branch-node-chip::after {
+            content: ''; position: absolute; top: 0; left: -120%; width: 80%; height: 100%;
+            background: linear-gradient(90deg, transparent, rgba(255, 255, 255, 0.4), transparent); transform: skewX(-22deg); transition: 0.6s ease;
+        }
+        .branch-node-chip:hover { transform: translateY(-5px) scale(1.05); box-shadow: 0 14px 28px rgba(0, 0, 0, 0.25); filter: brightness(1.1); }
+        .branch-node-chip:hover::after { left: 140%; }
+        .branch-node-info { display: flex; flex-direction: column; gap: 2px; overflow: hidden; z-index: 1; }
+        .branch-node-name { font-size: 0.82rem; font-weight: 800; color: #ffffff; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; text-shadow: 0 1px 4px rgba(0,0,0,0.3); }
+        .branch-node-sub { font-size: 0.65rem; font-weight: 600; color: rgba(255, 255, 255, 0.9); letter-spacing: 0.3px; }
+        .branch-node-count {
+            background: rgba(255, 255, 255, 0.32); border: 1.5px solid rgba(255, 255, 255, 0.5); backdrop-filter: blur(8px);
+            color: #ffffff; padding: 2px 8px; border-radius: 14px; font-size: 0.72rem; font-weight: 900; white-space: nowrap; z-index: 1;
+            box-shadow: 0 2px 8px rgba(0,0,0,0.18); transition: transform 0.25s;
+        }
+        .branch-node-chip:hover .branch-node-count { transform: scale(1.15); background: rgba(255, 255, 255, 0.45); }
+
+        /* COLORFUL BRANCHES ACTION MATRIX */
+        .branch-actions-box { display: flex; flex-direction: column; gap: 14px; position: relative; z-index: 1; }
+        .all-branches-action-header {
+            display: flex; align-items: center; justify-content: space-between;
+            background: linear-gradient(135deg, rgba(99, 102, 241, 0.14), rgba(236, 72, 153, 0.14));
+            padding: 14px 20px; border-radius: 18px; border: 1.5px dashed rgba(99, 102, 241, 0.4); flex-wrap: wrap; gap: 10px;
+        }
+        .btn-all-branches-gradient {
+            background: linear-gradient(135deg, #6366f1 0%, #ec4899 50%, #f59e0b 100%); color: #ffffff; font-weight: 800; font-size: 0.92rem;
+            padding: 11px 24px; border: none; border-radius: 16px; cursor: pointer; display: inline-flex; align-items: center; gap: 8px;
+            box-shadow: 0 8px 20px rgba(236, 72, 153, 0.4); transition: all 0.3s cubic-bezier(0.34, 1.56, 0.64, 1);
+        }
+        .btn-all-branches-gradient:hover { transform: translateY(-3px) scale(1.05); box-shadow: 0 14px 28px rgba(236, 72, 153, 0.55); }
+        .colorful-branch-buttons-grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(175px, 1fr)); gap: 11px; max-height: 280px; overflow-y: auto; padding: 4px; }
+        .colorful-branch-btn {
+            border: none; border-radius: 16px; padding: 11px 15px; color: #ffffff; font-weight: 800; font-size: 0.84rem;
+            cursor: pointer; display: flex; align-items: center; justify-content: space-between; transition: all 0.3s cubic-bezier(0.34, 1.56, 0.64, 1);
+            box-shadow: 0 6px 16px rgba(0,0,0,0.12); position: relative; overflow: hidden; text-align: left;
+        }
+        .colorful-branch-btn:hover { transform: translateY(-4px) scale(1.04); box-shadow: 0 10px 24px rgba(0,0,0,0.22); }
+        .branch-btn-badge { background: rgba(255, 255, 255, 0.32); border: 1px solid rgba(255, 255, 255, 0.45); padding: 3px 8px; border-radius: 12px; font-size: 0.74rem; font-weight: 800; color: #ffffff; white-space: nowrap; }
+
+        .table-card { background: var(--card-bg); backdrop-filter: blur(16px); padding: 24px; border-radius: 24px; box-shadow: var(--shadow); border: 1.5px solid rgba(255, 255, 255, 0.95); margin-bottom: 24px; position: relative; overflow: hidden; }
+        .table-header { display: flex; justify-content: space-between; align-items: center; margin-bottom: 16px; flex-wrap: wrap; gap: 10px; position: relative; z-index: 1; }
+        .table-header h3 { font-size: 1.18rem; font-weight: 800; }
+        .app-filters-container { display: flex; gap: 12px; flex-wrap: wrap; align-items: center; padding: 14px; background: #f8fafc; border: 1px solid var(--border); border-radius: 14px; margin-bottom: 14px; position: relative; z-index: 1; }
+        .filter-item { display: flex; align-items: center; gap: 6px; }
+        .filter-item label { font-size: 0.82rem; font-weight: 700; color: var(--secondary); }
+        .filter-input, .filter-select { padding: 8px 14px; border: 1.5px solid var(--border); border-radius: 10px; font-size: 0.84rem; background: #fff; color: #334155; outline: none; transition: border-color 0.2s; }
+        .filter-input:focus, .filter-select:focus { border-color: #6366f1; }
+        .table-scroll { max-height: 520px; overflow: auto; border: 1px solid var(--border); border-radius: 14px; position: relative; z-index: 1; }
+        .data-table { width: 100%; border-collapse: collapse; font-size: 0.88rem; white-space: nowrap; }
+        .data-table thead { position: sticky; top: 0; background: linear-gradient(180deg, #f8fafc 0%, #f1f5f9 100%); z-index: 10; }
+        .data-table th { padding: 14px 18px; text-align: left; color: #334155; font-weight: 800; border-bottom: 2px solid var(--border); }
+        .data-table td { padding: 12px 18px; text-align: left; border-bottom: 1px solid var(--border); color: #475569; }
+        .data-table tfoot td { background-color: #f1f5f9; font-weight: 800; border-top: 2px solid var(--border); color: #1e293b; padding: 12px 18px; }
+        .data-table tbody tr:hover { background-color: #f8faff; }
+
+        /* PENDING & REJECTION APPLICATIONS RECORDS SECTION */
+        .pending-apps-reduced-card { padding: 16px 20px !important; margin-bottom: 18px !important; border-radius: 18px !important; }
+        .pending-apps-reduced-card .table-header { margin-bottom: 10px !important; }
+        .pending-apps-reduced-card .table-header h3 { font-size: 1.02rem !important; }
+        .pending-apps-reduced-card .app-filters-container { padding: 9px 14px !important; margin-bottom: 10px !important; border-radius: 12px !important; gap: 8px !important; }
+        .pending-apps-reduced-card .filter-input, .pending-apps-reduced-card .filter-select { padding: 6px 12px !important; font-size: 0.8rem !important; }
+        .pending-apps-scroll-reduced { max-height: 310px !important; border-radius: 12px !important; }
+        .pending-apps-reduced-card .data-table { font-size: 0.8rem !important; }
+        .pending-apps-reduced-card .data-table th { padding: 9px 14px !important; font-size: 0.76rem !important; }
+        .pending-apps-reduced-card .data-table td { padding: 8px 14px !important; }
+
+        .branch-filter-select { padding: 5px 12px; border: 1.5px solid var(--border); border-radius: 10px; font-size: 0.8rem; background: #fff; color: #334155; font-weight: 700; outline: none; cursor: pointer; }
+        .branch-filter-select:focus { border-color: #6366f1; }
+        .reply-input-box { padding: 6px 10px; border: 1.5px solid var(--border); border-radius: 8px; font-size: 0.8rem; flex: 1; min-width: 120px; outline: none; }
+        .reply-input-box:focus { border-color: #6366f1; }
+        .btn-submit-reply { background: var(--primary-gradient); color: #fff; padding: 6px 12px; border: none; border-radius: 8px; font-size: 0.78rem; font-weight: 700; cursor: pointer; white-space: nowrap; transition: all 0.25s cubic-bezier(0.34, 1.56, 0.64, 1); box-shadow: 0 3px 10px rgba(99, 102, 241, 0.25); }
+        .btn-submit-reply:hover { transform: translateY(-2px) scale(1.05); box-shadow: 0 6px 14px rgba(99, 102, 241, 0.35); }
+        .mail-fallback-badge { display: inline-flex; align-items: center; gap: 6px; padding: 5px 10px; border-radius: 8px; font-size: 0.76rem; font-weight: 700; background: #fff7ed; color: #c2410c; border: 1px solid #ffedd5; line-height: 1.3; }
+        .sent-symbol-badge { display: inline-flex; align-items: center; gap: 6px; padding: 5px 12px; border-radius: 20px; font-size: 0.76rem; font-weight: 800; background: linear-gradient(135deg, #dcfce7, #bbf7d0); color: #15803d; border: 1px solid #86efac; box-shadow: 0 3px 8px rgba(34, 197, 94, 0.2); }
+        .status-msg { text-align: center; padding: 30px; color: var(--secondary); font-style: italic; }
+        .spin-icon { animation: spin 1s linear infinite; }
+        @keyframes spin { 100% { transform: rotate(360deg); } }
+
+        /* MAGICAL FOOTER CONTACT SECTION */
+        .magical-contact-section { background: linear-gradient(135deg, rgba(255, 255, 255, 0.95), rgba(243, 232, 255, 0.92)); border-radius: 26px; padding: 24px 34px; margin-top: 26px; border: 2px solid transparent; background-clip: padding-box; box-shadow: 0 16px 36px -8px rgba(99, 102, 241, 0.22); position: relative; overflow: hidden; display: flex; justify-content: space-between; align-items: center; flex-wrap: wrap; gap: 16px; }
+        .magical-contact-section::before { content: ''; position: absolute; top: -2px; left: -2px; right: -2px; bottom: -2px; background: linear-gradient(90deg, #6366f1, #ec4899, #f59e0b, #10b981, #06b6d4, #6366f1); background-size: 300% 300%; animation: magicBorderShift 6s linear infinite; z-index: -1; border-radius: 28px; }
+        @keyframes magicBorderShift { 0% { background-position: 0% 50%; } 50% { background-position: 100% 50%; } 100% { background-position: 0% 50%; } }
+        .contact-content { display: flex; align-items: center; gap: 16px; position: relative; z-index: 1; }
+        .contact-icon-sparkle { width: 50px; height: 50px; border-radius: 50%; background: linear-gradient(135deg, #6366f1, #a855f7); color: #fff; display: flex; align-items: center; justify-content: center; font-size: 1.35rem; animation: pulseGlow 2.4s ease-in-out infinite alternate; }
+        @keyframes pulseGlow { 0% { transform: scale(1); box-shadow: 0 0 10px rgba(99, 102, 241, 0.4); } 100% { transform: scale(1.1); box-shadow: 0 0 24px rgba(168, 85, 247, 0.75); } }
+        .contact-p-text { font-size: 0.95rem; color: #1e1b4b; font-weight: 700; line-height: 1.5; }
+        .contact-chips { display: flex; gap: 12px; flex-wrap: wrap; position: relative; z-index: 1; }
+        .contact-chip { display: inline-flex; align-items: center; gap: 8px; background: #ffffff; padding: 9px 18px; border-radius: 30px; border: 1.5px solid rgba(99, 102, 241, 0.25); font-size: 0.9rem; font-weight: 800; color: #4338ca; text-decoration: none; box-shadow: 0 4px 14px rgba(99, 102, 241, 0.1); transition: all 0.3s cubic-bezier(0.34, 1.56, 0.64, 1); }
+        .contact-chip:hover { transform: translateY(-4px) scale(1.05); box-shadow: 0 10px 24px rgba(99, 102, 241, 0.25); color: #6366f1; border-color: #6366f1; }
+
+        .modal { display: none; position: fixed; z-index: 1000; left: 0; top: 0; width: 100%; height: 100%; background: rgba(15, 23, 42, 0.75); backdrop-filter: blur(10px); align-items: center; justify-content: center; }
+        .modal-content { background: #fff; padding: 30px; border-radius: 20px; width: 100%; max-width: 400px; box-shadow: 0 20px 25px -5px rgba(0, 0, 0, 0.2); }
+        #branchCompareDialogModal .modal-content, #allBranchesCompareDialogModal .modal-content { max-width: 900px; width: 95%; background: rgba(255, 255, 255, 0.98); border: 2px solid rgba(99, 102, 241, 0.4); border-radius: 26px; padding: 26px; box-shadow: 0 25px 60px -15px rgba(15, 23, 42, 0.45); position: relative; overflow: hidden; animation: dialogPop 0.35s cubic-bezier(0.34, 1.56, 0.64, 1); }
+
+        #matrixCalculatorModal .modal-content { max-width: 640px; width: 95%; border-radius: 24px; border: 2px solid #10b981; padding: 26px 30px; }
+        #emiCalculatorModal .modal-content { max-width: 460px; width: 95%; border-radius: 24px; border: 2px solid #f59e0b; padding: 26px 30px; }
+
+        #branchDialogModal .modal-content { max-width: 1440px; width: 95vw; height: 90vh; background: rgba(255, 255, 255, 0.98); border: 2px solid rgba(99, 102, 241, 0.5); border-radius: 28px; padding: 26px 30px; box-shadow: 0 35px 80px -15px rgba(15, 23, 42, 0.55), 0 0 30px rgba(99, 102, 241, 0.3); position: relative; overflow: hidden; display: flex; flex-direction: column; animation: dialogPopMax 0.35s cubic-bezier(0.34, 1.56, 0.64, 1); }
+        @keyframes dialogPopMax { 0% { transform: scale(0.94) translateY(20px); opacity: 0; } 100% { transform: scale(1) translateY(0); opacity: 1; } }
+        @keyframes dialogPop { 0% { transform: scale(0.92); opacity: 0; } 100% { transform: scale(1); opacity: 1; } }
+
+        .branch-dialog-header { display: flex; justify-content: space-between; align-items: center; border-bottom: 2px solid #e2e8f0; padding-bottom: 14px; margin-bottom: 14px; flex-wrap: wrap; gap: 12px; }
+        .branch-dialog-title { display: flex; align-items: center; gap: 14px; }
+        .branch-dialog-title h2 { font-size: 1.5rem; color: #1e1b4b; font-weight: 900; letter-spacing: -0.5px; }
+        .branch-badge-pill { background: linear-gradient(135deg, #6366f1, #a855f7); color: #fff; padding: 6px 16px; border-radius: 20px; font-size: 0.84rem; font-weight: 800; box-shadow: 0 4px 14px rgba(99, 102, 241, 0.4); }
+        .btn-close-dialog { background: #f1f5f9; border: none; width: 40px; height: 40px; border-radius: 50%; font-size: 1.2rem; color: #475569; cursor: pointer; display: flex; align-items: center; justify-content: center; transition: all 0.25s cubic-bezier(0.34, 1.56, 0.64, 1); }
+        .btn-close-dialog:hover { background: #fee2e2; color: #ef4444; transform: rotate(90deg) scale(1.15); }
+        .dialog-table-container { flex: 1; overflow-y: auto; border: 1.5px solid var(--border); border-radius: 18px; background: #ffffff; box-shadow: inset 0 2px 8px rgba(0, 0, 0, 0.03); }
+        .dialog-data-table { width: 100%; border-collapse: collapse; font-size: 0.84rem; }
+        .dialog-data-table th { background: linear-gradient(180deg, #f8fafc 0%, #f1f5f9 100%); color: #334155; font-weight: 800; padding: 12px 14px; text-align: left; position: sticky; top: 0; border-bottom: 2px solid var(--border); z-index: 10; text-transform: uppercase; font-size: 0.76rem; letter-spacing: 0.4px; }
+        .dialog-data-table td { padding: 10px 14px; border-bottom: 1px solid #f1f5f9; color: #334155; vertical-align: middle; }
+        .dialog-data-table tbody tr:hover { background-color: #f8faff; }
+        .dialog-quick-bar { display: flex; align-items: center; justify-content: space-between; background: linear-gradient(135deg, rgba(238, 242, 255, 0.75), rgba(243, 232, 255, 0.75)); padding: 9px 18px; border-radius: 14px; border: 1px solid rgba(99, 102, 241, 0.25); margin-bottom: 14px; flex-wrap: wrap; gap: 10px; }
+        .compare-stats-strip { display: grid; grid-template-columns: repeat(3, 1fr); gap: 14px; margin-bottom: 18px; }
+        .compare-stat-chip { padding: 14px 18px; border-radius: 16px; background: linear-gradient(135deg, #f8fafc, #f1f5f9); border: 1.5px solid var(--border); display: flex; flex-direction: column; gap: 2px; }
+        .compare-stat-label { font-size: 0.74rem; font-weight: 700; color: var(--secondary); text-transform: uppercase; }
+        .compare-stat-val { font-size: 1.45rem; font-weight: 900; }
+        .compare-graph-box { background: #f8fafc; border-radius: 18px; border: 1.5px solid var(--border); padding: 16px; margin-bottom: 14px; height: 290px; position: relative; }
+        .form-group { margin-bottom: 16px; }
+        .form-group label { display: block; margin-bottom: 6px; font-size: 0.86rem; font-weight: 700; color: var(--secondary); }
+        .form-group input, .form-group select { width: 100%; padding: 11px 15px; border: 1.5px solid var(--border); border-radius: 10px; font-size: 0.95rem; outline: none; transition: border-color 0.2s; }
+        .form-group input:focus, .form-group select:focus { border-color: #6366f1; }
+        .result-box-matrix { background: #f8fafc; border: 1.5px solid #cbd5e1; border-radius: 14px; padding: 16px; margin-top: 14px; }
+        
+        .credit-screen { display: none; position: fixed; top: 0; left: 0; width: 100%; height: 100%; background: linear-gradient(135deg, #f0f4ff 0%, #fdf4ff 50%, #f0fdf4 100%); z-index: 999; overflow-y: auto; padding: 24px; }
+        
+        /* DARK MODE STYLES */
+        body.dark-mode {
+            --bg: #0f172a;
+            --card-bg: rgba(30, 41, 59, 0.94);
+            --text-dark: #f1f5f9;
+            --secondary: #94a3b8;
+            --border: #334155;
+            --shadow: 0 10px 25px -5px rgba(0, 0, 0, 0.5);
+            background: linear-gradient(135deg, #0f172a, #1e293b);
+            animation: none;
+        }
+        body.dark-mode::before, body.dark-mode::after { opacity: 0.1; }
+        body.dark-mode header { background: rgba(30, 41, 59, 0.94); border-color: rgba(255, 255, 255, 0.05); }
+        body.dark-mode .table-card, body.dark-mode .floating-window-card { background: var(--card-bg); border-color: rgba(255, 255, 255, 0.05); }
+        body.dark-mode .data-table th, body.dark-mode .data-table tfoot td, body.dark-mode .subcat-table th, body.dark-mode .subcat-table tfoot td, body.dark-mode .dialog-data-table th { background: rgba(15, 23, 42, 0.8); color: #e2e8f0; border-color: var(--border); }
+        body.dark-mode .data-table td, body.dark-mode .subcat-table td, body.dark-mode .dialog-data-table td { color: #cbd5e1; border-color: var(--border); }
+        body.dark-mode .data-table tbody tr:hover, body.dark-mode .dialog-data-table tbody tr:hover { background-color: rgba(255, 255, 255, 0.03); }
+        body.dark-mode .filter-input, body.dark-mode .filter-select, body.dark-mode .app-filters-container { background: #1e293b; color: #f1f5f9; border-color: var(--border); }
+        body.dark-mode h1, body.dark-mode h2, body.dark-mode h3, body.dark-mode h4, body.dark-mode .header-title h1 { color: #f8fafc; -webkit-text-fill-color: #f8fafc; text-shadow: none; }
+        body.dark-mode .modal-content, body.dark-mode .main-login-box, body.dark-mode .catalogue-box { background: #1e293b; color: #f1f5f9; border-color: var(--border); }
+        body.dark-mode .modal-content input, body.dark-mode .modal-content select, body.dark-mode .main-login-box input, body.dark-mode .reply-input-box { background: #0f172a; color: #f8fafc; border-color: var(--border); }
+        body.dark-mode .result-box-matrix, body.dark-mode .compare-graph-box, body.dark-mode .compare-stat-chip { background: #0f172a; border-color: var(--border); }
+        body.dark-mode .compare-stat-label { color: #94a3b8; }
+        body.dark-mode .compare-stat-val, body.dark-mode .matrixResultValue { color: #e2e8f0 !important; }
+        body.dark-mode .compact-metric-card h3 { color: #f1f5f9; }
+        body.dark-mode .compact-card-sub, body.dark-mode .rejection-pie-detail { color: #cbd5e1; }
+        body.dark-mode .dialog-table-container { background: #0f172a; border-color: var(--border); }
+        body.dark-mode .branch-dialog-header { border-color: var(--border); }
+        body.dark-mode .dialog-quick-bar { background: rgba(30, 41, 59, 0.8); border-color: var(--border); }
+        body.dark-mode .contact-p-text { color: #f1f5f9; }
+        body.dark-mode .magical-contact-section { background: rgba(30, 41, 59, 0.8); }
+        body.dark-mode #branchDialogSearchInput { background: #0f172a; color: #fff; border-color: #334155; }
+    </style>
+</head>
+<body>
+
+<!-- APP-WIDE LOGIN OVERLAY -->
+<div id="mainLoginOverlay">
+    <div class="main-login-box">
+        <h2>Dashboard Login</h2>
+        <p>Please enter your branch name or master password.</p>
+        <input type="password" id="mainLoginPassword" placeholder="Enter Password" onkeydown="if(event.key==='Enter') handleMainLogin()">
+        <button onclick="handleMainLogin()">Login to System</button>
+        <p id="mainLoginError" style="color: #ef4444; margin-top: 15px; display: none; font-weight: bold;">Invalid Password! Please check your credentials.</p>
+    </div>
+</div>
+
+<!-- WELCOME CATALOGUE OVERLAY -->
+<div id="welcomeCatalogueOverlay" onclick="if(event.target === this) closeWelcomeCatalogue()">
+    <div class="catalogue-box">
+        <button class="catalogue-close-corner" onclick="closeWelcomeCatalogue()" aria-label="Close" title="Close">
+            <i class="fa-solid fa-xmark"></i>
+        </button>
+        <div class="catalogue-img-wrap">
+            <img id="catalogueImg" src="https://images.unsplash.com/photo-1470252649378-9c29740c9fa8?w=800&q=80" alt="Nature Scene" class="catalogue-img">
+            <div class="catalogue-img-overlay">
+                <span class="catalogue-badge" id="catalogueBadge"><i class="fa-solid fa-cloud-sun" style="color: #f59e0b;"></i> Morning Inspiration</span>
+            </div>
+        </div>
+        <div class="catalogue-content">
+            <h2><i class="fa-solid fa-sun" id="catalogueIcon" style="color: #f59e0b;"></i> <span id="catalogueGreeting">Welcome to Credit</span></h2>
+            <div class="sayary-box">
+                <p id="catalogueText">
+                    Suraj ki pehli kiran khushi de aapko,<br>
+                    Dusri kiran pyari si hasi de aapko,<br>
+                    Teesri kiran accha swasthya aur tarakki de aapko.<br>
+                    <strong>Suprabhat & Welcome to Credit!</strong>
+                </p>
+            </div>
+            <div class="catalogue-actions">
+                <button class="catalogue-btn" onclick="closeWelcomeCatalogue()">
+                    <i class="fa-solid fa-check"></i> Continue to Dashboard
+                </button>
+            </div>
+        </div>
+    </div>
+</div>
+
+<div class="container" id="mainDashboardContainer" style="display: none;">
+    <!-- ROBOTIC CYBER HUD METRIC CONTROLLER BAR -->
+    <div class="cyber-hud-status-bar">
+        <div class="cyber-hud-left">
+            <span class="robotic-eye-indicator"></span>
+            <span>CORE PROTOCOL: ONLINE</span>
+            <span style="color: #64748b;">|</span>
+            <span id="loggedInBranchDisplay">ZONE: --</span>
+        </div>
+        <div>
+            <i class="fa-solid fa-network-wired" style="margin-right: 6px; color: #38bdf8;"></i>
+            <span id="roboticTimeDisplay">SYSTEM SYNCING...</span>
+        </div>
+    </div>
+
+    <!-- COMPACT / REDUCED TOP HEADER SECTION -->
+    <header class="mesh-container">
+        <canvas class="mesh-canvas"></canvas>
+        <div class="header-title">
+            <h1><i class="fa-solid fa-robot fa-bounce" style="animation-duration: 4s; color: #6366f1;"></i> Pending Data Dashboard</h1>
+            <div>
+                <p>Live sync with Google Sheets</p>
+                <div class="dev-tag">
+                    <i class="fa-solid fa-code"></i> @Soumyaranjan sahu_12687
+                </div>
+            </div>
+        </div>
+        <div class="btn-group">
+            <button class="btn btn-credit" onclick="openLoginModal()">
+                <i class="fa-solid fa-user-lock"></i> Credit Dashboard
+            </button>
+            <button class="btn btn-refresh" id="refreshBtn" onclick="refreshDashboard()">
+                <i class="fa-solid fa-arrows-rotate" id="refreshIcon"></i> Refresh Data
+            </button>
+            <button class="btn btn-matrix" onclick="openMatrixDialog()">
+                <i class="fa-solid fa-calculator"></i> Matrix Calculator
+            </button>
+            <button class="btn btn-emi" onclick="openEmiDialog()">
+                <i class="fa-solid fa-coins"></i> EMI Calculator
+            </button>
+            <button class="btn" style="background: linear-gradient(135deg, #334155, #0f172a); color: white;" onclick="toggleDarkMode()" id="darkModeBtn">
+                <i class="fa-solid fa-moon"></i> Dark Mode
+            </button>
+            <button class="btn" style="background: linear-gradient(135deg, #ef4444, #b91c1c); color: white;" onclick="logoutApp()">
+                <i class="fa-solid fa-power-off"></i> Logout
+            </button>
+        </div>
+    </header>
+
+    <!-- LIVE GRAPHICS RUNNING BAR -->
+    <div class="live-running-ticker-wrap">
+        <div class="ticker-badge-live">
+            <span class="pulse-radar"></span>
+            <span><i class="fa-solid fa-tower-broadcast"></i> LIVE PENDING STREAM</span>
+        </div>
+        <div class="ticker-track">
+            <div class="ticker-content" id="runningTickerContent">
+                <div class="ticker-item">
+                    <span>Synchronizing pending branch queue with Google Sheets...</span>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- METRIC CARDS ROW IN ONE LINE -->
+    <div class="metric-cards-compact-row">
+        <!-- 1. Top 3 Pending Branches -->
+        <div class="compact-metric-card card-top interactive-spin-card mesh-container" onclick="spinCard(this)" title="Click to spin">
+            <canvas class="mesh-canvas"></canvas>
+            <h3><i class="fa-solid fa-fire" style="color: #ea580c;"></i> Top Pending Branches</h3>
+            <ul class="top-branch-list" id="topBranchesList">
+                <li class="status-msg" style="padding: 6px; font-size: 0.7rem;">Calculating...</li>
+            </ul>
+        </div>
+
+        <!-- 2. Total Pending Applications -->
+        <div class="compact-metric-card card-pending interactive-spin-card mesh-container" onclick="spinCard(this)" title="Click to spin">
+            <canvas class="mesh-canvas"></canvas>
+            <h3><i class="fa-solid fa-clock-rotate-left" style="color: #6366f1;"></i> Total Pending</h3>
+            <div class="compact-metric-value" id="totalPendingCount" style="color: #4f46e5;">--</div>
+            <p class="compact-card-sub">Active pending review</p>
+        </div>
+
+        <!-- 3. No of Branches Pending -->
+        <div class="compact-metric-card card-branch interactive-spin-card mesh-container" onclick="spinCard(this)" title="Click to spin">
+            <canvas class="mesh-canvas"></canvas>
+            <h3><i class="fa-solid fa-code-branch" style="color: #0284c7;"></i> Branches Pending</h3>
+            <div class="compact-metric-value" id="totalBranchCount" style="color: #0369a1;">--</div>
+            <p class="compact-card-sub">Branches in queue</p>
+        </div>
+
+        <!-- 4. TOTAL LOAN ID COUNT WITH REJECT CLIENT PIE CHART -->
+        <div class="compact-metric-card card-rejection-pie interactive-spin-card mesh-container" onclick="spinCard(this)" title="Click to spin">
+            <canvas class="mesh-canvas"></canvas>
+            <h3><i class="fa-solid fa-chart-pie" style="color: #e11d48;"></i> Reject Sum %</h3>
+            <div class="rejection-pie-content">
+                <div class="rejection-pie-canvas-wrap">
+                    <canvas id="rejectionMiniPieChart"></canvas>
+                </div>
+                <div class="rejection-pie-stats">
+                    <span class="rejection-pie-pct" id="rejectionMiniPct">--%</span>
+                    <span class="rejection-pie-detail" id="rejectionMiniDetail">0 Rej / 0 Total</span>
+                </div>
+            </div>
+        </div>
+
+        <!-- 5. Live Notification -->
+        <div class="compact-metric-card card-notify interactive-spin-card mesh-container" onclick="spinCard(this)" title="Click to spin">
+            <canvas class="mesh-canvas"></canvas>
+            <h3><i class="fa-solid fa-bell fa-shake" style="color: #d946ef;"></i> Live Alert</h3>
+            <div class="notif-slideshow-container">
+                <span class="notif-slideshow-text" id="notificationCount">Fetching live updates...</span>
+            </div>
+            <p class="compact-card-sub" id="notificationDetails">
+                <span style="width: 6px; height: 6px; background: #10b981; border-radius: 50%; display: inline-block;"></span> Live Sync Active
+            </p>
+        </div>
+    </div>
+
+    <!-- MODERN GRAPH CHARTS SECTION -->
+    <div class="analytics-grid">
+        <div class="floating-window-card mesh-container">
+            <canvas class="mesh-canvas"></canvas>
+            <div class="floating-window-header">
+                <div class="dots">
+                    <span class="dot dot-red"></span>
+                    <span class="dot dot-yellow"></span>
+                    <span class="dot dot-green"></span>
+                </div>
+                <h3 style="font-size: 0.95rem; font-weight: 800; color: #1e1b4b;">
+                    <i class="fa-solid fa-chart-line" style="color: #6366f1; margin-right: 6px;"></i>Branch-Wise Pending Count
+                </h3>
+                <span class="infographic-tag" style="background: #e0e7ff; color: #4338ca;">Wave Pulse Flow</span>
+            </div>
+            <div class="chart-container">
+                <canvas id="branchChart"></canvas>
+            </div>
+        </div>
+
+        <!-- REJECTION CHART -->
+        <div class="floating-window-card mesh-container">
+            <canvas class="mesh-canvas"></canvas>
+            <div class="floating-window-header">
+                <div class="dots">
+                    <span class="dot dot-red"></span>
+                    <span class="dot dot-yellow"></span>
+                    <span class="dot dot-green"></span>
+                </div>
+                <h3 style="font-size: 0.95rem; font-weight: 800; color: #1e1b4b;">
+                    <i class="fa-solid fa-chart-line" style="color: #f43f5e; margin-right: 6px;"></i>Branch-Wise Rejection Count
+                </h3>
+                <span class="infographic-tag" style="background: #ffe4e6; color: #be123c;">Wave Pulse Flow</span>
+            </div>
+            <div class="chart-container">
+                <canvas id="rejectionBranchChart"></canvas>
+            </div>
+        </div>
+    </div>
+
+    <!-- Sub-Category Breakdown Card -->
+    <div class="table-card mesh-container">
+        <canvas class="mesh-canvas"></canvas>
+        <div class="table-header">
+            <h3>
+                <span><i class="fa-solid fa-chart-pie" style="color: #a855f7; margin-right: 8px;"></i>Sub-Category Breakdown (%)</span>
+                <span id="subcatCountBadge" style="font-size: 0.8rem; font-weight: 700; color: #6366f1; background: #eef2ff; padding: 4px 10px; border-radius: 12px; margin-left: 8px;">0 Categories</span>
+            </h3>
+        </div>
+        <div class="subcat-table-wrap">
+            <table class="subcat-table">
+                <thead>
+                    <tr>
+                        <th>Sub-Category</th>
+                        <th style="width: 140px; text-align: center;">Loan ID Count</th>
+                        <th style="width: 180px; text-align: right;">Percentage (%)</th>
+                    </tr>
+                </thead>
+                <tbody id="subCategoryTableBody">
+                    <tr><td colspan="3" class="status-msg">Loading sub-category analytics...</td></tr>
+                </tbody>
+                <tfoot id="subCategoryTableFoot"></tfoot>
+            </table>
+        </div>
+    </div>
+
+    <!-- INTERACTIVE BRANCHES DIRECTORY SECTION -->
+    <div class="table-card mesh-container">
+        <canvas class="mesh-canvas"></canvas>
+        <div class="table-header">
+            <div>
+                <h3><i class="fa-solid fa-building-circle-check" style="color: #06b6d4; margin-right: 8px;"></i>Branch Pending Queues Explorer</h3>
+                <p style="font-size: 0.82rem; color: var(--secondary); margin-top: 4px; font-weight: 600;">Click any branch below to launch interactive maximized dialogue matrix with Product Name, CM Remarks, Member Details & Reply Submission</p>
+            </div>
+            <span id="branchesMatrixCountBadge" style="font-size: 0.8rem; font-weight: 700; color: #0284c7; background: #e0f2fe; padding: 4px 10px; border-radius: 12px;">0 Active Branches</span>
+        </div>
+        <div class="branch-matrix-container" id="branchMatrixContainer">
+            <div class="status-msg">Scanning branches from database...</div>
+        </div>
+    </div>
+
+    <!-- BRANCH REJECTION & LOAN SUM COMPARE CONSOLE SECTION -->
+    <div class="table-card mesh-container">
+        <canvas class="mesh-canvas"></canvas>
+        <div class="table-header">
+            <div>
+                <h3><i class="fa-solid fa-cubes-stacked" style="color: #ec4899; margin-right: 8px;"></i>Branch Rejection & Loan Sum Compare Console</h3>
+                <p style="font-size: 0.82rem; color: var(--secondary); margin-top: 4px; font-weight: 600;">Click 'Show All Branches' for overall rejection % dialog or select any branch for individual graph analysis</p>
+            </div>
+        </div>
+        <div class="branch-actions-box">
+            <div class="all-branches-action-header">
+                <div>
+                    <h4 style="font-size: 0.98rem; font-weight: 800; color: #1e1b4b;">Comprehensive Network Analytics</h4>
+                    <p style="font-size: 0.78rem; color: #64748b; font-weight: 600;">Overall total sum loan id vs sum rejection clients percentage</p>
+                </div>
+                <div style="display: flex; gap: 10px; flex-wrap: wrap;">
+                    <button class="btn-all-branches-gradient" onclick="openAllBranchesCompareDialog()">
+                        <i class="fa-solid fa-network-wired"></i> Show All Branches
+                    </button>
+                    <button class="btn-all-branches-gradient" style="background: linear-gradient(135deg, #10b981 0%, #3b82f6 100%);" onclick="toggleColorfulBranches()">
+                        <i class="fa-solid fa-code-branch"></i> Individual branch
+                    </button>
+                </div>
+            </div>
+            <div class="colorful-branch-buttons-grid" id="colorfulBranchButtonsGrid" style="display: none;">
+                <div class="status-msg" style="grid-column: 1/-1;">Loading colorful branch buttons...</div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Pending Applications Records Section -->
+    <div class="table-card mesh-container pending-apps-reduced-card">
+        <canvas class="mesh-canvas"></canvas>
+        <div class="table-header">
+            <h3><i class="fa-solid fa-table-list" style="color: #6366f1; margin-right: 8px;"></i>Pending Applications Records</h3>
+            <span id="recordCountDisplay" style="color: var(--secondary); font-size: 0.82rem; font-weight: 700;">Showing 0 records</span>
+        </div>
+        
+        <div class="app-filters-container">
+            <div class="filter-item">
+                <label><i class="fa-solid fa-filter" style="color: #6366f1;"></i> Branch:</label>
+                <select id="appBranchFilter" class="filter-select" onchange="applyPendingAppFilters()">
+                    <option value="ALL">All Branches</option>
+                </select>
+            </div>
+            <div class="filter-item" style="flex: 1; min-width: 180px;">
+                <label><i class="fa-solid fa-magnifying-glass" style="color: #06b6d4;"></i> Search:</label>
+                <input type="text" id="appGeneralSearch" class="filter-input" style="width: 100%;" placeholder="Search Loan ID, Product, Remark..." oninput="applyPendingAppFilters()">
+            </div>
+            <button class="btn btn-branch" onclick="downloadPendingFilteredExcel()" style="padding: 7px 14px; font-size: 0.8rem;">
+                <i class="fa-solid fa-file-excel"></i> Download Excel
+            </button>
+        </div>
+
+        <div class="table-scroll pending-apps-scroll-reduced">
+            <table class="data-table">
+                <thead id="tableHead"></thead>
+                <tbody id="tableBody">
+                    <tr><td class="status-msg">Fetching records from Google Sheet...</td></tr>
+                </tbody>
+            </table>
+        </div>
+    </div>
+
+    <!-- Rejection Records Section (Below Pending Applications Records) -->
+    <div class="table-card mesh-container pending-apps-reduced-card" id="rejectionSection">
+        <canvas class="mesh-canvas"></canvas>
+        <div class="table-header">
+            <h3><i class="fa-solid fa-circle-xmark" style="color: #f43f5e; margin-right: 8px;"></i>Rejection Records</h3>
+            <span id="rejectionRecordCountDisplay" style="color: var(--secondary); font-size: 0.82rem; font-weight: 700;">Showing 0 records</span>
+        </div>
+        
+        <div class="app-filters-container">
+            <div class="filter-item">
+                <label><i class="fa-solid fa-filter" style="color: #f43f5e;"></i> Branch:</label>
+                <select id="rejBranchFilter" class="filter-select" onchange="applyRejectionAppFilters()">
+                    <option value="ALL">All Branches</option>
+                </select>
+            </div>
+            <div class="filter-item" style="flex: 1; min-width: 180px;">
+                <label><i class="fa-solid fa-magnifying-glass" style="color: #f43f5e;"></i> Search:</label>
+                <input type="text" id="rejGeneralSearch" class="filter-input" style="width: 100%;" placeholder="Search Rejection Loan ID, Product, Remark..." oninput="applyRejectionAppFilters()">
+            </div>
+            <button class="btn" onclick="downloadRejectionFilteredExcel()" style="padding: 7px 14px; font-size: 0.8rem; background: linear-gradient(135deg, #f43f5e, #be123c); color: #fff;">
+                <i class="fa-solid fa-file-excel"></i> Download Excel
+            </button>
+        </div>
+
+        <div class="table-scroll pending-apps-scroll-reduced">
+            <table class="data-table">
+                <thead id="rejTableHead"></thead>
+                <tbody id="rejTableBody">
+                    <tr><td class="status-msg">Fetching rejection records from Google Sheet...</td></tr>
+                </tbody>
+            </table>
+        </div>
+    </div>
+
+    <!-- MAGICAL CONTACT US FOOTER -->
+    <div class="magical-contact-section mesh-container">
+        <canvas class="mesh-canvas"></canvas>
+        <div class="contact-content">
+            <div class="contact-icon-sparkle">
+                <i class="fa-solid fa-triangle-exclamation"></i>
+            </div>
+            <div>
+                <p class="contact-p-text">
+                    <strong>Contact Us:</strong> Running into a glitch? Let us know at soumayaranjan@afpl.net.in so we can fix it and get your quote over to you without delay..
+                </p>
+            </div>
+        </div>
+        <div class="contact-chips">
+            <a href="tel:7008424759" class="contact-chip">
+                <i class="fa-solid fa-phone" style="color: #10b981;"></i> mob-7008424759
+            </a>
+            <a href="mailto:soumyaranjan@afpl.net.in" class="contact-chip">
+                <i class="fa-solid fa-envelope" style="color: #6366f1;"></i> soumyaranjan@afpl.net.in
+            </a>
+        </div>
+    </div>
+</div>
+
+<!-- Modal 1: Login Modal for Credit Dashboard -->
+<div class="modal" id="loginModal">
+    <div class="modal-content">
+        <h2 style="margin-bottom: 16px;">Credit Login</h2>
+        <div class="form-group">
+            <label>Password</label>
+            <input type="password" id="creditPassword" placeholder="Enter Password" onkeydown="if(event.key==='Enter') validateLogin()">
+        </div>
+        <p id="loginError" style="color: red; font-size: 0.85rem; display: none; margin-bottom: 10px;">Invalid Password!</p>
+        <div style="display: flex; gap: 10px; justify-content: flex-end;">
+            <button class="btn" onclick="closeLoginModal()" style="background: #e2e8f0; color: #333;">Cancel</button>
+            <button class="btn btn-credit" onclick="validateLogin()">Login</button>
+        </div>
+    </div>
+</div>
+
+<!-- Modal 2: Bureau Tradeline Manual Edit & Calculation Matrix Calculator -->
+<div class="modal" id="matrixCalculatorModal">
+    <div class="modal-content">
+        <div class="branch-dialog-header">
+            <div class="branch-dialog-title">
+                <i class="fa-solid fa-calculator" style="color: #047857; font-size: 1.4rem;"></i>
+                <div>
+                    <h2 style="font-size: 1.25rem;">Bureau Tradeline Manual Edit & Calculation Matrix</h2>
+                    <span style="font-size: 0.78rem; color: var(--secondary);">Automatic condition matching from Underwriting Matrix Tool</span>
+                </div>
+            </div>
+            <button class="btn-close-dialog" onclick="closeMatrixDialog()"><i class="fa-solid fa-xmark"></i></button>
+        </div>
+        
+        <div class="form-group">
+            <label><i class="fa-solid fa-file-invoice"></i> Select Account Type</label>
+            <select id="matrixAccountType" onchange="computeMatrixDialogValues()">
+                <option value="">-- Choose Account Type --</option>
+            </select>
+        </div>
+
+        <div class="form-group">
+            <label><i class="fa-solid fa-indian-rupee-sign"></i> Disbursement Amount (₹)</label>
+            <input type="number" id="matrixDisbAmount" placeholder="Enter disbursed amount" oninput="computeMatrixDialogValues()">
+        </div>
+
+        <div class="result-box-matrix">
+            <div style="display: flex; justify-content: space-between; margin-bottom: 8px;">
+                <span style="font-weight: 600; color: #64748b; font-size: 0.82rem;">Calculated Matrix EMI:</span>
+                <span style="font-weight: 800; color: #047857; font-size: 1.05rem;" id="matrixResultValue">₹ 0</span>
+            </div>
+            <div style="display: flex; justify-content: space-between;">
+                <span style="font-weight: 600; color: #64748b; font-size: 0.82rem;">Condition Applied:</span>
+                <span style="font-weight: 700; color: #334155; font-size: 0.82rem;" id="matrixConditionNote">Awaiting Inputs</span>
+            </div>
+        </div>
+
+        <div class="form-group" style="margin-top: 16px;">
+            <label><i class="fa-solid fa-users"></i> No of Borrower (SHG / JLG Divide Option)</label>
+            <input type="number" id="matrixBorrowerCount" value="1" min="1" placeholder="Enter number of borrowers" oninput="computeMatrixDialogValues()">
+        </div>
+
+        <div class="result-box-matrix" style="background: #ecfdf5; border-color: #a7f3d0;">
+            <div style="display: flex; justify-content: space-between; align-items: center;">
+                <span style="font-weight: 700; color: #065f46; font-size: 0.86rem;">Divided Value (Per Borrower EMI):</span>
+                <span style="font-weight: 900; color: #047857; font-size: 1.2rem;" id="matrixDividedValue">₹ 0</span>
+            </div>
+        </div>
+
+        <div style="display: flex; justify-content: flex-end; margin-top: 18px;">
+            <button class="btn btn-refresh" onclick="closeMatrixDialog()">Done</button>
+        </div>
+    </div>
+</div>
+
+<!-- Modal 3: EMI Calculator Dialog -->
+<div class="modal" id="emiCalculatorModal">
+    <div class="modal-content">
+        <div class="branch-dialog-header">
+            <div class="branch-dialog-title">
+                <i class="fa-solid fa-coins" style="color: #d97706; font-size: 1.4rem;"></i>
+                <div>
+                    <h2 style="font-size: 1.25rem;">EMI Calculator</h2>
+                    <span style="font-size: 0.78rem; color: var(--secondary);">Quick monthly loan installment simulator</span>
+                </div>
+            </div>
+            <button class="btn-close-dialog" onclick="closeEmiDialog()"><i class="fa-solid fa-xmark"></i></button>
+        </div>
+
+        <div class="form-group">
+            <label>Loan Amount (₹)</label>
+            <input type="number" id="dialogEmiLoanAmt" placeholder="e.g. 50000" oninput="computeDialogQuickEmi()">
+        </div>
+
+        <div class="form-group">
+            <label>Annual Interest Rate (% ROI)</label>
+            <input type="number" id="dialogEmiRoi" step="0.01" value="24.49" placeholder="e.g. 24.49" oninput="computeDialogQuickEmi()">
+        </div>
+
+        <div class="form-group">
+            <label>Tenure (Months)</label>
+            <input type="number" id="dialogEmiTenure" value="24" placeholder="e.g. 12, 18, 24, 36" oninput="computeDialogQuickEmi()">
+        </div>
+
+        <div class="result-box-matrix" style="background: #fffbeb; border-color: #fde68a;">
+            <div style="display: flex; justify-content: space-between; align-items: center;">
+                <span style="font-weight: 700; color: #92400e;">Monthly EMI:</span>
+                <span style="font-weight: 900; color: #b45309; font-size: 1.3rem;" id="dialogEmiOutput">₹ 0</span>
+            </div>
+        </div>
+
+        <div style="display: flex; justify-content: flex-end; margin-top: 18px;">
+            <button class="btn btn-refresh" onclick="closeEmiDialog()">Close</button>
+        </div>
+    </div>
+</div>
+
+<!-- Modal 4: ROBOTIC BRANCH DETAILS DIALOG MODAL -->
+<div class="modal" id="branchDialogModal">
+    <div class="modal-content">
+        <div class="branch-dialog-header">
+            <div class="branch-dialog-title">
+                <div style="width: 46px; height: 46px; border-radius: 14px; background: linear-gradient(135deg, #6366f1, #a855f7); display: flex; align-items: center; justify-content: center; color: #fff; font-size: 1.4rem; box-shadow: 0 6px 16px rgba(99, 102, 241, 0.4);">
+                    <i class="fa-solid fa-network-wired"></i>
+                </div>
+                <div>
+                    <h2 id="branchDialogTitleName">Branch Pending Data</h2>
+                    <span style="font-size: 0.82rem; color: var(--secondary); font-weight: 600;" id="branchDialogSubtext">Live Queue Console & Direct Reply Submission</span>
+                </div>
+                <span class="branch-badge-pill" id="branchDialogCountBadge">0 Pending</span>
+            </div>
+            <button class="btn-close-dialog" onclick="closeBranchDialog()" title="Close Terminal"><i class="fa-solid fa-xmark"></i></button>
+        </div>
+
+        <div class="dialog-quick-bar">
+            <div style="display: flex; align-items: center; gap: 8px;">
+                <i class="fa-solid fa-bolt" style="color: #f59e0b;"></i>
+                <span style="font-size: 0.84rem; font-weight: 700; color: #1e1b4b;" id="branchDialogLiveStatus">Branch Submissions Enabled</span>
+            </div>
+            <div style="display: flex; align-items: center; gap: 10px;">
+                <input type="text" id="branchDialogSearchInput" oninput="filterBranchDialogRows()" placeholder="Search in this branch..." style="padding: 6px 12px; border-radius: 8px; border: 1.5px solid #cbd5e1; font-size: 0.8rem; outline: none; width: 220px;">
+                <button class="btn btn-refresh" onclick="refreshBranchDialogCurrent()" style="padding: 6px 12px; font-size: 0.78rem; border-radius: 8px;">
+                    <i class="fa-solid fa-arrows-rotate"></i> Sync
+                </button>
+            </div>
+        </div>
+        
+        <div class="dialog-table-container">
+            <table class="dialog-data-table">
+                <thead>
+                    <tr>
+                        <th style="width: 9%;">Loan ID</th>
+                        <th style="width: 14%;">Member Name</th>
+                        <th style="width: 11%;">Product Name</th>
+                        <th style="width: 11%;">Group</th>
+                        <th style="width: 12%;">Sub Category</th>
+                        <th style="width: 21%;">CM Remarks</th>
+                        <th style="width: 22%;">Branch Reply & Action</th>
+                    </tr>
+                </thead>
+                <tbody id="branchDialogTableBody">
+                    <tr><td colspan="7" class="status-msg">Loading branch records...</td></tr>
+                </tbody>
+            </table>
+        </div>
+    </div>
+</div>
+
+<!-- Modal 5: SINGLE BRANCH COMPARE DIALOG MODAL -->
+<div class="modal" id="branchCompareDialogModal">
+    <div class="modal-content">
+        <div class="branch-dialog-header">
+            <div class="branch-dialog-title">
+                <i class="fa-solid fa-chart-simple" style="font-size: 1.4rem; color: #ec4899;"></i>
+                <div>
+                    <h2 id="compareBranchTitle">Branch Status Analytics</h2>
+                    <span style="font-size: 0.78rem; color: var(--secondary);">Total Loan ID vs Rejection from Status Clients</span>
+                </div>
+            </div>
+            <button class="btn-close-dialog" onclick="closeBranchCompareDialog()"><i class="fa-solid fa-xmark"></i></button>
+        </div>
+        <div class="compare-stats-strip">
+            <div class="compare-stat-chip">
+                <span class="compare-stat-label">Total Loan IDs</span>
+                <span class="compare-stat-val" id="compareBranchTotalLoans" style="color: #6366f1;">0</span>
+            </div>
+            <div class="compare-stat-chip">
+                <span class="compare-stat-label">Rejected Clients</span>
+                <span class="compare-stat-val" id="compareBranchRejections" style="color: #f43f5e;">0</span>
+            </div>
+            <div class="compare-stat-chip">
+                <span class="compare-stat-label">Rejection %</span>
+                <span class="compare-stat-val" id="compareBranchRejPct" style="color: #ea580c;">0%</span>
+            </div>
+        </div>
+        <div class="compare-graph-box">
+            <canvas id="branchCompareChartCanvas"></canvas>
+        </div>
+    </div>
+</div>
+
+<!-- Modal 6: ALL BRANCHES COMPARE DIALOG MODAL -->
+<div class="modal" id="allBranchesCompareDialogModal">
+    <div class="modal-content">
+        <div class="branch-dialog-header">
+            <div class="branch-dialog-title">
+                <i class="fa-solid fa-globe" style="font-size: 1.4rem; color: #6366f1;"></i>
+                <div>
+                    <h2>All Branches Total Summary</h2>
+                    <span style="font-size: 0.78rem; color: var(--secondary);">Total Sum Loan ID vs Sum Reject Clients from Status Percentage</span>
+                </div>
+            </div>
+            <button class="btn-close-dialog" onclick="closeAllBranchesCompareDialog()"><i class="fa-solid fa-xmark"></i></button>
+        </div>
+        <div class="compare-stats-strip">
+            <div class="compare-stat-chip">
+                <span class="compare-stat-label">Overall Total Loans</span>
+                <span class="compare-stat-val" id="allCompareTotalLoans" style="color: #6366f1;">0</span>
+            </div>
+            <div class="compare-stat-chip">
+                <span class="compare-stat-label">Total Rejections</span>
+                <span class="compare-stat-val" id="allCompareTotalRejections" style="color: #f43f5e;">0</span>
+            </div>
+            <div class="compare-stat-chip">
+                <span class="compare-stat-label">Overall Rejection Rate</span>
+                <span class="compare-stat-val" id="allCompareRejPct" style="color: #e11d48;">0%</span>
+            </div>
+        </div>
+        <div class="dialog-table-container" style="max-height: 380px;">
+            <table class="dialog-data-table">
+                <thead>
+                    <tr>
+                        <th>Branch Name</th>
+                        <th style="text-align: center;">Total Loan IDs</th>
+                        <th style="text-align: center;">Rejected Clients</th>
+                        <th style="text-align: right;">Rejection (%)</th>
+                    </tr>
+                </thead>
+                <tbody id="allBranchesCompareTableBody">
+                    <tr><td colspan="4" class="status-msg">Compiling summary records...</td></tr>
+                </tbody>
+            </table>
+        </div>
+    </div>
+</div>
+
+<!-- Credit Dashboard Screen -->
+<div class="credit-screen" id="creditScreen">
+    <div class="container">
+        <header class="mesh-container">
+            <canvas class="mesh-canvas"></canvas>
+            <div class="header-title">
+                <h1>Credit Dashboard</h1>
+                <p>Live sync from Google Sheet ("All data")</p>
+            </div>
+            <div class="btn-group">
+                <button class="btn btn-refresh" id="creditRefreshBtn" onclick="refreshCreditDashboard()">
+                    <i class="fa-solid fa-arrows-rotate" id="creditRefreshIcon"></i> Refresh Data
+                </button>
+                <button class="btn btn-home" onclick="closeCreditScreen()">
+                    <i class="fa-solid fa-house"></i> Back to Home Screen
+                </button>
+            </div>
+        </header>
+
+        <div class="live-running-ticker-wrap">
+            <div class="ticker-badge-credit">
+                <span class="pulse-radar"></span>
+                <span><i class="fa-solid fa-chart-pie"></i> CREDIT STATUS STREAM</span>
+            </div>
+            <div class="ticker-track">
+                <div class="ticker-content" id="creditRunningTickerContent">
+                    <div class="ticker-item">
+                        <span>Compiling status-wise approved amount, loan ID count, and rejection metrics...</span>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <div class="metric-cards-compact-row">
+            <div class="compact-metric-card card-pending interactive-spin-card mesh-container" onclick="spinCard(this)" title="Click to spin">
+                <canvas class="mesh-canvas"></canvas>
+                <h3><i class="fa-solid fa-file-invoice" style="color: #6366f1;"></i> Total Loan IDs</h3>
+                <div class="compact-metric-value" id="creditTotalLoans" style="color: #4f46e5;">--</div>
+                <p class="compact-card-sub">Sanctioned loans</p>
+            </div>
+            <div class="compact-metric-card card-branch interactive-spin-card mesh-container" onclick="spinCard(this)" title="Click to spin">
+                <canvas class="mesh-canvas"></canvas>
+                <h3><i class="fa-solid fa-indian-rupee-sign" style="color: #06b6d4;"></i> Total Approved</h3>
+                <div class="compact-metric-value" id="creditTotalAmount" style="color: #0284c7; font-size: 1.45rem;">--</div>
+                <p class="compact-card-sub">Amount approved</p>
+            </div>
+            <div class="compact-metric-card card-jlg interactive-spin-card mesh-container" onclick="spinCard(this)" title="Click to spin">
+                <canvas class="mesh-canvas"></canvas>
+                <h3><i class="fa-solid fa-check-double" style="color: #10b981;"></i> JLG 1st Cycle</h3>
+                <div class="compact-metric-value" id="creditJlgCount" style="color: #059669;">--</div>
+                <p class="compact-card-sub">Passed count</p>
+            </div>
+            <div class="compact-metric-card card-top interactive-spin-card mesh-container" onclick="spinCard(this)" title="Click to spin">
+                <canvas class="mesh-canvas"></canvas>
+                <h3><i class="fa-solid fa-layer-group" style="color: #ea580c;"></i> Active Branches</h3>
+                <div class="compact-metric-value" id="creditActiveBranchesCount" style="color: #ea580c;">--</div>
+                <p class="compact-card-sub">Contributing hubs</p>
+            </div>
+            <div class="compact-metric-card card-notify interactive-spin-card mesh-container" onclick="spinCard(this)" title="Click to spin">
+                <canvas class="mesh-canvas"></canvas>
+                <h3><i class="fa-solid fa-bell fa-shake" style="color: #d946ef;"></i> Live Alert</h3>
+                <div class="notif-slideshow-container">
+                    <span class="notif-slideshow-text" id="creditNotificationCount">Fetching live updates...</span>
+                </div>
+                <p class="compact-card-sub" id="creditNotificationDetails">Live from Sheet</p>
+            </div>
+        </div>
+
+        <div class="analytics-grid">
+            <div class="floating-window-card mesh-container">
+                <canvas class="mesh-canvas"></canvas>
+                <div class="floating-window-header">
+                    <div class="dots">
+                        <span class="dot dot-red"></span>
+                        <span class="dot dot-yellow"></span>
+                        <span class="dot dot-green"></span>
+                    </div>
+                    <h3 style="font-size: 0.95rem; font-weight: 800; color: #1e1b4b;">Status Wise Analytics</h3>
+                    <span class="infographic-tag" style="background: #e0e7ff; color: #4338ca;">Infographic</span>
+                </div>
+                <div class="chart-container">
+                    <canvas id="creditStatusChart"></canvas>
+                </div>
+            </div>
+
+            <div class="floating-window-card mesh-container">
+                <canvas class="mesh-canvas"></canvas>
+                <div class="floating-window-header">
+                    <div class="dots">
+                        <span class="dot dot-red"></span>
+                        <span class="dot dot-yellow"></span>
+                        <span class="dot dot-green"></span>
+                    </div>
+                    <h3 style="font-size: 0.95rem; font-weight: 800; color: #1e1b4b;">Category/Status Breakdown</h3>
+                    <span class="infographic-tag" style="background: #f3e8ff; color: #7e22ce;">Breakdown</span>
+                </div>
+                <div class="subcat-table-wrap">
+                    <table class="subcat-table">
+                        <thead>
+                            <tr>
+                                <th>Status</th>
+                                <th style="text-align: center;">Loan ID Count</th>
+                                <th style="text-align: right;">Sum of Approved Amount</th>
+                            </tr>
+                        </thead>
+                        <tbody id="creditStatusTableBody">
+                            <tr><td colspan="3" class="status-msg">Loading data...</td></tr>
+                        </tbody>
+                        <tfoot id="creditStatusTableFoot"></tfoot>
+                    </table>
+                </div>
+            </div>
+        </div>
+
+        <!-- Branch Wise Business -->
+        <div class="table-card mesh-container">
+            <canvas class="mesh-canvas"></canvas>
+            <div class="table-header">
+                <h3><i class="fa-solid fa-city" style="color: #06b6d4; margin-right: 8px;"></i>Branch Wise Business (Count of Loan ID & Approved Amount)</h3>
+                <span id="creditBranchTotalCountBadge" style="font-size: 0.82rem; font-weight: 700; color: #0284c7; background: #e0f2fe; padding: 4px 10px; border-radius: 12px;">0 Branches</span>
+            </div>
+            <div class="table-scroll">
+                <table class="data-table">
+                    <thead>
+                        <tr>
+                            <th>Branch Name</th>
+                            <th style="text-align: center;">Loan ID Count</th>
+                            <th style="text-align: right;">Sum of Approved Amount</th>
+                            <th style="text-align: right;">Percentage (%)</th>
+                        </tr>
+                    </thead>
+                    <tbody id="creditTotalBranchBusinessBody">
+                        <tr><td colspan="4" class="status-msg">Loading branch business records...</td></tr>
+                    </tbody>
+                    <tfoot id="creditTotalBranchBusinessFoot"></tfoot>
+                </table>
+            </div>
+        </div>
+
+        <div class="table-card mesh-container">
+            <canvas class="mesh-canvas"></canvas>
+            <div class="table-header">
+                <h3><i class="fa-solid fa-box-archive" style="color: #6366f1; margin-right: 8px;"></i>Product Name Wise Count, Approved Amount & Percentage</h3>
+            </div>
+            <div class="table-scroll">
+                <table class="data-table">
+                    <thead>
+                        <tr>
+                            <th>Product Name</th>
+                            <th style="text-align: center;">Loan ID Count</th>
+                            <th style="text-align: right;">Sum of Approved Amount</th>
+                            <th style="text-align: right;">Percentage (%)</th>
+                        </tr>
+                    </thead>
+                    <tbody id="creditProductTableBody">
+                        <tr><td colspan="4" class="status-msg">Loading product data...</td></tr>
+                    </tbody>
+                    <tfoot id="creditProductTableFoot"></tfoot>
+                </table>
+            </div>
+        </div>
+
+        <div class="table-card mesh-container">
+            <canvas class="mesh-canvas"></canvas>
+            <div class="table-header">
+                <h3><i class="fa-solid fa-building" style="color: #6366f1; margin-right: 8px;"></i>JLG (1st Cycle Pass) Branch Wise Business Count, Approved Amount & Percentage</h3>
+            </div>
+            <div class="table-scroll">
+                <table class="data-table">
+                    <thead>
+                        <tr>
+                            <th>Branch Name</th>
+                            <th style="text-align: center;">Loan ID Count</th>
+                            <th style="text-align: right;">Sum of Approved Amount</th>
+                            <th style="text-align: right;">Percentage (%)</th>
+                        </tr>
+                    </thead>
+                    <tbody id="creditBranchTableBody">
+                        <tr><td colspan="4" class="status-msg">Loading branch data...</td></tr>
+                    </tbody>
+                    <tfoot id="creditBranchTableFoot"></tfoot>
+                </table>
+            </div>
+        </div>
+    </div>
+</div>
+
+<script>
+    Chart.register(ChartDataLabels);
+
+    const SPREADSHEET_ID = "1jzF2pjnaYDiLj2wRvBRY7k_Smk-El6ZLMBwdVuMbaxY";
+    const SUBMIT_SPREADSHEET_ID = "12VmzIiwtjIxdpyqyxFjrbceBaw1OgQGV4ZdD5JMYRmA";
+    const TARGET_SUBMIT_SHEET = "reply submited data";
+    
+    const GOOGLE_APP_SCRIPT_URL = "https://script.google.com/macros/s/AKfycbwSGge7HUzKvZNYVvglELVFZPtrA5ZMavNXSBZT0ZaxpXC3x80aJWyK8_WF9PMS_tG07g/exec";
+
+    // Valid Global Passwords and Branch Passwords
+    const MASTER_PASSWORDS = ["Credit@123", "Soumya@123"];
+    const VALID_BRANCHES = [
+        "Odagaon", "Godipada", "Digapahandi", "Aska", "Buguda", "Gania", 
+        "Chhatrapur", "Indanpur", "Nayagarh", "Hinjilicut", "Surada", 
+        "Khalikote", "Jagannathprasad", "Bhanjanagar", "Nayagarh Urban", 
+        "kodala", "Khandapada2", "Berhampur-OD", "Jagannath Vihar", 
+        "Kantilo", "Patrapur", "Purushottampur", "Polasara", "Krushnaprasad", 
+        "Sheragada", "Daspalla", "Digapahandi2", "Chikiti", "Sorada2", "Beguniapada"
+    ].map(b => b.toLowerCase());
+
+    let loggedInUser = null; // Either 'MASTER' or specific 'Branch Name'
+
+    let headers = [];
+    let allRows = [];
+    let filteredRows = [];
+
+    let rejHeaders = [];
+    let allRejRows = [];
+    let filteredRejRows = [];
+
+    let chartInstance = null;
+    let rejectionChartInstance = null;
+    let creditChartInstance = null;
+    let miniPieChartInstance = null;
+    let branchCompareChartInstance = null;
+
+    let submittedLoanIdsSet = new Set();
+    let currentOpenBranchName = "";
+
+    let creditAllHeaders = [];
+    let creditAllRows = [];
+
+    let globalStatusMap = {};
+    let globalBranchStatusMap = {};
+    let globalTotalLoansCount = 0;
+    let globalTotalRejectionClientsCount = 0;
+
+    const COLOR_PALETTES = [
+        'linear-gradient(135deg, #6366f1, #a855f7)',
+        'linear-gradient(135deg, #06b6d4, #3b82f6)',
+        'linear-gradient(135deg, #f43f5e, #e11d48)',
+        'linear-gradient(135deg, #10b981, #059669)',
+        'linear-gradient(135deg, #f59e0b, #ea580c)',
+        'linear-gradient(135deg, #8b5cf6, #ec4899)',
+        'linear-gradient(135deg, #0284c7, #2563eb)',
+        'linear-gradient(135deg, #14b8a6, #0d9488)',
+        'linear-gradient(135deg, #e11d48, #be123c)',
+        'linear-gradient(135deg, #7c3aed, #4f46e5)',
+        'linear-gradient(135deg, #f97316, #d97706)',
+        'linear-gradient(135deg, #ec4899, #db2777)',
+        'linear-gradient(135deg, #0ea5e9, #0284c7)',
+        'linear-gradient(135deg, #10b981, #047857)'
+    ];
+
+    /* UNDERWRITING MATRIX TABLE DATA RULES */
+    const matrixAccountCategories = [
+        { name: "Personal Loan", type: "matrix_b", col: "Personal Loan" },
+        { name: "Microfinance Personal Loan", type: "matrix_b", col: "Microfinance Personal Loan" },
+        { name: "Consumer Loan", type: "matrix_b", col: "Consumer Loan" },
+        { name: "Auto Loan (Personal)", type: "matrix_b", col: "Auto Loan (Personal)" },
+        { name: "Two-Wheeler Vehicle Loan", type: "matrix_b", col: "Two-Wheeler Vehicle Loan" },
+        { name: "Commercial Vehicle Loan", type: "matrix_b", col: "Commercial Vehicle Loan" },
+        { name: "Tractor Loan", type: "matrix_b", col: "Tractor Loan" },
+        { name: "Microfinance Business Loan", type: "matrix_b", col: "Microfinance Business Loan" },
+        { name: "Business Loan - Secured", type: "matrix_b", col: "Business Loan - Secured" },
+        { name: "Business Loan - Unsecured", type: "matrix_b", col: "Business Loan - Unsecured" },
+        { name: "Mudra Loans – Shishu / Kishor /Tarun", type: "matrix_b", col: "Mudra Loans" },
+        { name: "Pradhan Mantri Awas Yojana - CLSS", type: "matrix_b", col: "PMAY" },
+        { name: "Housing Loan", type: "matrix_b", col: "Housing Loan" },
+        { name: "Microfinance Housing Loan", type: "matrix_b", col: "Microfinance Housing Loan" },
+        { name: "Gold Loan", type: "percent_os", rate: 0.015 },
+        { name: "Kisan Credit Cards", type: "percent_os", rate: 0.010 },
+        { name: "Credit Card", type: "percent_os", rate: 0.050 },
+        { name: "Corporate Credit Card", type: "percent_os", rate: 0.050 },
+        { name: "Fleet Card", type: "percent_os", rate: 0.050 },
+        { name: "Secured Credit Card", type: "percent_os", rate: 0.050 },
+        { name: "Overdraft", type: "percent_os", rate: 0.050 },
+        { name: "Prime Minister Jaan Dhan Yojana - Overdraft", type: "percent_os", rate: 0.050 },
+        { name: "Used Car Loan", type: "matrix_b", col: "Auto Loan (Personal)" },
+        { name: "Business Loan Against Bank Deposits", type: "matrix_b", col: "Business Loan - Secured" },
+        { name: "Loan Against Bank Deposits", type: "matrix_b", col: "Business Loan - Secured" },
+        { name: "Loan Against Shares / Securities", type: "matrix_b", col: "Business Loan - Secured" },
+        { name: "Business Loan General", type: "matrix_b", col: "Business Loan - Unsecured" },
+        { name: "Business Loan Priority Sector Agriculture", type: "matrix_b", col: "Business Loan - Unsecured" },
+        { name: "Business Loan Priority Sector Others", type: "matrix_b", col: "Business Loan - Unsecured" },
+        { name: "Business Loan Priority Sector Small Business", type: "matrix_b", col: "Business Loan - Unsecured" },
+        { name: "Business Non-Funded Credit Facility General", type: "matrix_b", col: "Business Loan - Unsecured" },
+        { name: "Microfinance Others", type: "matrix_b", col: "Microfinance Personal Loan" },
+        { name: "Individual", type: "matrix_b", col: "Personal Loan" },
+        { name: "Loan on Credit Card", type: "matrix_b", col: "Personal Loan" },
+        { name: "Loan to Professional", type: "matrix_b", col: "Personal Loan" },
+        { name: "Staff Loan", type: "matrix_b", col: "Personal Loan" },
+        { name: "Property Loan", type: "matrix_b", col: "Business Loan - Secured" },
+        { name: "Commercial Equipment Loan", type: "matrix_d" },
+        { name: "Construction Equipment Loan", type: "matrix_d" },
+        { name: "Education Loan", type: "matrix_d" },
+        { name: "GECL Loan secured", type: "matrix_d" },
+        { name: "GECL Loan unsecured", type: "matrix_d" },
+        { name: "Leasing", type: "matrix_d" },
+        { name: "Non-Funded Credit Facility", type: "matrix_d" },
+        { name: "Telco Broadband", type: "matrix_d" },
+        { name: "Telco Wireless", type: "matrix_d" },
+        { name: "Other", type: "matrix_d" }
+    ];
+
+    const matrixTableB = [
+        { max: 20000, "Personal Loan": 180, "Microfinance Personal Loan": 185, "Consumer Loan": 120, "Auto Loan (Personal)": 90, "Two-Wheeler Vehicle Loan": 95, "Commercial Vehicle Loan": 75, "Tractor Loan": 65, "Microfinance Business Loan": 90, "Business Loan - Secured": 35, "Business Loan - Unsecured": 90, "Mudra Loans": 85, "PMAY": 15, "Housing Loan": 10, "Microfinance Housing Loan": 55 },
+        { max: 40000, "Personal Loan": 85, "Microfinance Personal Loan": 70, "Consumer Loan": 100, "Auto Loan (Personal)": 45, "Two-Wheeler Vehicle Loan": 55, "Commercial Vehicle Loan": 40, "Tractor Loan": 65, "Microfinance Business Loan": 80, "Business Loan - Secured": 35, "Business Loan - Unsecured": 65, "Mudra Loans": 30, "PMAY": 15, "Housing Loan": 10, "Microfinance Housing Loan": 55 },
+        { max: 60000, "Personal Loan": 60, "Microfinance Personal Loan": 55, "Consumer Loan": 65, "Auto Loan (Personal)": 35, "Two-Wheeler Vehicle Loan": 55, "Commercial Vehicle Loan": 40, "Tractor Loan": 55, "Microfinance Business Loan": 55, "Business Loan - Secured": 35, "Business Loan - Unsecured": 55, "Mudra Loans": 30, "PMAY": 15, "Housing Loan": 10, "Microfinance Housing Loan": 55 },
+        { max: 80000, "Personal Loan": 55, "Microfinance Personal Loan": 40, "Consumer Loan": 40, "Auto Loan (Personal)": 35, "Two-Wheeler Vehicle Loan": 50, "Commercial Vehicle Loan": 40, "Tractor Loan": 55, "Microfinance Business Loan": 50, "Business Loan - Secured": 35, "Business Loan - Unsecured": 55, "Mudra Loans": 20, "PMAY": 15, "Housing Loan": 10, "Microfinance Housing Loan": 55 },
+        { max: 100000, "Personal Loan": 40, "Microfinance Personal Loan": 40, "Consumer Loan": 40, "Auto Loan (Personal)": 35, "Two-Wheeler Vehicle Loan": 45, "Commercial Vehicle Loan": 40, "Tractor Loan": 55, "Microfinance Business Loan": 50, "Business Loan - Secured": 35, "Business Loan - Unsecured": 55, "Mudra Loans": 20, "PMAY": 15, "Housing Loan": 10, "Microfinance Housing Loan": 55 },
+        { max: 120000, "Personal Loan": 40, "Microfinance Personal Loan": 40, "Consumer Loan": 40, "Auto Loan (Personal)": 35, "Two-Wheeler Vehicle Loan": 40, "Commercial Vehicle Loan": 40, "Tractor Loan": 55, "Microfinance Business Loan": 50, "Business Loan - Secured": 25, "Business Loan - Unsecured": 50, "Mudra Loans": 20, "PMAY": 15, "Housing Loan": 10, "Microfinance Housing Loan": 55 },
+        { max: 140000, "Personal Loan": 35, "Microfinance Personal Loan": 40, "Consumer Loan": 40, "Auto Loan (Personal)": 35, "Two-Wheeler Vehicle Loan": 40, "Commercial Vehicle Loan": 40, "Tractor Loan": 55, "Microfinance Business Loan": 50, "Business Loan - Secured": 25, "Business Loan - Unsecured": 50, "Mudra Loans": 20, "PMAY": 10, "Housing Loan": 10, "Microfinance Housing Loan": 45 },
+        { max: 160000, "Personal Loan": 35, "Microfinance Personal Loan": 40, "Consumer Loan": 40, "Auto Loan (Personal)": 35, "Two-Wheeler Vehicle Loan": 35, "Commercial Vehicle Loan": 40, "Tractor Loan": 55, "Microfinance Business Loan": 50, "Business Loan - Secured": 25, "Business Loan - Unsecured": 50, "Mudra Loans": 20, "PMAY": 10, "Housing Loan": 10, "Microfinance Housing Loan": 45 },
+        { max: 180000, "Personal Loan": 35, "Microfinance Personal Loan": 30, "Consumer Loan": 40, "Auto Loan (Personal)": 35, "Two-Wheeler Vehicle Loan": 35, "Commercial Vehicle Loan": 40, "Tractor Loan": 50, "Microfinance Business Loan": 50, "Business Loan - Secured": 25, "Business Loan - Unsecured": 45, "Mudra Loans": 20, "PMAY": 10, "Housing Loan": 10, "Microfinance Housing Loan": 40 },
+        { max: 200000, "Personal Loan": 35, "Microfinance Personal Loan": 30, "Consumer Loan": 35, "Auto Loan (Personal)": 30, "Two-Wheeler Vehicle Loan": 35, "Commercial Vehicle Loan": 35, "Tractor Loan": 50, "Microfinance Business Loan": 50, "Business Loan - Secured": 25, "Business Loan - Unsecured": 45, "Mudra Loans": 20, "PMAY": 10, "Housing Loan": 10, "Microfinance Housing Loan": 40 },
+        { max: 220000, "Personal Loan": 35, "Microfinance Personal Loan": 30, "Consumer Loan": 35, "Auto Loan (Personal)": 30, "Two-Wheeler Vehicle Loan": 35, "Commercial Vehicle Loan": 35, "Tractor Loan": 50, "Microfinance Business Loan": 40, "Business Loan - Secured": 25, "Business Loan - Unsecured": 40, "Mudra Loans": 20, "PMAY": 10, "Housing Loan": 10, "Microfinance Housing Loan": 40 },
+        { max: 240000, "Personal Loan": 25, "Microfinance Personal Loan": 30, "Consumer Loan": 30, "Auto Loan (Personal)": 25, "Two-Wheeler Vehicle Loan": 30, "Commercial Vehicle Loan": 35, "Tractor Loan": 45, "Microfinance Business Loan": 40, "Business Loan - Secured": 25, "Business Loan - Unsecured": 40, "Mudra Loans": 20, "PMAY": 10, "Housing Loan": 10, "Microfinance Housing Loan": 40 },
+        { max: 260000, "Personal Loan": 25, "Microfinance Personal Loan": 30, "Consumer Loan": 30, "Auto Loan (Personal)": 25, "Two-Wheeler Vehicle Loan": 30, "Commercial Vehicle Loan": 35, "Tractor Loan": 40, "Microfinance Business Loan": 40, "Business Loan - Secured": 25, "Business Loan - Unsecured": 40, "Mudra Loans": 20, "PMAY": 10, "Housing Loan": 10, "Microfinance Housing Loan": 40 },
+        { max: 280000, "Personal Loan": 25, "Microfinance Personal Loan": 30, "Consumer Loan": 30, "Auto Loan (Personal)": 20, "Two-Wheeler Vehicle Loan": 30, "Commercial Vehicle Loan": 30, "Tractor Loan": 40, "Microfinance Business Loan": 40, "Business Loan - Secured": 25, "Business Loan - Unsecured": 35, "Mudra Loans": 20, "PMAY": 10, "Housing Loan": 10, "Microfinance Housing Loan": 40 },
+        { max: Infinity, "Personal Loan": 25, "Microfinance Personal Loan": 30, "Consumer Loan": 25, "Auto Loan (Personal)": 20, "Two-Wheeler Vehicle Loan": 30, "Commercial Vehicle Loan": 30, "Tractor Loan": 40, "Microfinance Business Loan": 40, "Business Loan - Secured": 25, "Business Loan - Unsecured": 35, "Mudra Loans": 20, "PMAY": 10, "Housing Loan": 10, "Microfinance Housing Loan": 40 }
+    ];
+
+    const matrixTableD = [
+        { max: 20000, val: 185 }, { max: 40000, val: 85 }, { max: 60000, val: 60 }, { max: 80000, val: 55 },
+        { max: 100000, val: 55 }, { max: 120000, val: 55 }, { max: 140000, val: 55 }, { max: 160000, val: 55 },
+        { max: 180000, val: 50 }, { max: 200000, val: 50 }, { max: 220000, val: 50 }, { max: 240000, val: 45 },
+        { max: 260000, val: 40 }, { max: 280000, val: 40 }, { max: Infinity, val: 40 }
+    ];
+
+    function initMatrixAccountDropdown() {
+        const select = document.getElementById('matrixAccountType');
+        if (!select) return;
+        select.innerHTML = `<option value="">-- Choose Account Type --</option>` + 
+            matrixAccountCategories.map(a => `<option value="${a.name}">${a.name}</option>`).join('');
+    }
+
+    function computeMatrixDialogValues() {
+        const acctName = document.getElementById('matrixAccountType').value;
+        const disbAmt = parseFloat(document.getElementById('matrixDisbAmount').value) || 0;
+        const borrowers = Math.max(1, parseFloat(document.getElementById('matrixBorrowerCount').value) || 1);
+
+        const valSpan = document.getElementById('matrixResultValue');
+        const condSpan = document.getElementById('matrixConditionNote');
+        const divSpan = document.getElementById('matrixDividedValue');
+
+        if (!acctName || disbAmt <= 0) {
+            valSpan.textContent = '₹ 0';
+            condSpan.textContent = 'Awaiting Inputs';
+            divSpan.textContent = '₹ 0';
+            return;
+        }
+
+        const meta = matrixAccountCategories.find(a => a.name === acctName);
+        let factor = 0;
+        let calculatedEmi = 0;
+        let conditionText = '';
+
+        if (!meta) {
+            valSpan.textContent = '₹ 0';
+            return;
+        }
+
+        if (meta.type === 'percent_os') {
+            calculatedEmi = Math.round(disbAmt * meta.rate);
+            conditionText = `Flat ${(meta.rate * 100).toFixed(1)}% calculation on disbursement/OS`;
+        } else if (meta.type === 'matrix_b') {
+            const row = matrixTableB.find(r => disbAmt <= r.max);
+            factor = row ? (row[meta.col] || 0) : 0;
+            calculatedEmi = Math.round((disbAmt / 1000) * factor);
+            conditionText = `Table B: ₹${factor} per ₹1,000 disbursement (Slab <= ₹${row.max.toLocaleString()})`;
+        } else if (meta.type === 'matrix_d') {
+            const row = matrixTableD.find(r => disbAmt <= r.max);
+            factor = row ? row.val : 0;
+            calculatedEmi = Math.round((disbAmt / 1000) * factor);
+            conditionText = `Table D: ₹${factor} per ₹1,000 disbursement (Slab <= ₹${row.max.toLocaleString()})`;
+        }
+
+        const dividedEmi = Math.round(calculatedEmi / borrowers);
+
+        valSpan.textContent = `₹ ${calculatedEmi.toLocaleString('en-IN')}`;
+        condSpan.textContent = conditionText;
+        divSpan.textContent = `₹ ${dividedEmi.toLocaleString('en-IN')} (${borrowers} borrower${borrowers > 1 ? 's' : ''})`;
+    }
+
+    function openMatrixDialog() {
+        document.getElementById('matrixCalculatorModal').style.display = 'flex';
+        initMatrixAccountDropdown();
+        computeMatrixDialogValues();
+    }
+
+    function closeMatrixDialog() {
+        document.getElementById('matrixCalculatorModal').style.display = 'none';
+    }
+
+    /* EMI CALCULATOR DIALOG LOGIC */
+    function openEmiDialog() {
+        document.getElementById('emiCalculatorModal').style.display = 'flex';
+        computeDialogQuickEmi();
+    }
+
+    function closeEmiDialog() {
+        document.getElementById('emiCalculatorModal').style.display = 'none';
+    }
+
+    function computeDialogQuickEmi() {
+        const principal = parseFloat(document.getElementById('dialogEmiLoanAmt').value) || 0;
+        const roiAnnual = parseFloat(document.getElementById('dialogEmiRoi').value) || 0;
+        const months = parseFloat(document.getElementById('dialogEmiTenure').value) || 0;
+        const outSpan = document.getElementById('dialogEmiOutput');
+
+        if (principal > 0 && roiAnnual > 0 && months > 0) {
+            const monthlyRate = (roiAnnual / 12) / 100;
+            const emi = principal * monthlyRate * Math.pow(1 + monthlyRate, months) / (Math.pow(1 + monthlyRate, months) - 1);
+            outSpan.textContent = `₹ ${Math.round(emi).toLocaleString('en-IN')}`;
+        } else {
+            outSpan.textContent = '₹ 0';
+        }
+    }
+
+    /* ROBOTIC HUD CLOCK CONTROLLER */
+    function updateRoboticClock() {
+        const now = new Date();
+        const display = document.getElementById('roboticTimeDisplay');
+        if (display) {
+            display.textContent = `SYS TIME: ${now.toLocaleTimeString()} | LATENCY: 18ms`;
+        }
+    }
+    setInterval(updateRoboticClock, 1000);
+
+    /* APP-WIDE LOGIN & CATALOGUE LOGIC */
+    function handleMainLogin() {
+        const pass = document.getElementById('mainLoginPassword').value.trim();
+        const err = document.getElementById('mainLoginError');
+        
+        if (MASTER_PASSWORDS.includes(pass)) {
+            loggedInUser = 'MASTER';
+            document.getElementById('loggedInBranchDisplay').textContent = "ZONE: ALL (MASTER)";
+        } else if (VALID_BRANCHES.includes(pass.toLowerCase())) {
+            // Capitalize first letter for aesthetics
+            loggedInUser = pass.charAt(0).toUpperCase() + pass.slice(1).toLowerCase();
+            document.getElementById('loggedInBranchDisplay').textContent = `ZONE: ${loggedInUser.toUpperCase()}`;
+        } else {
+            err.style.display = 'block';
+            return;
+        }
+        
+        // Successful login
+        err.style.display = 'none';
+        document.getElementById('mainLoginOverlay').style.display = 'none';
+        document.getElementById('mainDashboardContainer').style.display = 'block';
+        
+        checkShowCatalogue();
+        
+        // Initialize everything now that we are logged in
+        initAllMeshCanvases();
+        initAutomaticCardMotion();
+        initMatrixAccountDropdown();
+        refreshDashboard(); // Fetch data
+    }
+
+    let sessionHasShownWelcomeCredit = false;
+
+    const TIMING_CATALOGUE_DATA = {
+        morning: {
+            badge: '<i class="fa-solid fa-cloud-sun" style="color: #f59e0b;"></i> Good Morning Inspiration',
+            icon: '<i class="fa-solid fa-sun" style="color: #f59e0b;"></i>',
+            greeting: 'Good Morning & Welcome to Credit',
+            images: [
+                "https://images.unsplash.com/photo-1470252649378-9c29740c9fa8?w=800&q=80",
+                "https://images.unsplash.com/photo-1464822759023-fed622ff2c3b?w=800&q=80",
+                "https://images.unsplash.com/photo-1500382017468-9049fed747ef?w=800&q=80",
+                "https://images.unsplash.com/photo-1433086966358-54859d0ed716?w=800&q=80",
+                "https://images.unsplash.com/photo-1472214103451-9374bd1c798e?w=800&q=80",
+                "https://images.unsplash.com/photo-1506744038136-46273834b3fb?w=800&q=80"
+            ],
+            shayaris: [
+                "Suraj ki pehli kiran khushi de aapko,<br>Dusri kiran pyari si hasi de aapko,<br>Teesri kiran accha swasthya aur tarakki de aapko.<br><strong>Suprabhat & Welcome to Credit!</strong> ☀️",
+                "Har subah ek nayi shuruaat hoti hai nayi umeedon ke saath.<br>A new morning brings endless strength and infinite possibilities.<br>May your day be filled with vibrant health, peace, and high achievement.<br><strong>Good Morning & Welcome to Credit!</strong> 🌸",
+                "Khilte phool jaise mehke jeevan tumhara,<br>Muskurata rahe har pal aur din tumhara.<br>Tarakki ke naye aasmaan chuwo har kadam pe.<br><strong>Suprabhat & Welcome to Credit!</strong> 🌿",
+                "Subah ki sunehri dhoop aapke jeevan mein nayi umang bhar de,<br>Har mushkil aasan ho aur har sapna sakaar ho jaye.<br>Wishing you boundless energy, joy, and grand success today!<br><strong>Good Morning & Welcome to Credit!</strong> 🌄",
+                "Waqt aur halat chahe jaise bhi hon,<br>Mehnat aur nek iraadon se har manzil aasan ho jati hai.<br>Aapka har pal mangalmay aur kamyabi se bhara ho.<br><strong>Suprabhat & Welcome to Credit!</strong> ✨",
+                "Every sunrise is an invitation to brighten someone's day.<br>Jeevan ek nayi subah hai, ise khul kar jiyo aur har lamha muskurate raho.<br>Wishing you a joyful, healthy, and highly productive day ahead!<br><strong>Good Morning & Welcome to Credit!</strong> 🌞",
+                "Roshan ho aapka har din, khushiyon se bhara ho har pal,<br>Safalta hamesha aapke kadam chume aaj, hamesha aur kal.<br><strong>Suprabhat & Welcome to Credit!</strong> 🌷"
+            ]
+        },
+        afternoon: {
+            badge: '<i class="fa-solid fa-sun" style="color: #ea580c;"></i> Good Afternoon Energy',
+            icon: '<i class="fa-solid fa-sun" style="color: #ea580c;"></i>',
+            greeting: 'Good Afternoon & Welcome to Credit',
+            images: [
+                "https://images.unsplash.com/photo-1507525428034-b723cf961d3e?w=800&q=80",
+                "https://images.unsplash.com/photo-1426604966848-d7adac402bff?w=800&q=80",
+                "https://images.unsplash.com/photo-1448375240586-882707db888b?w=800&q=80",
+                "https://images.unsplash.com/photo-1501854140801-50d01698950b?w=800&q=80",
+                "https://images.unsplash.com/photo-1519681393784-d120267933ba?w=800&q=80",
+                "https://images.unsplash.com/photo-1473448912268-2022ce9509d8?w=800&q=80"
+            ],
+            shayaris: [
+                "Dopahar ki dhoop sikhati hai ki chamakne ke liye tapna padta hai,<br>Houslon se bhari udaan bharne ke liye lagatar chalna padta hai.<br>May your afternoon be productive, energetic, and triumphant!<br><strong>Good Afternoon & Welcome to Credit!</strong> ☀️",
+                "Stay focused, stay positive, and keep moving forward.<br>Aadhi manzil tay ho chuki hai, baaki safar bhi shandar hoga.<br>Wishing you vibrant energy, good health, and fulfilling success today.<br><strong>Shubh Dopahar & Welcome to Credit!</strong> 🌿",
+                "Mehnat ki dhoop mein jo pasina bahate hain,<br>Wahi itihaas ke panno par apna naam chamkate hain.<br>Keep your spirits high and make every hour count!<br><strong>Good Afternoon & Welcome to Credit!</strong> 💫",
+                "No matter how busy the day gets, take a deep breath and smile.<br>Khushiyaan unhe milti hain jo har lamhe ko umang se jeete hain.<br>May joy, peace, and accomplishment follow all your efforts this afternoon.<br><strong>Good Afternoon & Welcome to Credit!</strong> 🌸",
+                "Thakna mana hai, rukna mana hai, manzilon ko pana hi apna irada hai,<br>Har chunouti ko paar karke safalta ki nayi misaal banana hai.<br>Have a fantastic, result-driven, and wonderful afternoon!<br><strong>Shubh Dopahar & Welcome to Credit!</strong> 🏆",
+                "Midday energy brings new clarity and strength.<br>Aapki mehnat rang layegi aur har kaam asani se poora hoga.<br>Stay inspired, joyful, and healthy throughout the rest of your day!<br><strong>Good Afternoon & Welcome to Credit!</strong> ⚡"
+            ]
+        },
+        evening: {
+            badge: '<i class="fa-solid fa-cloud-moon" style="color: #ec4899;"></i> Good Evening Serenity',
+            icon: '<i class="fa-solid fa-mountain-sun" style="color: #8b5cf6;"></i>',
+            greeting: 'Good Evening & Welcome to Credit',
+            images: [
+                "https://images.unsplash.com/photo-1495616811223-4d98c6e9c869?w=800&q=80",
+                "https://images.unsplash.com/photo-1518495973542-4542c06a5843?w=800&q=80",
+                "https://images.unsplash.com/photo-1509114397022-ed747cca3f65?w=800&q=80",
+                "https://images.unsplash.com/photo-1534447677768-be436bb09401?w=800&q=80",
+                "https://images.unsplash.com/photo-1470770841072-f978cf4d019e?w=800&q=80",
+                "https://images.unsplash.com/photo-1507525428034-b723cf961d3e?w=800&q=80"
+            ],
+            shayaris: [
+                "Dhalti hui shaam sukoon ka sandesha laati hai,<br>Din bhar ki mehnat ke baad chehron par muskaan khilati hai.<br>May your evening be peaceful, cheerful, and full of warmth.<br><strong>Shubh Sandhya & Welcome to Credit!</strong> 🌇",
+                "Evenings are nature's reminder to celebrate today's efforts and smile.<br>Aapne jo mehnat ki hai, uska fal barkat aur khushi layega.<br>Wishing you relaxation, good health, and joyful moments with loved ones.<br><strong>Good Evening & Welcome to Credit!</strong> 🌆",
+                "Shaam ki thandi hawaien dil ko sukoon de jayein,<br>Aaj ki har chinta bhulkar kal ke liye nayi umeed jagayein.<br>Have a calm, refreshing, and blissful evening ahead!<br><strong>Shubh Sandhya & Welcome to Credit!</strong> 🍃",
+                "As the golden sun sets, let gratitude fill your heart.<br>Har din ek seekh hai aur har shaam ek nayi umeed.<br>May your evening be blessed with peace, harmony, and happiness.<br><strong>Good Evening & Welcome to Credit!</strong> 🍁",
+                "Suraj dhalne par bhi umeedon ki roshni kam na ho,<br>Aapke jeevan mein kabhi khushiyon aur kamyabi ka koi gham na ho.<br>Wishing you a delightful, peaceful, and warm evening!<br><strong>Shubh Sandhya & Welcome to Credit!</strong> 🌟",
+                "The sunset paints the sky with colors of peace and hope.<br>Aapka din chahe kaisa bhi gaya ho, shaam hamesha sukoon lati hai.<br>Enjoy every precious moment this evening with good cheer and smiles!<br><strong>Good Evening & Welcome to Credit!</strong> 🕊️"
+            ]
+        },
+        night: {
+            badge: '<i class="fa-solid fa-moon" style="color: #38bdf8;"></i> Good Night Peace',
+            icon: '<i class="fa-solid fa-moon" style="color: #38bdf8;"></i>',
+            greeting: 'Good Night & Welcome to Credit',
+            images: [
+                "https://images.unsplash.com/photo-1506744038136-46273834b3fb?w=800&q=80",
+                "https://images.unsplash.com/photo-1519681393784-d120267933ba?w=800&q=80",
+                "https://images.unsplash.com/photo-1451187580459-43490279c0fa?w=800&q=80",
+                "https://images.unsplash.com/photo-1538370965046-79c0d6907d47?w=800&q=80",
+                "https://images.unsplash.com/photo-1518709268805-4e9042af9f23?w=800&q=80",
+                "https://images.unsplash.com/photo-1509198397868-475647b2a1e5?w=800&q=80"
+            ],
+            shayaris: [
+                "Taaron ki chaadar odh kar so jao sukoon se,<br>Kal ki nayi subah phir sajegi naye junoon se.<br>May peaceful sleep recharge your soul for greater heights tomorrow.<br><strong>Shubh Ratri & Welcome to Credit!</strong> 🌙",
+                "Leave today's worries behind, embrace peaceful dreams and deep rest.<br>Raat ki khamoshi aapko sukoon aur swasthya pradaan kare.<br>Wishing you serene rest, sweet dreams, and refreshed energy for tomorrow.<br><strong>Good Night & Welcome to Credit!</strong> ✨",
+                "Chandani raat aapke sapno ko sajaye,<br>Aane wala kal aapke jeevan mein khushiyon ki bahaar laye.<br>Rest well with deep gratitude and calm optimism in your heart.<br><strong>Shubh Ratri & Welcome to Credit!</strong> 🌌",
+                "Sleep is the best meditation for mind and body.<br>Thakan ko alvida keh kar meethe sapno ki duniya mein kho jao.<br>May tonight bring healing, calm, and sweet rest to you.<br><strong>Good Night & Welcome to Credit!</strong> 😴",
+                "Sitaron ki roshni aapko lori sunaye,<br>Har nayi subah aapke liye aningat khushiyan aur tarakki lekar aaye.<br>Rest peacefully knowing you did your best today.<br><strong>Shubh Ratri & Welcome to Credit!</strong> 🌠",
+                "As the world rests under the moon's gentle glow, breathe in peace.<br>Khuda aapko tandurasti, khushiyaan aur hamesha kamyabi bakashe.<br>Wishing you a restful, tranquil night and a brilliant tomorrow!<br><strong>Good Night & Welcome to Credit!</strong> 🌃"
+            ]
+        }
+    };
+
+    let lastShownShayariSlot = '';
+    let lastShownShayariIndex = -1;
+
+    function getTimingSlot(hour) {
+        if (hour >= 5 && hour < 12) return 'morning';
+        if (hour >= 12 && hour < 17) return 'afternoon';
+        if (hour >= 17 && hour < 21) return 'evening';
+        return 'night';
+    }
+
+    function checkShowCatalogue() {
+        if (!sessionHasShownWelcomeCredit) {
+            sessionHasShownWelcomeCredit = true;
+            
+            const currentHour = new Date().getHours();
+            const slotKey = getTimingSlot(currentHour);
+            const slotData = TIMING_CATALOGUE_DATA[slotKey];
+            
+            // Pick a different shayari & nature image every time
+            const totalShayaris = slotData.shayaris.length;
+            let pickIdx = Math.floor(Math.random() * totalShayaris);
+            if (lastShownShayariSlot === slotKey && totalShayaris > 1 && pickIdx === lastShownShayariIndex) {
+                pickIdx = (pickIdx + 1) % totalShayaris;
+            }
+            lastShownShayariSlot = slotKey;
+            lastShownShayariIndex = pickIdx;
+            
+            const imgIdx = pickIdx % slotData.images.length;
+            const chosenImage = slotData.images[imgIdx];
+            const chosenShayari = slotData.shayaris[pickIdx];
+
+            const imgEl = document.getElementById('catalogueImg');
+            const textEl = document.getElementById('catalogueText');
+            const badgeEl = document.getElementById('catalogueBadge');
+            const iconEl = document.getElementById('catalogueIcon');
+            const greetingEl = document.getElementById('catalogueGreeting');
+
+            if (imgEl) {
+                imgEl.src = chosenImage;
+                imgEl.onerror = function() {
+                    this.src = "https://images.unsplash.com/photo-1470252649378-9c29740c9fa8?w=800&q=80";
+                };
+            }
+            if (textEl) textEl.innerHTML = chosenShayari;
+            if (badgeEl) badgeEl.innerHTML = slotData.badge;
+            if (iconEl) iconEl.className = slotData.icon.match(/class="([^"]+)"/)?.[1] || 'fa-solid fa-sun';
+            if (greetingEl) greetingEl.textContent = slotData.greeting;
+
+            const overlay = document.getElementById('welcomeCatalogueOverlay');
+            if (overlay) overlay.style.display = 'flex';
+        }
+    }
+
+    function closeWelcomeCatalogue() {
+        const overlay = document.getElementById('welcomeCatalogueOverlay');
+        if (overlay) overlay.style.display = 'none';
+    }
+
+
+    /* AUTOMATIC 180° CARD MOTION CONTROLLER */
+    function initAutomaticCardMotion() {
+        setInterval(() => {
+            const cards = document.querySelectorAll('.metric-cards-compact-row .compact-metric-card');
+            if (!cards.length) return;
+
+            cards.forEach((card, idx) => {
+                setTimeout(() => {
+                    if (!card.classList.contains('is-spinning')) {
+                        card.classList.add('auto-spin-180');
+                        setTimeout(() => card.classList.remove('auto-spin-180'), 1350);
+                    }
+                }, idx * 200);
+            });
+        }, 7500);
+    }
+
+    /* KINETIC HOLOGRAPHIC MESH ANIMATION */
+    function initAllMeshCanvases() {
+        const canvases = document.querySelectorAll('.mesh-canvas');
+        canvases.forEach(canvas => {
+            const parent = canvas.parentElement;
+            let width = canvas.width = parent.offsetWidth || 300;
+            let height = canvas.height = parent.offsetHeight || 150;
+            const ctx = canvas.getContext('2d');
+
+            window.addEventListener('resize', () => {
+                if (canvas.parentElement) {
+                    width = canvas.width = canvas.parentElement.offsetWidth;
+                    height = canvas.height = canvas.parentElement.offsetHeight;
+                }
+            });
+
+            const particles = [];
+            const count = Math.max(10, Math.floor(width / 55));
+            for (let i = 0; i < count; i++) {
+                particles.push({
+                    x: Math.random() * width,
+                    y: Math.random() * height,
+                    vx: (Math.random() - 0.5) * 0.9,
+                    vy: (Math.random() - 0.5) * 0.9,
+                    radius: Math.random() * 2 + 1,
+                    color: i % 3 === 0 ? 'rgba(99, 102, 241,' : (i % 3 === 1 ? 'rgba(6, 182, 212,' : 'rgba(236, 72, 153,')
+                });
+            }
+
+            let angle = Math.random() * Math.PI;
+
+            function drawMesh() {
+                if (width <= 0 || height <= 0) {
+                    requestAnimationFrame(drawMesh);
+                    return;
+                }
+                ctx.clearRect(0, 0, width, height);
+
+                ctx.beginPath();
+                ctx.moveTo(0, height * 0.5 + Math.sin(angle) * 12);
+                for (let x = 0; x < width; x += 25) {
+                    const y = height * 0.5 + Math.sin(angle + x * 0.015) * 14;
+                    ctx.lineTo(x, y);
+                }
+                ctx.strokeStyle = 'rgba(99, 102, 241, 0.16)';
+                ctx.lineWidth = 2;
+                ctx.stroke();
+
+                for (let i = 0; i < particles.length; i++) {
+                    const p = particles[i];
+                    p.x += p.vx;
+                    p.y += p.vy;
+
+                    if (p.x < 0 || p.x > width) p.vx *= -1;
+                    if (p.y < 0 || p.y > height) p.vy *= -1;
+
+                    ctx.beginPath();
+                    ctx.arc(p.x, p.y, p.radius, 0, Math.PI * 2);
+                    ctx.fillStyle = p.color + '0.7)';
+                    ctx.fill();
+
+                    for (let j = i + 1; j < particles.length; j++) {
+                        const p2 = particles[j];
+                        const dist = Math.hypot(p.x - p2.x, p.y - p2.y);
+                        if (dist < 80) {
+                            ctx.beginPath();
+                            ctx.moveTo(p.x, p.y);
+                            ctx.lineTo(p2.x, p2.y);
+                            ctx.strokeStyle = `rgba(168, 85, 247, ${0.22 * (1 - dist / 80)})`;
+                            ctx.lineWidth = 0.8;
+                            ctx.stroke();
+                        }
+                    }
+                }
+
+                angle += 0.02;
+                requestAnimationFrame(drawMesh);
+            }
+            drawMesh();
+        });
+    }
+
+    function spinCard(cardElement) {
+        if (cardElement.classList.contains('is-spinning')) return;
+        cardElement.classList.add('is-spinning');
+        setTimeout(() => {
+            cardElement.classList.remove('is-spinning');
+        }, 950);
+    }
+
+    function loadGoogleSheetData(sheetName, callbackName, range = '', targetSpreadsheetId = SPREADSHEET_ID) {
+        const scriptId = 'googleSheetDataScript_' + callbackName;
+        const existingScript = document.getElementById(scriptId);
+        if (existingScript) existingScript.remove();
+
+        const rangeParam = range ? `&range=${encodeURIComponent(range)}` : '';
+        const script = document.createElement('script');
+        script.id = scriptId;
+        script.src = `https://docs.google.com/spreadsheets/d/${targetSpreadsheetId}/gviz/tq?sheet=${encodeURIComponent(sheetName)}${rangeParam}&tqx=responseHandler:${callbackName}&_t=${Date.now()}`;
+        document.body.appendChild(script);
+    }
+
+    function fetchNotification() {
+        loadGoogleSheetData('Notification', 'handleNotificationData', 'A1');
+    }
+
+    window.handleNotificationData = function(json) {
+        let remark = "All systems operational";
+        if (json && json.table && json.table.rows && json.table.rows.length > 0) {
+            const cell = json.table.rows[0].c && json.table.rows[0].c[0];
+            if (cell && (cell.v !== null && cell.v !== undefined)) {
+                remark = String(cell.f || cell.v).trim();
+            }
+        }
+        const notifMain = document.getElementById('notificationCount');
+        const notifCredit = document.getElementById('creditNotificationCount');
+        if (notifMain) notifMain.textContent = remark;
+        if (notifCredit) notifCredit.textContent = remark;
+    };
+
+    function refreshDashboard() {
+        if (!loggedInUser) return; // Only refresh if logged in
+        const icon = document.getElementById('refreshIcon');
+        if (icon) icon.classList.add('spin-icon');
+        fetchNotification();
+        loadSubmittedRepliesData();
+        loadGoogleSheetData('Pending', 'handlePendingData');
+        loadGoogleSheetData('Rejection', 'handleRejectionData');
+        loadGoogleSheetData('All data', 'handleAllDataSilent');
+    }
+
+    function refreshCreditDashboard() {
+        const icon = document.getElementById('creditRefreshIcon');
+        if (icon) icon.classList.add('spin-icon');
+        fetchNotification();
+        loadGoogleSheetData('All data', 'handleAllData');
+    }
+
+    function loadSubmittedRepliesData() {
+        loadGoogleSheetData(TARGET_SUBMIT_SHEET, 'handleSubmittedRepliesData', '', SUBMIT_SPREADSHEET_ID);
+    }
+
+    window.handleSubmittedRepliesData = function(json) {
+        submittedLoanIdsSet = new Set();
+        if (json && json.table && json.table.rows) {
+            json.table.rows.forEach(r => {
+                if (r && r.c) {
+                    const loanIdCell = r.c[2];
+                    const loanId = loanIdCell && (loanIdCell.v !== null && loanIdCell.v !== undefined) ? String(loanIdCell.v).trim().toLowerCase() : '';
+                    if (loanId) {
+                        submittedLoanIdsSet.add(loanId);
+                    }
+                }
+            });
+        }
+        if (allRows && allRows.length > 0) {
+            if (currentOpenBranchName && document.getElementById('branchDialogModal').style.display === 'flex') {
+                renderBranchDialogContent(currentOpenBranchName);
+            }
+        }
+    };
+
+    function findColIndex(headersArray, keywordList) {
+        for (const k of keywordList) {
+            const idx = headersArray.findIndex(h => {
+                const header = h.toLowerCase().trim();
+                const key = k.toLowerCase().trim();
+                return header === key || header.replace(/[^a-z0-9]/g, '') === key.replace(/[^a-z0-9]/g, '') || header.includes(key);
+            });
+            if (idx !== -1) return idx;
+        }
+        return -1;
+    }
+
+    function renderRunningTickerBar() {
+        const ticker = document.getElementById('runningTickerContent');
+        if (!ticker) return;
+
+        const branchIdx = findColIndex(headers, ['branch name', 'branch', 'location', 'hub', 'office']);
+        const loanIdIdx = findColIndex(headers, ['loan id', 'loan_id', 'loan no', 'loan_no', 'app id', 'application id', 'loanid', 'loan', 'id']);
+
+        if (allRows.length === 0) {
+            ticker.innerHTML = `<div class="ticker-item">No pending branch records available.</div>`;
+            return;
+        }
+
+        const branchMap = {};
+        allRows.forEach(r => {
+            const b = (branchIdx !== -1 && r[branchIdx]) ? r[branchIdx] : 'Main Branch';
+            const loanId = (loanIdIdx !== -1 && r[loanIdIdx]) ? r[loanIdIdx] : '-';
+            if (!branchMap[b]) branchMap[b] = { count: 0, latestLoanIds: [] };
+            branchMap[b].count++;
+            if (loanId !== '-' && branchMap[b].latestLoanIds.length < 3) {
+                branchMap[b].latestLoanIds.push(loanId);
+            }
+        });
+
+        const itemsHtml = Object.entries(branchMap).map(([branch, info]) => {
+            const sampleIds = info.latestLoanIds.map(id => `<span class="ticker-pill-id">#${id}</span>`).join(' ');
+            return `
+                <div class="ticker-item">
+                    <i class="fa-solid fa-code-branch" style="color: #38bdf8;"></i>
+                    <strong>${branch}</strong>
+                    <span class="ticker-pill-count">${info.count} Pending</span>
+                    <span>Loan IDs:</span>
+                    ${sampleIds || '<span class="ticker-pill-id">Queue Active</span>'}
+                </div>
+            `;
+        }).join('');
+
+        ticker.innerHTML = itemsHtml + itemsHtml;
+    }
+
+    function renderCreditRunningTickerBar(statusMap) {
+        const ticker = document.getElementById('creditRunningTickerContent');
+        if (!ticker) return;
+
+        const statusEntries = Object.entries(statusMap);
+        if (statusEntries.length === 0) {
+            ticker.innerHTML = `<div class="ticker-item">No credit status breakdown available.</div>`;
+            return;
+        }
+
+        const itemsHtml = statusEntries.map(([status, info]) => {
+            const isRejection = status.toLowerCase().includes('reject');
+            return `
+                <div class="ticker-item">
+                    <i class="fa-solid fa-circle-notch" style="color: #34d399;"></i>
+                    <strong>${status}</strong>
+                    <span>Count:</span>
+                    <span class="${isRejection ? 'ticker-pill-rej' : 'ticker-pill-count'}">${info.count.toLocaleString()}</span>
+                    <span>Approved Amount:</span>
+                    <span class="ticker-pill-amount">₹${info.amount.toLocaleString()}</span>
+                    ${isRejection ? `<span class="ticker-pill-rej"><i class="fa-solid fa-xmark"></i> Rejection Rate Active</span>` : ''}
+                </div>
+            `;
+        }).join('');
+
+        ticker.innerHTML = itemsHtml + itemsHtml;
+    }
+
+    window.handlePendingData = function(json) {
+        const icon = document.getElementById('refreshIcon');
+        if (icon) icon.classList.remove('spin-icon');
+
+        if (!json || !json.table) return;
+
+        const table = json.table;
+        headers = table.cols.map((col, index) => col.label ? col.label.trim() : `Column ${index + 1}`);
+        const loanIdIdx = findColIndex(headers, ['loan id', 'loan_id', 'loan no', 'loan_no', 'app id', 'application id', 'loanid', 'loan', 'id']);
+        const branchIdx = findColIndex(headers, ['branch name', 'branch', 'location', 'hub', 'office']);
+
+        allRows = table.rows.map(row => {
+            return row.c ? row.c.map(cell => (cell && cell.v !== null && cell.v !== undefined) ? String(cell.f || cell.v).trim() : '') : [];
+        }).filter(r => {
+            if (loanIdIdx !== -1 && (!r[loanIdIdx] || r[loanIdIdx].trim() === '')) return false;
+            
+            // Apply Master / Branch Filter globally
+            if (loggedInUser && loggedInUser !== 'MASTER' && branchIdx !== -1) {
+                const rowBranch = (r[branchIdx] || '').trim().toLowerCase();
+                if (rowBranch !== loggedInUser.toLowerCase()) return false;
+            }
+
+            return r.some(cell => cell !== '');
+        });
+
+        filteredRows = [...allRows];
+
+        renderAnalytics();
+        renderRunningTickerBar();
+        populateAppFilters();
+        renderTable(filteredRows);
+        renderBranchesMatrixSection();
+        renderColorfulBranchButtons();
+
+        if (currentOpenBranchName && document.getElementById('branchDialogModal').style.display === 'flex') {
+            renderBranchDialogContent(currentOpenBranchName);
+        }
+    };
+
+    /* BRANCH-WISE REJECTION DATA & TABLE HANDLER */
+    window.handleRejectionData = function(json) {
+        if (!json || !json.table) return;
+        rejHeaders = json.table.cols.map((col, idx) => col.label ? col.label.trim() : `Column ${idx + 1}`);
+        const branchIdx = findColIndex(rejHeaders, ['branch name', 'branch', 'location', 'hub', 'office']);
+        const loanIdIdx = findColIndex(rejHeaders, ['loan id', 'loan_id', 'loan no', 'loan_no', 'app id', 'application id', 'loanid', 'loan', 'id']);
+
+        allRejRows = json.table.rows.map(row => {
+            return row.c ? row.c.map(cell => (cell && cell.v !== null && cell.v !== undefined) ? String(cell.f || cell.v).trim() : '') : [];
+        }).filter(r => {
+            if (loanIdIdx !== -1 && (!r[loanIdIdx] || r[loanIdIdx].trim() === '')) return false;
+            
+            // Apply Master / Branch Filter globally
+            if (loggedInUser && loggedInUser !== 'MASTER' && branchIdx !== -1) {
+                const rowBranch = (r[branchIdx] || '').trim().toLowerCase();
+                if (rowBranch !== loggedInUser.toLowerCase()) return false;
+            }
+
+            return r.some(cell => cell !== '');
+        });
+
+        filteredRejRows = [...allRejRows];
+
+        populateRejFilters();
+        renderRejectionTable(filteredRejRows);
+
+        const totalRej = allRejRows.length;
+        const branchCounts = {};
+
+        allRejRows.forEach(r => {
+            const b = (branchIdx !== -1 && r[branchIdx]) ? r[branchIdx] : 'Unassigned Branch';
+            branchCounts[b] = (branchCounts[b] || 0) + 1;
+        });
+
+        const sortedBranches = Object.entries(branchCounts).sort((a, b) => b[1] - a[1]);
+
+        const ctx = document.getElementById('rejectionBranchChart').getContext('2d');
+        if (rejectionChartInstance) rejectionChartInstance.destroy();
+
+        const gradRejWave = ctx.createLinearGradient(0, 0, 0, 240);
+        gradRejWave.addColorStop(0, 'rgba(244, 63, 94, 0.55)');
+        gradRejWave.addColorStop(0.5, 'rgba(251, 113, 133, 0.25)');
+        gradRejWave.addColorStop(1, 'rgba(255, 241, 242, 0.02)');
+
+        rejectionChartInstance = new Chart(ctx, {
+            type: 'line',
+            data: {
+                labels: sortedBranches.map(b => b[0]),
+                datasets: [{
+                    label: 'Rejections',
+                    data: sortedBranches.map(b => b[1]),
+                    fill: true,
+                    backgroundColor: gradRejWave,
+                    borderColor: '#f43f5e',
+                    borderWidth: 3.5,
+                    tension: 0.42,
+                    pointBackgroundColor: '#ffffff',
+                    pointBorderColor: '#be123c',
+                    pointBorderWidth: 3,
+                    pointRadius: 5,
+                    pointHoverRadius: 8,
+                    pointHoverBackgroundColor: '#be123c',
+                    pointHoverBorderColor: '#ffffff'
+                }]
+            },
+            options: {
+                responsive: true,
+                maintainAspectRatio: false,
+                animation: {
+                    duration: 2000,
+                    easing: 'easeOutElastic'
+                },
+                layout: {
+                    padding: { top: 20, right: 12, left: 12, bottom: 2 }
+                },
+                plugins: {
+                    legend: { display: false },
+                    tooltip: {
+                        backgroundColor: 'rgba(15, 23, 42, 0.94)',
+                        titleFont: { size: 12, weight: '700' },
+                        bodyFont: { size: 11 },
+                        padding: 10,
+                        cornerRadius: 8,
+                        callbacks: {
+                            label: function(context) {
+                                const val = context.raw;
+                                const pct = totalRej > 0 ? ((val / totalRej) * 100).toFixed(1) : 0;
+                                return `Rejection Budget: ${val} (${pct}%)`;
+                            }
+                        }
+                    },
+                    datalabels: {
+                        anchor: 'end',
+                        align: 'top',
+                        offset: 4,
+                        formatter: (val) => {
+                            const pct = totalRej > 0 ? ((val / totalRej) * 100).toFixed(1) : 0;
+                            return `${val} (${pct}%)`;
+                        },
+                        font: { size: 9.5, weight: '800', family: 'Inter' },
+                        color: '#be123c'
+                    }
+                },
+                scales: {
+                    y: { 
+                        beginAtZero: true, 
+                        grid: { color: 'rgba(226, 232, 240, 0.7)', strokeDashArray: [4, 4] },
+                        ticks: { precision: 0, color: '#64748b', font: { weight: '600', size: 10 } } 
+                    },
+                    x: { 
+                        grid: { display: false },
+                        ticks: { autoSkip: false, maxRotation: 40, minRotation: 20, color: '#334155', font: { size: 9.5, weight: '700' } } 
+                    }
+                }
+            }
+        });
+    };
+
+    function populateRejFilters() {
+        const branchIdx = findColIndex(rejHeaders, ['branch name', 'branch', 'location', 'hub', 'office']);
+        const branchDropdown = document.getElementById('rejBranchFilter');
+        if (!branchDropdown || branchIdx === -1) return;
+
+        const branches = [...new Set(allRejRows.map(r => r[branchIdx]).filter(Boolean))].sort();
+        branchDropdown.innerHTML = `<option value="ALL">All Branches</option>` + 
+            branches.map(b => `<option value="${b}">${b}</option>`).join('');
+    }
+
+    function applyRejectionAppFilters() {
+        const selectedBranch = document.getElementById('rejBranchFilter').value;
+        const searchQuery = document.getElementById('rejGeneralSearch').value.trim().toLowerCase();
+        const branchIdx = findColIndex(rejHeaders, ['branch name', 'branch', 'location', 'hub', 'office']);
+
+        filteredRejRows = allRejRows.filter(r => {
+            const matchesBranch = (selectedBranch === 'ALL' || branchIdx === -1) ? true : (r[branchIdx] === selectedBranch);
+            const matchesSearch = (!searchQuery) ? true : r.some(cell => cell.toLowerCase().includes(searchQuery));
+            return matchesBranch && matchesSearch;
+        });
+
+        renderRejectionTable(filteredRejRows);
+    }
+
+    function renderRejectionTable(rows) {
+        const head = document.getElementById('rejTableHead');
+        const body = document.getElementById('rejTableBody');
+        const countDisplay = document.getElementById('rejectionRecordCountDisplay');
+
+        if (countDisplay) countDisplay.textContent = `Showing ${rows.length} of ${allRejRows.length} records`;
+        if (head) head.innerHTML = `<tr>${rejHeaders.map(h => `<th>${h}</th>`).join('')}</tr>`;
+
+        if (!body) return;
+        if (rows.length === 0) {
+            body.innerHTML = `<tr><td colspan="${rejHeaders.length || 1}" class="status-msg">No matching rejection records found.</td></tr>`;
+            return;
+        }
+
+        body.innerHTML = rows.map(r => `
+            <tr>${r.map(cell => `<td>${cell || '-'}</td>`).join('')}</tr>
+        `).join('');
+    }
+
+    function downloadRejectionFilteredExcel() {
+        if (!filteredRejRows || filteredRejRows.length === 0) {
+            alert("No rejection records found to download.");
+            return;
+        }
+        const wsData = [rejHeaders, ...filteredRejRows];
+        const wb = XLSX.utils.book_new();
+        const ws = XLSX.utils.aoa_to_sheet(wsData);
+        XLSX.utils.book_append_sheet(wb, ws, "Rejections_Filtered");
+        XLSX.writeFile(wb, `Rejection_Applications_${new Date().toISOString().slice(0,10)}.xlsx`);
+    }
+
+    function renderAnalytics() {
+        const total = allRows.length;
+        document.getElementById('totalPendingCount').textContent = total.toLocaleString();
+
+        const branchIdx = findColIndex(headers, ['branch name', 'branch', 'location', 'hub', 'office']);
+        const subCatIdx = findColIndex(headers, ['sub category', 'sub-category', 'subcategory', 'sub_category', 'reason']);
+        const loanIdIdx = findColIndex(headers, ['loan id', 'loan_id', 'loan no', 'loan_no', 'app id', 'application id', 'loanid', 'loan', 'id']);
+
+        const branchCounts = {};
+        allRows.forEach(r => {
+            const b = (branchIdx !== -1 && r[branchIdx]) ? r[branchIdx] : 'Unassigned Branch';
+            branchCounts[b] = (branchCounts[b] || 0) + 1;
+        });
+
+        const sortedBranches = Object.entries(branchCounts).sort((a, b) => b[1] - a[1]);
+        document.getElementById('totalBranchCount').textContent = Object.keys(branchCounts).length;
+
+        const top3 = sortedBranches.slice(0, 3);
+        const topListEl = document.getElementById('topBranchesList');
+        if (top3.length > 0) {
+            topListEl.innerHTML = top3.map(([branch, count], idx) => `
+                <li class="top-branch-item">
+                    <span><span class="rank-badge">#${idx + 1}</span><strong>${branch}</strong></span>
+                    <span style="font-weight: 800; color: #4f46e5;">${count} (${((count / total) * 100).toFixed(1)}%)</span>
+                </li>
+            `).join('');
+        }
+
+        const ctx = document.getElementById('branchChart').getContext('2d');
+        if (chartInstance) chartInstance.destroy();
+
+        const gradientWaveFill = ctx.createLinearGradient(0, 0, 0, 240);
+        gradientWaveFill.addColorStop(0, 'rgba(99, 102, 241, 0.55)');
+        gradientWaveFill.addColorStop(0.5, 'rgba(168, 85, 247, 0.28)');
+        gradientWaveFill.addColorStop(1, 'rgba(238, 242, 255, 0.02)');
+
+        chartInstance = new Chart(ctx, {
+            type: 'line',
+            data: {
+                labels: sortedBranches.map(b => b[0]),
+                datasets: [{
+                    label: 'Pending Loans',
+                    data: sortedBranches.map(b => b[1]),
+                    fill: true,
+                    backgroundColor: gradientWaveFill,
+                    borderColor: '#6366f1',
+                    borderWidth: 3.5,
+                    tension: 0.42,
+                    pointBackgroundColor: '#ffffff',
+                    pointBorderColor: '#4f46e5',
+                    pointBorderWidth: 3,
+                    pointRadius: 5,
+                    pointHoverRadius: 8,
+                    pointHoverBackgroundColor: '#4f46e5',
+                    pointHoverBorderColor: '#ffffff'
+                }]
+            },
+            options: {
+                responsive: true,
+                maintainAspectRatio: false,
+                animation: {
+                    duration: 2000,
+                    easing: 'easeOutElastic'
+                },
+                layout: {
+                    padding: { top: 20, right: 12, left: 12, bottom: 2 }
+                },
+                plugins: {
+                    legend: { display: false },
+                    tooltip: {
+                        backgroundColor: 'rgba(15, 23, 42, 0.94)',
+                        titleFont: { size: 12, weight: '700' },
+                        bodyFont: { size: 11 },
+                        padding: 10,
+                        cornerRadius: 8,
+                        callbacks: {
+                            label: function(context) {
+                                const val = context.raw;
+                                const pct = total > 0 ? ((val / total) * 100).toFixed(1) : 0;
+                                return `Pending Budget: ${val} (${pct}%)`;
+                            }
+                        }
+                    },
+                    datalabels: {
+                        anchor: 'end',
+                        align: 'top',
+                        offset: 4,
+                        formatter: (val) => {
+                            const pct = total > 0 ? ((val / total) * 100).toFixed(1) : 0;
+                            return `${val} (${pct}%)`;
+                        },
+                        font: { size: 9.5, weight: '800', family: 'Inter' },
+                        color: '#4338ca'
+                    }
+                },
+                scales: {
+                    y: { 
+                        beginAtZero: true, 
+                        grid: { color: 'rgba(226, 232, 240, 0.7)', strokeDashArray: [4, 4] },
+                        ticks: { precision: 0, color: '#64748b', font: { weight: '600', size: 10 } } 
+                    },
+                    x: { 
+                        grid: { display: false },
+                        ticks: { autoSkip: false, maxRotation: 40, minRotation: 20, color: '#334155', font: { size: 9.5, weight: '700' } } 
+                    }
+                }
+            }
+        });
+
+        const subCatMap = {};
+        allRows.forEach(r => {
+            const cat = (subCatIdx !== -1 && r[subCatIdx]) ? r[subCatIdx] : 'Unspecified Sub-Category';
+            const loanId = (loanIdIdx !== -1 && r[loanIdIdx]) ? r[loanIdIdx] : Math.random();
+            if (!subCatMap[cat]) subCatMap[cat] = new Set();
+            subCatMap[cat].add(loanId);
+        });
+
+        const sortedSubCats = Object.entries(subCatMap)
+            .map(([cat, set]) => [cat, set.size])
+            .sort((a, b) => b[1] - a[1]);
+
+        document.getElementById('subcatCountBadge').textContent = `${sortedSubCats.length} Categories`;
+        const subCatBody = document.getElementById('subCategoryTableBody');
+        const subCatFoot = document.getElementById('subCategoryTableFoot');
+
+        if (sortedSubCats.length > 0) {
+            let totalLoanIdSum = 0;
+            subCatBody.innerHTML = sortedSubCats.map(([cat, count]) => {
+                totalLoanIdSum += count;
+                const pct = total > 0 ? ((count / total) * 100).toFixed(1) : 0;
+                return `
+                    <tr>
+                        <td>
+                            <strong style="color: #1e293b;">${cat}</strong>
+                            <div class="progress-bar-bg">
+                                <div class="progress-bar-fill" style="width: ${pct}%;"></div>
+                            </div>
+                        </td>
+                        <td style="text-align: center; font-weight: 700; color: #475569;">${count}</td>
+                        <td style="text-align: right;"><span style="color: #6366f1; font-weight: 800;">${pct}%</span></td>
+                    </tr>
+                `;
+            }).join('');
+
+            subCatFoot.innerHTML = `
+                <tr>
+                    <td><strong>Total</strong></td>
+                    <td style="text-align: center; font-weight: 800; color: #1e293b;">${totalLoanIdSum}</td>
+                    <td style="text-align: right; font-weight: 800; color: #6366f1;">100%</td>
+                </tr>
+            `;
+        } else {
+            subCatFoot.innerHTML = '';
+        }
+    }
+
+    /* RENDER BRANCHES MATRIX SECTION */
+    function renderBranchesMatrixSection() {
+        const container = document.getElementById('branchMatrixContainer');
+        const badge = document.getElementById('branchesMatrixCountBadge');
+        const branchIdx = findColIndex(headers, ['branch name', 'branch', 'location', 'hub', 'office']);
+
+        if (!container) return;
+
+        if (branchIdx === -1 || allRows.length === 0) {
+            container.innerHTML = `<div class="status-msg">No branch data available to display.</div>`;
+            return;
+        }
+
+        const branchStats = {};
+        allRows.forEach(r => {
+            const b = r[branchIdx] ? r[branchIdx].trim() : 'Unknown Branch';
+            branchStats[b] = (branchStats[b] || 0) + 1;
+        });
+
+        const sortedBranches = Object.entries(branchStats).sort((a, b) => a[0].localeCompare(b[0]));
+        badge.textContent = `${sortedBranches.length} Branches Available`;
+
+        container.innerHTML = sortedBranches.map(([bName, count], idx) => {
+            const gradientBg = COLOR_PALETTES[idx % COLOR_PALETTES.length];
+            return `
+                <div class="branch-node-chip" style="background-image: ${gradientBg};" onclick="openBranchDialog('${escapeHtml(bName)}')">
+                    <div class="branch-node-info">
+                        <span class="branch-node-name" title="${bName}">
+                            <i class="fa-solid fa-code-branch" style="margin-right: 5px; font-size: 0.8rem;"></i>${bName}
+                        </span>
+                        <span class="branch-node-sub">Click to inspect</span>
+                    </div>
+                    <span class="branch-node-count">${count}</span>
+                </div>
+            `;
+        }).join('');
+    }
+
+    /* OPEN MAXIMIZED BRANCH DIALOG */
+    function openBranchDialog(branchName) {
+        currentOpenBranchName = branchName;
+        const modal = document.getElementById('branchDialogModal');
+        const searchInput = document.getElementById('branchDialogSearchInput');
+        if (searchInput) searchInput.value = '';
+
+        renderBranchDialogContent(branchName);
+        modal.style.display = 'flex';
+    }
+
+    function renderBranchDialogContent(branchName, filterQuery = '') {
+        const titleEl = document.getElementById('branchDialogTitleName');
+        const countBadge = document.getElementById('branchDialogCountBadge');
+        const bodyEl = document.getElementById('branchDialogTableBody');
+
+        titleEl.innerHTML = `<i class="fa-solid fa-building" style="color: #6366f1; margin-right: 8px;"></i>${branchName}`;
+
+        const branchIdx = findColIndex(headers, ['branch name', 'branch', 'location', 'hub', 'office']);
+        const loanIdIdx = findColIndex(headers, ['loan id', 'loan_id', 'loan no', 'loan_no', 'app id', 'application id', 'loanid', 'loan', 'id']);
+        const nameIdx = findColIndex(headers, ['member name', 'client name', 'customer name', 'borrower name', 'applicant name', 'name', 'member']);
+        const productIdx = findColIndex(headers, ['product name', 'product_name', 'product', 'scheme', 'product type']);
+        const groupIdx = findColIndex(headers, ['group name', 'group', 'center', 'group_name', 'center name', 'grp']);
+        const subCatIdx = findColIndex(headers, ['sub category', 'sub-category', 'subcategory', 'sub_category', 'reason']);
+        const cmRemarksIdx = findColIndex(headers, ['cm remarks', 'cm remark', 'remarks', 'remark', 'credit remarks']);
+
+        let branchPendingRecords = allRows.filter(r => {
+            const b = (branchIdx !== -1 && r[branchIdx]) ? r[branchIdx].trim() : '';
+            return b.toLowerCase() === branchName.toLowerCase();
+        });
+
+        countBadge.textContent = `${branchPendingRecords.length} Loans`;
+
+        if (filterQuery) {
+            branchPendingRecords = branchPendingRecords.filter(r => 
+                r.some(cell => String(cell).toLowerCase().includes(filterQuery.toLowerCase()))
+            );
+        }
+
+        if (branchPendingRecords.length === 0) {
+            bodyEl.innerHTML = `<tr><td colspan="7" class="status-msg">No pending records found for ${branchName}.</td></tr>`;
+            return;
+        }
+
+        bodyEl.innerHTML = branchPendingRecords.map((r, i) => {
+            const loanId = (loanIdIdx !== -1 && r[loanIdIdx]) ? r[loanIdIdx] : '-';
+            const name = (nameIdx !== -1 && r[nameIdx]) ? r[nameIdx] : '-';
+            const product = (productIdx !== -1 && r[productIdx]) ? r[productIdx] : '-';
+            const group = (groupIdx !== -1 && r[groupIdx]) ? r[groupIdx] : '-';
+            const subCat = (subCatIdx !== -1 && r[subCatIdx]) ? r[subCatIdx] : '';
+            const cmRemarks = (cmRemarksIdx !== -1 && r[cmRemarksIdx]) ? r[cmRemarksIdx] : '-';
+
+            const cleanLoanId = loanId.trim().toLowerCase();
+            const isLoanIdSubmitted = submittedLoanIdsSet.has(cleanLoanId);
+
+            let actionCellHtml = '';
+            if (isLoanIdSubmitted) {
+                actionCellHtml = `
+                    <span class="sent-symbol-badge">
+                        <i class="fa-solid fa-paper-plane"></i> Sent
+                    </span>
+                `;
+            } else {
+                const subCatNormalized = subCat.trim().toLowerCase();
+                const isKycIssue = subCatNormalized.includes('kyc image blank') || 
+                                   subCatNormalized.includes('kyc image wrong') || 
+                                   subCatNormalized === 'kyc image blank/wrong uploaded';
+
+                if (isKycIssue) {
+                    actionCellHtml = `
+                        <div style="display: flex; gap: 6px; align-items: center;">
+                            <input type="text" id="dlg_reply_input_${i}" class="reply-input-box" placeholder="Enter branch reply...">
+                            <button class="btn-submit-reply" onclick="submitClientReply('${escapeHtml(branchName)}', '${escapeHtml(loanId)}', '${escapeHtml(subCat)}', '${escapeHtml(cmRemarks)}', 'dlg_reply_input_${i}', this)">
+                                <i class="fa-solid fa-paper-plane"></i> Submit
+                            </button>
+                        </div>
+                    `;
+                } else {
+                    actionCellHtml = `
+                        <span class="mail-fallback-badge">
+                            <i class="fa-solid fa-envelope"></i> Send supporting via mail
+                        </span>
+                    `;
+                }
+            }
+
+            return `
+                <tr>
+                    <td style="font-weight: 800; color: #4338ca;"><i class="fa-solid fa-hashtag" style="font-size: 0.72rem; color: #a855f7;"></i> ${loanId}</td>
+                    <td style="font-weight: 700; color: #0284c7;"><i class="fa-solid fa-user" style="font-size: 0.72rem; margin-right: 4px; color: #38bdf8;"></i>${name}</td>
+                    <td><span style="background: linear-gradient(135deg, #eef2ff, #e0e7ff); border: 1px solid #c7d2fe; color: #3730a3; padding: 3px 8px; border-radius: 6px; font-weight: 700; font-size: 0.76rem;">${product}</span></td>
+                    <td style="font-weight: 600; color: #334155;">${group}</td>
+                    <td style="font-weight: 600; color: #64748b; font-size: 0.8rem;">${subCat || '-'}</td>
+                    <td style="color: #1e293b; line-height: 1.35; font-size: 0.8rem;">${cmRemarks}</td>
+                    <td>${actionCellHtml}</td>
+                </tr>
+            `;
+        }).join('');
+    }
+
+    function filterBranchDialogRows() {
+        const q = document.getElementById('branchDialogSearchInput').value.trim();
+        if (currentOpenBranchName) {
+            renderBranchDialogContent(currentOpenBranchName, q);
+        }
+    }
+
+    function refreshBranchDialogCurrent() {
+        loadSubmittedRepliesData();
+        if (currentOpenBranchName) {
+            renderBranchDialogContent(currentOpenBranchName);
+        }
+    }
+
+    function closeBranchDialog() {
+        document.getElementById('branchDialogModal').style.display = 'none';
+        currentOpenBranchName = "";
+    }
+
+    /* SILENT FETCH OF "ALL DATA" SHEET TO POWER REJECTION CALCULATIONS */
+    window.handleAllDataSilent = function(json) {
+        if (!json || !json.table) return;
+
+        creditAllHeaders = json.table.cols.map((col, i) => col.label ? col.label.trim() : `Column ${i + 1}`);
+        const loanIdIdx = findColIndex(creditAllHeaders, ['loan id', 'loan_id', 'loanid', 'loan', 'id']);
+        const statusIdx = findColIndex(creditAllHeaders, ['status']);
+        const branchIdx = findColIndex(creditAllHeaders, ['branch', 'branch name', 'location']);
+
+        creditAllRows = json.table.rows.map(row => {
+            return row.c ? row.c.map(cell => (cell && cell.v !== null && cell.v !== undefined) ? String(cell.f || cell.v).trim() : '') : [];
+        }).filter(r => {
+            if (loanIdIdx !== -1 && (!r[loanIdIdx] || r[loanIdIdx].trim() === '')) return false;
+
+            // Apply Master / Branch Filter globally
+            if (loggedInUser && loggedInUser !== 'MASTER' && branchIdx !== -1) {
+                const rowBranch = (r[branchIdx] || '').trim().toLowerCase();
+                if (rowBranch !== loggedInUser.toLowerCase()) return false;
+            }
+
+            return r.some(cell => cell !== '');
+        });
+
+        globalStatusMap = {};
+        globalBranchStatusMap = {};
+        globalTotalLoansCount = creditAllRows.length;
+        globalTotalRejectionClientsCount = 0;
+
+        creditAllRows.forEach(r => {
+            const status = statusIdx !== -1 && r[statusIdx] ? String(r[statusIdx]).trim() : 'Unassigned';
+            const branch = branchIdx !== -1 && r[branchIdx] ? String(r[branchIdx]).trim() : 'Unassigned';
+            const isReject = status.toLowerCase().includes('reject');
+
+            if (!globalStatusMap[status]) globalStatusMap[status] = 0;
+            globalStatusMap[status]++;
+
+            if (!globalBranchStatusMap[branch]) {
+                globalBranchStatusMap[branch] = { total: 0, reject: 0, other: 0 };
+            }
+            globalBranchStatusMap[branch].total++;
+            if (isReject) {
+                globalBranchStatusMap[branch].reject++;
+                globalTotalRejectionClientsCount++;
+            } else {
+                globalBranchStatusMap[branch].other++;
+            }
+        });
+
+        renderRejectionPieCard();
+        renderColorfulBranchButtons();
+    };
+
+    /* RENDER TOP METRIC CARD: TOTAL LOAN ID COUNT WITH REJECT CLIENT IN PIE CHART */
+    function renderRejectionPieCard() {
+        const totalLoans = globalTotalLoansCount;
+        const rejectLoans = globalTotalRejectionClientsCount;
+        const otherLoans = Math.max(0, totalLoans - rejectLoans);
+        const pct = totalLoans > 0 ? ((rejectLoans / totalLoans) * 100).toFixed(1) : 0;
+
+        const pctEl = document.getElementById('rejectionMiniPct');
+        const detailEl = document.getElementById('rejectionMiniDetail');
+
+        if (pctEl) pctEl.textContent = `${pct}%`;
+        if (detailEl) detailEl.textContent = `${rejectLoans.toLocaleString()} Rej / ${totalLoans.toLocaleString()} Total`;
+
+        const ctx = document.getElementById('rejectionMiniPieChart').getContext('2d');
+        if (miniPieChartInstance) miniPieChartInstance.destroy();
+
+        miniPieChartInstance = new Chart(ctx, {
+            type: 'pie',
+            data: {
+                labels: [`Total Loans (${otherLoans})`, `Reject Client (${rejectLoans})`],
+                datasets: [{
+                    data: totalLoans > 0 ? [otherLoans, rejectLoans] : [1, 0],
+                    backgroundColor: ['#6366f1', '#f43f5e'],
+                    hoverBackgroundColor: ['#4f46e5', '#e11d48'],
+                    borderWidth: 2,
+                    borderColor: '#ffffff'
+                }]
+            },
+            options: {
+                responsive: true,
+                maintainAspectRatio: false,
+                plugins: {
+                    legend: { display: false },
+                    tooltip: {
+                        enabled: true,
+                        callbacks: {
+                            label: function(context) {
+                                return ` ${context.label}: ${context.raw}`;
+                            }
+                        }
+                    },
+                    datalabels: { display: false }
+                }
+            }
+        });
+    }
+
+    /* RENDER COLORFUL BRANCH BUTTONS */
+    function renderColorfulBranchButtons() {
+        const container = document.getElementById('colorfulBranchButtonsGrid');
+        if (!container) return;
+
+        let branchList = Object.keys(globalBranchStatusMap);
+        if (branchList.length === 0) {
+            const branchIdx = findColIndex(headers, ['branch name', 'branch', 'location', 'hub', 'office']);
+            if (branchIdx !== -1 && allRows.length > 0) {
+                branchList = [...new Set(allRows.map(r => r[branchIdx]).filter(Boolean))];
+            }
+        }
+
+        if (branchList.length === 0) {
+            container.innerHTML = `<div class="status-msg" style="grid-column: 1/-1;">No branches found to display.</div>`;
+            return;
+        }
+
+        branchList.sort();
+
+        container.innerHTML = branchList.map((branch, i) => {
+            const grad = COLOR_PALETTES[i % COLOR_PALETTES.length];
+            const stats = globalBranchStatusMap[branch] || { total: 0, reject: 0 };
+            return `
+                <button class="colorful-branch-btn" style="background: ${grad};" onclick="openBranchCompareDialog('${escapeHtml(branch)}')">
+                    <span style="white-space: nowrap; overflow: hidden; text-overflow: ellipsis; max-width: 110px;">
+                        <i class="fa-solid fa-code-branch" style="margin-right: 5px; font-size: 0.72rem;"></i>${branch}
+                    </span>
+                    <span class="branch-btn-badge">${stats.total} Loans</span>
+                </button>
+            `;
+        }).join('');
+    }
+    
+    function toggleColorfulBranches() {
+        const grid = document.getElementById('colorfulBranchButtonsGrid');
+        if (grid.style.display === 'none') {
+            grid.style.display = 'grid';
+        } else {
+            grid.style.display = 'none';
+        }
+    }
+
+    /* OPEN INDIVIDUAL BRANCH COMPARE DIALOG */
+    function openBranchCompareDialog(branchName) {
+        const modal = document.getElementById('branchCompareDialogModal');
+        const titleEl = document.getElementById('compareBranchTitle');
+        const totalEl = document.getElementById('compareBranchTotalLoans');
+        const rejEl = document.getElementById('compareBranchRejections');
+        const pctEl = document.getElementById('compareBranchRejPct');
+
+        titleEl.textContent = `${branchName} - Status & Rejection Analysis`;
+
+        const stats = globalBranchStatusMap[branchName] || { total: 0, reject: 0, other: 0 };
+        const total = stats.total;
+        const rej = stats.reject;
+        const nonRej = Math.max(0, total - rej);
+        const pct = total > 0 ? ((rej / total) * 100).toFixed(1) : 0;
+
+        totalEl.textContent = total.toLocaleString();
+        rejEl.textContent = rej.toLocaleString();
+        pctEl.textContent = `${pct}%`;
+
+        modal.style.display = 'flex';
+
+        const ctx = document.getElementById('branchCompareChartCanvas').getContext('2d');
+        if (branchCompareChartInstance) branchCompareChartInstance.destroy();
+
+        branchCompareChartInstance = new Chart(ctx, {
+            type: 'bar',
+            data: {
+                labels: ['Total Loans', 'Rejected Clients', 'Non-Rejected Clients'],
+                datasets: [{
+                    label: branchName,
+                    data: [total, rej, nonRej],
+                    backgroundColor: [
+                        'rgba(99, 102, 241, 0.88)',
+                        'rgba(244, 63, 94, 0.88)',
+                        'rgba(16, 185, 129, 0.88)'
+                    ],
+                    borderColor: ['#6366f1', '#f43f5e', '#10b981'],
+                    borderWidth: 2,
+                    borderRadius: 12
+                }]
+            },
+            options: {
+                responsive: true,
+                maintainAspectRatio: false,
+                plugins: {
+                    legend: { display: false },
+                    datalabels: {
+                        anchor: 'end',
+                        align: 'top',
+                        font: { weight: '800', size: 12 },
+                        color: '#1e1b4b',
+                        formatter: (val) => val.toLocaleString()
+                    }
+                },
+                scales: {
+                    y: {
+                        beginAtZero: true,
+                        grid: { color: 'rgba(226, 232, 240, 0.8)' },
+                        ticks: { precision: 0 }
+                    },
+                    x: {
+                        grid: { display: false }
+                    }
+                }
+            }
+        });
+    }
+
+    function closeBranchCompareDialog() {
+        document.getElementById('branchCompareDialogModal').style.display = 'none';
+    }
+
+    /* OPEN ALL BRANCHES COMPARE DIALOG */
+    function openAllBranchesCompareDialog() {
+        const modal = document.getElementById('allBranchesCompareDialogModal');
+        const totalEl = document.getElementById('allCompareTotalLoans');
+        const rejEl = document.getElementById('allCompareTotalRejections');
+        const pctEl = document.getElementById('allCompareRejPct');
+        const tbody = document.getElementById('allBranchesCompareTableBody');
+
+        const totalLoans = globalTotalLoansCount;
+        const totalRejections = globalTotalRejectionClientsCount;
+        const overallPct = totalLoans > 0 ? ((totalRejections / totalLoans) * 100).toFixed(1) : 0;
+
+        totalEl.textContent = totalLoans.toLocaleString();
+        rejEl.textContent = totalRejections.toLocaleString();
+        pctEl.textContent = `${overallPct}%`;
+
+        const branchEntries = Object.entries(globalBranchStatusMap).sort((a, b) => b[1].total - a[1].total);
+
+        if (branchEntries.length === 0) {
+            tbody.innerHTML = `<tr><td colspan="4" class="status-msg">No status data available from sheet.</td></tr>`;
+        } else {
+            tbody.innerHTML = branchEntries.map(([branch, data]) => {
+                const bPct = data.total > 0 ? ((data.reject / data.total) * 100).toFixed(1) : 0;
+                return `
+                    <tr>
+                        <td><strong><i class="fa-solid fa-building" style="color: #6366f1; margin-right: 6px;"></i>${branch}</strong></td>
+                        <td style="text-align: center; font-weight: 700; color: #1e1b4b;">${data.total.toLocaleString()}</td>
+                        <td style="text-align: center; font-weight: 700; color: #f43f5e;">${data.reject.toLocaleString()}</td>
+                        <td style="text-align: right; font-weight: 800; color: #e11d48;">${bPct}%</td>
+                    </tr>
+                `;
+            }).join('');
+        }
+
+        modal.style.display = 'flex';
+    }
+
+    function closeAllBranchesCompareDialog() {
+        document.getElementById('allBranchesCompareDialogModal').style.display = 'none';
+    }
+
+    function escapeHtml(text) {
+        return (text || '').replace(/'/g, "\\'");
+    }
+
+    async function submitClientReply(branch, loanId, subCat, cmRemarks, inputId, btn) {
+        const inputEl = document.getElementById(inputId);
+        const replyText = inputEl.value.trim();
+
+        if (!replyText) {
+            alert('Please enter a reply before submitting.');
+            return;
+        }
+
+        const originalText = btn.innerHTML;
+        btn.innerHTML = `<i class="fa-solid fa-spinner fa-spin"></i> Submitting...`;
+        btn.disabled = true;
+
+        const payload = {
+            targetSheet: TARGET_SUBMIT_SHEET,
+            spreadsheetId: SUBMIT_SPREADSHEET_ID,
+            branchName: branch,
+            loanId: loanId,
+            subCategory: subCat,
+            cmRemarks: cmRemarks,
+            replyText: replyText,
+            timestamp: new Date().toLocaleString()
+        };
+
+        try {
+            await fetch(GOOGLE_APP_SCRIPT_URL, {
+                method: 'POST',
+                mode: 'no-cors',
+                headers: { 'Content-Type': 'application/json' },
+                body: JSON.stringify(payload)
+            });
+
+            btn.innerHTML = `<i class="fa-solid fa-paper-plane"></i> Sent`;
+            btn.style.background = '#10b981';
+            inputEl.value = '';
+            alert(`Reply for Loan ID: ${loanId} successfully submitted!`);
+            loadSubmittedRepliesData();
+        } catch (err) {
+            console.error(err);
+            alert('Submission failed. Check network connection or webhook endpoint.');
+            btn.innerHTML = originalText;
+            btn.disabled = false;
+        }
+    }
+
+    function populateAppFilters() {
+        const branchIdx = findColIndex(headers, ['branch name', 'branch', 'location', 'hub', 'office']);
+        const branchDropdown = document.getElementById('appBranchFilter');
+
+        if (branchIdx !== -1) {
+            const branches = [...new Set(allRows.map(r => r[branchIdx]).filter(Boolean))].sort();
+            branchDropdown.innerHTML = `<option value="ALL">All Branches</option>` + 
+                branches.map(b => `<option value="${b}">${b}</option>`).join('');
+            
+            // Auto select branch if logged in as specific branch
+            if (loggedInUser && loggedInUser !== 'MASTER') {
+                branchDropdown.value = loggedInUser;
+                // Optional: disable dropdown so they can't change it if they are restricted
+                // branchDropdown.disabled = true; 
+            }
+        }
+    }
+
+    function applyPendingAppFilters() {
+        const selectedBranch = document.getElementById('appBranchFilter').value;
+        const searchQuery = document.getElementById('appGeneralSearch').value.trim().toLowerCase();
+
+        const branchIdx = findColIndex(headers, ['branch name', 'branch', 'location', 'hub', 'office']);
+
+        filteredRows = allRows.filter(r => {
+            const matchesBranch = (selectedBranch === 'ALL' || branchIdx === -1) ? true : (r[branchIdx] === selectedBranch);
+            const matchesSearch = (!searchQuery) ? true : r.some(cell => cell.toLowerCase().includes(searchQuery));
+            return matchesBranch && matchesSearch;
+        });
+
+        renderTable(filteredRows);
+    }
+
+    function renderTable(rows) {
+        const head = document.getElementById('tableHead');
+        const body = document.getElementById('tableBody');
+        const countDisplay = document.getElementById('recordCountDisplay');
+
+        countDisplay.textContent = `Showing ${rows.length} of ${allRows.length} records`;
+        head.innerHTML = `<tr>${headers.map(h => `<th>${h}</th>`).join('')}</tr>`;
+
+        if (rows.length === 0) {
+            body.innerHTML = `<tr><td colspan="${headers.length || 1}" class="status-msg">No matching records found for the applied filters.</td></tr>`;
+            return;
+        }
+
+        body.innerHTML = rows.map(r => `
+            <tr>${r.map(cell => `<td>${cell || '-'}</td>`).join('')}</tr>
+        `).join('');
+    }
+
+    function downloadPendingFilteredExcel() {
+        if (!filteredRows || filteredRows.length === 0) {
+            alert("No records found to download.");
+            return;
+        }
+        const wsData = [headers, ...filteredRows];
+        const wb = XLSX.utils.book_new();
+        const ws = XLSX.utils.aoa_to_sheet(wsData);
+        XLSX.utils.book_append_sheet(wb, ws, "Pending_Filtered");
+        XLSX.writeFile(wb, `Pending_Applications_Filtered_${new Date().toISOString().slice(0,10)}.xlsx`);
+    }
+
+    function openLoginModal() {
+        document.getElementById('loginModal').style.display = 'flex';
+        document.getElementById('creditPassword').value = '';
+        document.getElementById('loginError').style.display = 'none';
+        setTimeout(() => document.getElementById('creditPassword').focus(), 100);
+    }
+    function closeLoginModal() { document.getElementById('loginModal').style.display = 'none'; }
+    
+    function validateLogin() {
+        const pass = document.getElementById('creditPassword').value.trim();
+        // Credit dashboard can still be accessed via same master passwords or old hardcoded ones
+        if (MASTER_PASSWORDS.includes(pass) || pass === "Ganjam@123" || pass === "Credit@12687") {
+            closeLoginModal();
+            document.getElementById('creditScreen').style.display = 'block';
+            fetchNotification();
+            loadGoogleSheetData('All data', 'handleAllData');
+            setTimeout(initAllMeshCanvases, 100);
+        } else {
+            document.getElementById('loginError').style.display = 'block';
+        }
+    }
+    function closeCreditScreen() { document.getElementById('creditScreen').style.display = 'none'; }
+
+    /* Credit Dashboard Analytics & Render */
+    window.handleAllData = function(json) {
+        const icon = document.getElementById('creditRefreshIcon');
+        if (icon) icon.classList.remove('spin-icon');
+        if (!json || !json.table) return;
+
+        creditAllHeaders = json.table.cols.map((col, i) => col.label ? col.label.trim() : `Column ${i + 1}`);
+        const loanIdIdx = findColIndex(creditAllHeaders, ['loan id', 'loan_id', 'loanid', 'loan', 'id']);
+        const branchIdx = findColIndex(creditAllHeaders, ['branch', 'branch name', 'location']);
+
+        creditAllRows = json.table.rows.map(row => {
+            return row.c ? row.c.map(cell => (cell && cell.v !== null && cell.v !== undefined) ? String(cell.f || cell.v).trim() : '') : [];
+        }).filter(r => {
+            if (loanIdIdx !== -1 && (!r[loanIdIdx] || r[loanIdIdx].trim() === '')) return false;
+
+            // Apply Master / Branch Filter globally
+            if (loggedInUser && loggedInUser !== 'MASTER' && branchIdx !== -1) {
+                const rowBranch = (r[branchIdx] || '').trim().toLowerCase();
+                if (rowBranch !== loggedInUser.toLowerCase()) return false;
+            }
+
+            return r.some(cell => cell !== '');
+        });
+
+        renderCreditAnalytics();
+        handleAllDataSilent(json); // Also refresh the mini-pie chart on main page
+    };
+
+    function renderCreditAnalytics() {
+        const statusIdx = findColIndex(creditAllHeaders, ['status']);
+        const amountIdx = findColIndex(creditAllHeaders, ['approved amount', 'sanction amount', 'amount', 'approved']);
+        const branchIdx = findColIndex(creditAllHeaders, ['branch', 'branch name', 'location']);
+        const productIdx = findColIndex(creditAllHeaders, ['product', 'product name']);
+        const cycleIdx = findColIndex(creditAllHeaders, ['loan cycle', 'cycle']);
+
+        let jlgCount = 0;
+        let jlgTotalAmount = 0;
+
+        const statusMap = {};
+        const branchMap = {};
+        const productMap = {};
+        const allBranchBusinessMap = {};
+
+        creditAllRows.forEach(row => {
+            const status = statusIdx !== -1 && row[statusIdx] ? String(row[statusIdx]).trim() : 'Unassigned';
+            const amount = amountIdx !== -1 && !isNaN(parseFloat(row[amountIdx])) ? parseFloat(row[amountIdx]) : 0;
+            const branch = branchIdx !== -1 && row[branchIdx] ? String(row[branchIdx]).trim() : 'Unassigned';
+            const productRaw = productIdx !== -1 && row[productIdx] ? String(row[productIdx]).trim() : 'Unspecified';
+            const product = productRaw.toLowerCase();
+            const cycle = cycleIdx !== -1 && row[cycleIdx] ? String(row[cycleIdx]).trim().toLowerCase() : '';
+
+            if (!allBranchBusinessMap[branch]) allBranchBusinessMap[branch] = { count: 0, amount: 0 };
+            allBranchBusinessMap[branch].count++;
+            allBranchBusinessMap[branch].amount += amount;
+
+            const isJlg248 = product.includes('jlg 248') || product.includes('jlg248');
+            const is1stCycle = cycle.includes('1st cycle') || cycle === '1';
+
+            if (isJlg248 && is1stCycle) {
+                jlgCount++;
+                jlgTotalAmount += amount;
+
+                if (!branchMap[branch]) branchMap[branch] = { count: 0, amount: 0 };
+                branchMap[branch].count++;
+                branchMap[branch].amount += amount;
+            }
+
+            if (!statusMap[status]) statusMap[status] = { count: 0, amount: 0 };
+            statusMap[status].count++;
+            statusMap[status].amount += amount;
+
+            if (!productMap[productRaw]) productMap[productRaw] = { count: 0, amount: 0 };
+            productMap[productRaw].count++;
+            productMap[productRaw].amount += amount;
+        });
+
+        let sanctionLoans = 0;
+        let sanctionAmount = 0;
+        Object.keys(statusMap).forEach(stKey => {
+            if (stKey.toLowerCase().includes('sanction')) {
+                sanctionLoans += statusMap[stKey].count;
+                sanctionAmount += statusMap[stKey].amount;
+            }
+        });
+
+        document.getElementById('creditTotalLoans').textContent = sanctionLoans.toLocaleString();
+        document.getElementById('creditTotalAmount').textContent = '₹' + sanctionAmount.toLocaleString();
+        document.getElementById('creditJlgCount').textContent = jlgCount.toLocaleString();
+        document.getElementById('creditActiveBranchesCount').textContent = Object.keys(allBranchBusinessMap).length;
+
+        renderCreditRunningTickerBar(statusMap);
+
+        const statusBody = document.getElementById('creditStatusTableBody');
+        const statusFoot = document.getElementById('creditStatusTableFoot');
+        let totalStatusLoans = 0;
+        let totalStatusAmount = 0;
+
+        statusBody.innerHTML = Object.entries(statusMap).map(([st, data]) => {
+            totalStatusLoans += data.count;
+            totalStatusAmount += data.amount;
+            return `
+                <tr>
+                    <td><strong>${st}</strong></td>
+                    <td style="text-align: center; font-weight: 700;">${data.count.toLocaleString()}</td>
+                    <td style="text-align: right; font-weight: 700; color: #10b981;">₹${data.amount.toLocaleString()}</td>
+                </tr>
+            `;
+        }).join('');
+
+        statusFoot.innerHTML = `
+            <tr>
+                <td><strong>Total</strong></td>
+                <td style="text-align: center; font-weight: 800; color: #1e293b;">${totalStatusLoans.toLocaleString()}</td>
+                <td style="text-align: right; font-weight: 800; color: #10b981;">₹${totalStatusAmount.toLocaleString()}</td>
+            </tr>
+        `;
+
+        const allBranchBody = document.getElementById('creditTotalBranchBusinessBody');
+        const allBranchFoot = document.getElementById('creditTotalBranchBusinessFoot');
+        const sortedAllBranches = Object.entries(allBranchBusinessMap).sort((a, b) => b[1].amount - a[1].amount);
+        const totalOverallBranchAmount = Object.values(allBranchBusinessMap).reduce((acc, c) => acc + c.amount, 0);
+        const totalOverallBranchLoans = Object.values(allBranchBusinessMap).reduce((acc, c) => acc + c.count, 0);
+
+        document.getElementById('creditBranchTotalCountBadge').textContent = `${sortedAllBranches.length} Branches`;
+
+        if (sortedAllBranches.length > 0) {
+            allBranchBody.innerHTML = sortedAllBranches.map(([br, data]) => {
+                const pct = totalOverallBranchAmount > 0 ? ((data.amount / totalOverallBranchAmount) * 100).toFixed(1) : 0;
+                return `
+                    <tr>
+                        <td><strong>${br}</strong></td>
+                        <td style="text-align: center; font-weight: 700;">${data.count.toLocaleString()}</td>
+                        <td style="text-align: right; font-weight: 700; color: #10b981;">₹${data.amount.toLocaleString()}</td>
+                        <td style="text-align: right; font-weight: 700; color: #0284c7;">${pct}%</td>
+                    </tr>
+                `;
+            }).join('');
+
+            allBranchFoot.innerHTML = `
+                <tr>
+                    <td><strong>Total</strong></td>
+                    <td style="text-align: center; font-weight: 800; color: #1e293b;">${totalOverallBranchLoans.toLocaleString()}</td>
+                    <td style="text-align: right; font-weight: 800; color: #10b981;">₹${totalOverallBranchAmount.toLocaleString()}</td>
+                    <td style="text-align: right; font-weight: 800; color: #0284c7;">100%</td>
+                </tr>
+            `;
+        } else {
+            allBranchBody.innerHTML = `<tr><td colspan="4" class="status-msg">No branch business records found</td></tr>`;
+            allBranchFoot.innerHTML = '';
+        }
+
+        const productBody = document.getElementById('creditProductTableBody');
+        const productFoot = document.getElementById('creditProductTableFoot');
+        const grandTotalProductAmount = Object.values(productMap).reduce((acc, curr) => acc + curr.amount, 0);
+        const grandTotalProductCount = Object.values(productMap).reduce((acc, curr) => acc + curr.count, 0);
+        const sortedProducts = Object.entries(productMap).sort((a, b) => b[1].count - a[1].count);
+
+        if (sortedProducts.length > 0) {
+            productBody.innerHTML = sortedProducts.map(([prod, data]) => {
+                const pct = grandTotalProductAmount > 0 ? ((data.amount / grandTotalProductAmount) * 100).toFixed(1) : 0;
+                return `
+                    <tr>
+                        <td><strong>${prod}</strong></td>
+                        <td style="text-align: center; font-weight: 700;">${data.count.toLocaleString()}</td>
+                        <td style="text-align: right; font-weight: 700; color: #10b981;">₹${data.amount.toLocaleString()}</td>
+                        <td style="text-align: right; font-weight: 800; color: #6366f1;">${pct}%</td>
+                    </tr>
+                `;
+            }).join('');
+
+            productFoot.innerHTML = `
+                <tr>
+                    <td><strong>Total</strong></td>
+                    <td style="text-align: center; font-weight: 800; color: #1e293b;">${grandTotalProductCount.toLocaleString()}</td>
+                    <td style="text-align: right; font-weight: 800; color: #10b981;">₹${grandTotalProductAmount.toLocaleString()}</td>
+                    <td style="text-align: right; font-weight: 800; color: #6366f1;">100%</td>
+                </tr>
+            `;
+        } else {
+            productBody.innerHTML = `<tr><td colspan="4" class="status-msg">No product data found</td></tr>`;
+            productFoot.innerHTML = '';
+        }
+
+        const branchBody = document.getElementById('creditBranchTableBody');
+        const branchFoot = document.getElementById('creditBranchTableFoot');
+        const sortedBranches = Object.entries(branchMap).sort((a, b) => b[1].count - a[1].count);
+
+        if (sortedBranches.length > 0) {
+            branchBody.innerHTML = sortedBranches.map(([br, data]) => {
+                const pct = jlgTotalAmount > 0 ? ((data.amount / jlgTotalAmount) * 100).toFixed(1) : 0;
+                return `
+                    <tr>
+                        <td><strong>${br}</strong></td>
+                        <td style="text-align: center; font-weight: 700;">${data.count.toLocaleString()}</td>
+                        <td style="text-align: right; font-weight: 700; color: #10b981;">₹${data.amount.toLocaleString()}</td>
+                        <td style="text-align: right; font-weight: 800; color: #6366f1;">${pct}%</td>
+                    </tr>
+                `;
+            }).join('');
+
+            branchFoot.innerHTML = `
+                <tr>
+                    <td><strong>Total</strong></td>
+                    <td style="text-align: center; font-weight: 800; color: #1e293b;">${jlgCount.toLocaleString()}</td>
+                    <td style="text-align: right; font-weight: 800; color: #10b981;">₹${jlgTotalAmount.toLocaleString()}</td>
+                    <td style="text-align: right; font-weight: 800; color: #6366f1;">100%</td>
+                </tr>
+            `;
+        } else {
+            branchBody.innerHTML = `<tr><td colspan="4" class="status-msg">No branch records for JLG (1st Cycle Pass) found</td></tr>`;
+            branchFoot.innerHTML = '';
+        }
+
+        const ctx = document.getElementById('creditStatusChart').getContext('2d');
+        if (creditChartInstance) creditChartInstance.destroy();
+
+        const labels = Object.keys(statusMap);
+        const counts = labels.map(l => statusMap[l].count);
+        const amounts = labels.map(l => statusMap[l].amount);
+
+        const gradCredit = ctx.createLinearGradient(0, 0, 0, 220);
+        gradCredit.addColorStop(0, '#f43f5e');
+        gradCredit.addColorStop(1, '#be123c');
+
+        creditChartInstance = new Chart(ctx, {
+            type: 'bar',
+            data: {
+                labels: labels,
+                datasets: [
+                    {
+                        type: 'line',
+                        label: 'Loan Count',
+                        data: counts,
+                        borderColor: '#3b82f6',
+                        backgroundColor: '#3b82f6',
+                        yAxisID: 'yCount',
+                        showLine: true,
+                        tension: 0.35,
+                        pointRadius: 4.5,
+                        pointHoverRadius: 7,
+                        datalabels: { display: false }
+                    },
+                    {
+                        type: 'bar',
+                        label: 'Approved Amount',
+                        data: amounts,
+                        backgroundColor: gradCredit,
+                        borderRadius: 8,
+                        yAxisID: 'yAmount',
+                        barThickness: 26,
+                        datalabels: { display: false }
+                    }
+                ]
+            },
+            options: {
+                responsive: true,
+                maintainAspectRatio: false,
+                scales: {
+                    x: {
+                        grid: { display: false },
+                        ticks: { font: { size: 10 } }
+                    },
+                    yCount: {
+                        type: 'linear',
+                        position: 'left',
+                        beginAtZero: true,
+                        grid: { display: false },
+                        ticks: { color: '#3b82f6', font: { size: 10 } }
+                    },
+                    yAmount: {
+                        type: 'linear',
+                        position: 'right',
+                        beginAtZero: true,
+                        grid: { color: '#f1f5f9' },
+                        ticks: { color: '#ef4444', font: { size: 10 } }
+                    }
+                }
+            }
+        });
+    }
+
+    // Initialize ONLY what's needed on window load; data fetch awaits successful login
+    window.onload = function() {
+        document.getElementById('mainLoginPassword').focus();
+    };
+
+    window.addEventListener('click', function(event) {
+        const branchModal = document.getElementById('branchDialogModal');
+        const compareModal = document.getElementById('branchCompareDialogModal');
+        const allCompareModal = document.getElementById('allBranchesCompareDialogModal');
+        const matrixModal = document.getElementById('matrixCalculatorModal');
+        const emiModal = document.getElementById('emiCalculatorModal');
+
+        const welcomeOverlay = document.getElementById('welcomeCatalogueOverlay');
+
+        if (event.target === branchModal) closeBranchDialog();
+        if (event.target === compareModal) closeBranchCompareDialog();
+        if (event.target === allCompareModal) closeAllBranchesCompareDialog();
+        if (event.target === matrixModal) closeMatrixDialog();
+        if (event.target === emiModal) closeEmiDialog();
+        if (event.target === welcomeOverlay) closeWelcomeCatalogue();
+    });
+
+    window.addEventListener('keydown', function(event) {
+        if (event.key === 'Escape') {
+            const welcomeOverlay = document.getElementById('welcomeCatalogueOverlay');
+            if (welcomeOverlay && welcomeOverlay.style.display === 'flex') {
+                closeWelcomeCatalogue();
+            }
+        }
+    });
+
+    /* THEME & SESSION CONTROLLERS */
+    function toggleDarkMode() {
+        document.body.classList.toggle('dark-mode');
+        const btn = document.getElementById('darkModeBtn');
+        if (document.body.classList.contains('dark-mode')) {
+            btn.innerHTML = '<i class="fa-solid fa-sun" style="color: #fbbf24;"></i> Light Mode';
+        } else {
+            btn.innerHTML = '<i class="fa-solid fa-moon"></i> Dark Mode';
+        }
+    }
+
+    function logoutApp() {
+        loggedInUser = null;
+        sessionHasShownWelcomeCredit = false;
+        document.getElementById('mainDashboardContainer').style.display = 'none';
+        document.getElementById('mainLoginOverlay').style.display = 'flex';
+        document.getElementById('mainLoginPassword').value = '';
+        document.getElementById('mainLoginError').style.display = 'none';
+        
+        // Clear tables to prevent data viewing before next valid login
+        allRows = [];
+        filteredRows = [];
+        allRejRows = [];
+        filteredRejRows = [];
+        
+        document.getElementById('tableBody').innerHTML = '<tr><td class="status-msg">Fetching records from Google Sheet...</td></tr>';
+        document.getElementById('rejTableBody').innerHTML = '<tr><td class="status-msg">Fetching rejection records from Google Sheet...</td></tr>';
+    }
+</script>
+</body>
+</html>
