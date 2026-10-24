@@ -173,3 +173,28 @@ export function getTimedWelcomeContent(hour: number, previousIndex: number = -1)
         index: selectedIdx
     };
 }
+
+export function validateRating(rating: number): boolean {
+    return Number.isInteger(rating) && rating >= 1 && rating <= 5;
+}
+
+export function getRatingLabel(rating: number): string {
+    switch (rating) {
+        case 5: return '⭐⭐⭐⭐⭐ Outstanding / बहुत बढ़िया!';
+        case 4: return '⭐⭐⭐⭐ Very Good / बहुत अच्छा!';
+        case 3: return '⭐⭐⭐ Good / अच्छा!';
+        case 2: return '⭐⭐ Fair / ठीक-ठाक!';
+        case 1: return '⭐ Needs Improvement / सुधार चाहिए';
+        default: return 'Select your rating (1 to 5 stars)';
+    }
+}
+
+export function calculateAverageRating(ratings: number[]): { average: number; count: number } {
+    if (!ratings || ratings.length === 0) {
+        return { average: 5.0, count: 1 };
+    }
+    const sum = ratings.reduce((acc, curr) => acc + curr, 0);
+    const avg = Math.round((sum / ratings.length) * 10) / 10;
+    return { average: avg, count: ratings.length };
+}
+

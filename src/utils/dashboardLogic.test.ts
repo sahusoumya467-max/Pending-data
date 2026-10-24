@@ -4,7 +4,10 @@ import {
     authenticateUser, 
     getTimeOfDay, 
     getTimedWelcomeContent, 
-    TIMING_WISE_CONTENT 
+    TIMING_WISE_CONTENT,
+    validateRating,
+    getRatingLabel,
+    calculateAverageRating
 } from './dashboardLogic';
 
 test('authenticateUser: validates master password correctly', () => {
@@ -66,3 +69,24 @@ test('getTimedWelcomeContent: changes selection and avoids immediate repeat when
     const second = getTimedWelcomeContent(8, first.index);
     assert.notEqual(first.index, second.index);
 });
+
+test('validateRating: checks valid star rating values between 1 and 5', () => {
+    assert.equal(validateRating(1), true);
+    assert.equal(validateRating(5), true);
+    assert.equal(validateRating(3), true);
+    assert.equal(validateRating(0), false);
+    assert.equal(validateRating(6), false);
+    assert.equal(validateRating(3.5), false);
+});
+
+test('getRatingLabel: returns descriptive labels for ratings', () => {
+    assert.ok(getRatingLabel(5).includes('Outstanding'));
+    assert.ok(getRatingLabel(1).includes('Needs Improvement'));
+});
+
+test('calculateAverageRating: computes accurate average and count', () => {
+    const res = calculateAverageRating([5, 4, 5, 5, 4]);
+    assert.equal(res.average, 4.6);
+    assert.equal(res.count, 5);
+});
+

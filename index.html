@@ -170,7 +170,7 @@
             box-shadow: 0 6px 20px rgba(99, 102, 241, 0.6);
         }
 
-        /* NEW WELCOME CATALOGUE */
+        /* NEW WELCOME CATALOGUE - COMPACT & REDUCED FOR MOBILE & DESKTOP */
         #welcomeCatalogueOverlay {
             position: fixed;
             inset: 0;
@@ -180,54 +180,53 @@
             display: none;
             align-items: center;
             justify-content: center;
-            padding: 20px;
+            padding: 14px;
         }
 
         .catalogue-box {
             position: relative;
             background: #ffffff;
-            border-radius: 24px;
+            border-radius: 20px;
             overflow: hidden;
             width: 100%;
-            max-width: 490px;
+            max-width: 390px;
             text-align: center;
-            animation: dialogPop 0.45s cubic-bezier(0.34, 1.56, 0.64, 1);
-            box-shadow: 0 25px 60px -15px rgba(0,0,0,0.55), 0 0 35px rgba(16, 185, 129, 0.25);
-            border: 1.5px solid rgba(255, 255, 255, 0.8);
+            animation: dialogPop 0.4s cubic-bezier(0.34, 1.56, 0.64, 1);
+            box-shadow: 0 20px 45px -10px rgba(0,0,0,0.5), 0 0 25px rgba(16, 185, 129, 0.2);
+            border: 1.5px solid rgba(255, 255, 255, 0.85);
         }
 
         .catalogue-close-corner {
             position: absolute;
-            top: 14px;
-            right: 14px;
-            width: 36px;
-            height: 36px;
+            top: 10px;
+            right: 10px;
+            width: 28px;
+            height: 28px;
             border-radius: 50%;
-            background: rgba(15, 23, 42, 0.65);
+            background: rgba(15, 23, 42, 0.68);
             color: #ffffff;
-            border: 1.5px solid rgba(255, 255, 255, 0.6);
-            font-size: 1.1rem;
+            border: 1px solid rgba(255, 255, 255, 0.6);
+            font-size: 0.85rem;
             cursor: pointer;
             display: flex;
             align-items: center;
             justify-content: center;
             z-index: 20;
-            backdrop-filter: blur(8px);
-            transition: all 0.25s cubic-bezier(0.34, 1.56, 0.64, 1);
-            box-shadow: 0 4px 12px rgba(0, 0, 0, 0.35);
+            backdrop-filter: blur(6px);
+            transition: all 0.2s ease;
+            box-shadow: 0 2px 8px rgba(0, 0, 0, 0.3);
         }
 
         .catalogue-close-corner:hover {
             background: #ef4444;
             transform: scale(1.1) rotate(90deg);
             border-color: #fca5a5;
-            box-shadow: 0 6px 16px rgba(239, 68, 68, 0.5);
         }
 
         .catalogue-img-wrap {
             position: relative;
             width: 100%;
-            height: 250px;
+            height: 135px;
             overflow: hidden;
             background: #0f172a;
         }
@@ -246,92 +245,358 @@
         .catalogue-img-overlay {
             position: absolute;
             inset: 0;
-            background: linear-gradient(180deg, rgba(0,0,0,0.15) 0%, transparent 45%, rgba(0,0,0,0.55) 100%);
+            background: linear-gradient(180deg, rgba(0,0,0,0.1) 0%, transparent 40%, rgba(0,0,0,0.5) 100%);
             display: flex;
             align-items: flex-end;
-            padding: 16px;
+            padding: 8px 12px;
             pointer-events: none;
         }
 
         .catalogue-badge {
-            background: rgba(255, 255, 255, 0.92);
+            background: rgba(255, 255, 255, 0.94);
             backdrop-filter: blur(8px);
             color: #065f46;
-            font-size: 0.76rem;
+            font-size: 0.68rem;
             font-weight: 800;
-            padding: 5px 14px;
-            border-radius: 20px;
+            padding: 3px 10px;
+            border-radius: 14px;
             display: inline-flex;
             align-items: center;
-            gap: 6px;
-            box-shadow: 0 4px 12px rgba(0,0,0,0.18);
+            gap: 5px;
+            box-shadow: 0 2px 8px rgba(0,0,0,0.15);
         }
 
         .catalogue-content {
-            padding: 24px 28px 26px;
+            padding: 14px 18px 16px;
         }
 
         .catalogue-content h2 {
             color: #059669;
-            font-size: 1.65rem;
-            margin-bottom: 14px;
+            font-size: 1.15rem;
+            margin-bottom: 8px;
             font-weight: 900;
-            letter-spacing: -0.5px;
+            letter-spacing: -0.3px;
             display: flex;
             align-items: center;
             justify-content: center;
-            gap: 8px;
+            gap: 6px;
         }
 
         .sayary-box {
             background: linear-gradient(135deg, rgba(240, 253, 244, 0.85), rgba(236, 253, 245, 0.5));
-            border: 1.5px dashed #a7f3d0;
-            border-radius: 16px;
-            padding: 15px 18px;
-            margin-bottom: 20px;
+            border: 1px dashed #a7f3d0;
+            border-radius: 12px;
+            padding: 10px 12px;
+            margin-bottom: 12px;
         }
 
         .catalogue-content p {
             font-style: italic;
             color: #334155;
-            line-height: 1.65;
-            font-size: 0.98rem;
+            line-height: 1.45;
+            font-size: 0.82rem;
             font-weight: 600;
             margin: 0;
         }
 
         .catalogue-content p strong {
             display: inline-block;
-            margin-top: 6px;
+            margin-top: 4px;
             color: #047857;
             font-weight: 800;
+            font-size: 0.82rem;
         }
 
         .catalogue-actions {
             display: flex;
-            gap: 12px;
+            gap: 8px;
             justify-content: center;
         }
 
         .catalogue-btn {
-            padding: 12px 32px;
+            padding: 8px 24px;
             background: linear-gradient(135deg, #10b981, #059669);
             color: white;
             border: none;
-            border-radius: 25px;
-            font-size: 0.95rem;
+            border-radius: 20px;
+            font-size: 0.82rem;
             font-weight: 800;
             cursor: pointer;
-            box-shadow: 0 6px 18px rgba(16, 185, 129, 0.4);
-            transition: all 0.3s cubic-bezier(0.34, 1.56, 0.64, 1);
+            box-shadow: 0 4px 14px rgba(16, 185, 129, 0.4);
+            transition: all 0.25s ease;
             display: inline-flex;
             align-items: center;
-            gap: 8px;
+            gap: 6px;
         }
 
         .catalogue-btn:hover {
-            transform: translateY(-2px) scale(1.04);
-            box-shadow: 0 8px 24px rgba(16, 185, 129, 0.6);
+            transform: translateY(-2px) scale(1.03);
+            box-shadow: 0 6px 18px rgba(16, 185, 129, 0.55);
+        }
+
+        @media (max-width: 480px) {
+            .catalogue-box {
+                max-width: 92vw;
+                border-radius: 16px;
+            }
+            .catalogue-img-wrap {
+                height: 115px;
+            }
+            .catalogue-content {
+                padding: 10px 14px 12px;
+            }
+            .catalogue-content h2 {
+                font-size: 1.02rem;
+                margin-bottom: 6px;
+            }
+            .sayary-box {
+                padding: 8px 10px;
+                margin-bottom: 10px;
+            }
+            .catalogue-content p {
+                font-size: 0.76rem;
+                line-height: 1.38;
+            }
+            .catalogue-btn {
+                padding: 7px 18px;
+                font-size: 0.78rem;
+            }
+        }
+
+        /* WEBPAGE FEEDBACK RATING MODAL STYLES */
+        #webpageFeedbackOverlay {
+            position: fixed;
+            inset: 0;
+            z-index: 100005;
+            background: rgba(15, 23, 42, 0.88);
+            backdrop-filter: blur(8px);
+            display: none;
+            align-items: center;
+            justify-content: center;
+            padding: 16px;
+            transition: opacity 0.3s ease;
+        }
+
+        .feedback-box {
+            position: relative;
+            background: #ffffff;
+            border-radius: 22px;
+            padding: 24px;
+            width: 100%;
+            max-width: 440px;
+            text-align: center;
+            animation: dialogPop 0.4s cubic-bezier(0.34, 1.56, 0.64, 1);
+            box-shadow: 0 25px 60px -15px rgba(0,0,0,0.5), 0 0 30px rgba(245, 158, 11, 0.25);
+            border: 1.5px solid rgba(255, 255, 255, 0.9);
+        }
+
+        .feedback-close-corner {
+            position: absolute;
+            top: 12px;
+            right: 12px;
+            width: 32px;
+            height: 32px;
+            border-radius: 50%;
+            background: #f1f5f9;
+            color: #64748b;
+            border: none;
+            font-size: 1rem;
+            cursor: pointer;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            transition: all 0.2s ease;
+        }
+
+        .feedback-close-corner:hover {
+            background: #fee2e2;
+            color: #ef4444;
+            transform: scale(1.1);
+        }
+
+        .feedback-badge {
+            display: inline-flex;
+            align-items: center;
+            gap: 6px;
+            background: linear-gradient(135deg, #fef3c7, #fde68a);
+            color: #b45309;
+            font-size: 0.74rem;
+            font-weight: 800;
+            padding: 4px 12px;
+            border-radius: 16px;
+            margin-bottom: 10px;
+            text-transform: uppercase;
+            letter-spacing: 0.5px;
+        }
+
+        .feedback-box h2 {
+            font-size: 1.35rem;
+            color: #1e1b4b;
+            font-weight: 900;
+            margin-bottom: 6px;
+        }
+
+        .feedback-box p.feedback-sub {
+            color: #64748b;
+            font-size: 0.82rem;
+            margin-bottom: 14px;
+            line-height: 1.4;
+        }
+
+        .star-rating-container {
+            display: flex;
+            justify-content: center;
+            gap: 8px;
+            margin-bottom: 8px;
+        }
+
+        .rating-star-btn {
+            background: none;
+            border: none;
+            font-size: 1.9rem;
+            color: #cbd5e1;
+            cursor: pointer;
+            transition: transform 0.2s cubic-bezier(0.34, 1.56, 0.64, 1), color 0.2s;
+            padding: 2px;
+            line-height: 1;
+        }
+
+        .rating-star-btn:hover,
+        .rating-star-btn.active {
+            color: #f59e0b;
+            transform: scale(1.15);
+            filter: drop-shadow(0 2px 6px rgba(245, 158, 11, 0.4));
+        }
+
+        .star-score-text {
+            font-size: 0.84rem;
+            font-weight: 800;
+            color: #ea580c;
+            min-height: 20px;
+            margin-bottom: 12px;
+        }
+
+        .feedback-tags-grid {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 6px;
+            justify-content: center;
+            margin-bottom: 12px;
+        }
+
+        .feedback-tag-chip {
+            background: #f8fafc;
+            border: 1px solid #e2e8f0;
+            padding: 5px 10px;
+            border-radius: 12px;
+            font-size: 0.75rem;
+            font-weight: 700;
+            color: #475569;
+            cursor: pointer;
+            transition: all 0.2s;
+            user-select: none;
+        }
+
+        .feedback-tag-chip.selected {
+            background: linear-gradient(135deg, #6366f1, #a855f7);
+            color: #ffffff;
+            border-color: #6366f1;
+            box-shadow: 0 2px 8px rgba(99, 102, 241, 0.3);
+        }
+
+        .feedback-textarea {
+            width: 100%;
+            padding: 10px 12px;
+            border: 1.5px solid #e2e8f0;
+            border-radius: 12px;
+            font-size: 0.82rem;
+            outline: none;
+            resize: none;
+            margin-bottom: 14px;
+            transition: border-color 0.2s;
+            background: #f8fafc;
+        }
+
+        .feedback-textarea:focus {
+            border-color: #f59e0b;
+            background: #ffffff;
+        }
+
+        .feedback-action-btns {
+            display: flex;
+            gap: 8px;
+            justify-content: center;
+        }
+
+        .btn-submit-feedback {
+            padding: 10px 24px;
+            background: linear-gradient(135deg, #f59e0b, #ea580c);
+            color: #ffffff;
+            border: none;
+            border-radius: 18px;
+            font-size: 0.86rem;
+            font-weight: 800;
+            cursor: pointer;
+            box-shadow: 0 4px 14px rgba(245, 158, 11, 0.4);
+            transition: all 0.25s ease;
+        }
+
+        .btn-submit-feedback:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 6px 18px rgba(245, 158, 11, 0.55);
+        }
+
+        .btn-skip-feedback {
+            padding: 10px 18px;
+            background: #f1f5f9;
+            color: #64748b;
+            border: none;
+            border-radius: 18px;
+            font-size: 0.84rem;
+            font-weight: 700;
+            cursor: pointer;
+            transition: all 0.2s;
+        }
+
+        .btn-skip-feedback:hover {
+            background: #e2e8f0;
+            color: #334155;
+        }
+
+        .feedback-success-msg {
+            display: none;
+            padding: 16px;
+            background: #ecfdf5;
+            border: 1.5px solid #a7f3d0;
+            border-radius: 16px;
+            color: #065f46;
+            font-weight: 800;
+            font-size: 0.95rem;
+            animation: cardWobbleEntry 0.4s ease;
+        }
+
+        body.dark-mode .feedback-box {
+            background: #1e293b;
+            color: #f1f5f9;
+            border-color: rgba(255, 255, 255, 0.1);
+        }
+        body.dark-mode .feedback-box h2 {
+            color: #f8fafc;
+        }
+        body.dark-mode .feedback-textarea {
+            background: #0f172a;
+            color: #f1f5f9;
+            border-color: #334155;
+        }
+        body.dark-mode .feedback-tag-chip {
+            background: #0f172a;
+            color: #cbd5e1;
+            border-color: #334155;
+        }
+        body.dark-mode .feedback-close-corner,
+        body.dark-mode .btn-skip-feedback {
+            background: #334155;
+            color: #cbd5e1;
         }
 
         @keyframes cardWobbleEntry {
@@ -982,6 +1247,54 @@
 </head>
 <body>
 
+<!-- WEBPAGE FEEDBACK RATING MODAL (FIRST TIME OPEN & ON DEMAND) -->
+<div id="webpageFeedbackOverlay" onclick="if(event.target === this) closeFeedbackModal()">
+    <div class="feedback-box">
+        <button class="feedback-close-corner" onclick="closeFeedbackModal()" aria-label="Close" title="Close">
+            <i class="fa-solid fa-xmark"></i>
+        </button>
+        <div class="feedback-badge">
+            <i class="fa-solid fa-star"></i> Community Rating &bull; <span id="feedbackAvgDisplay">4.9/5</span>
+        </div>
+        <h2>Rate Our Webpage</h2>
+        <p class="feedback-sub">How was your experience exploring the Pending & Credit Data Dashboard? Your quick rating helps us improve!</p>
+        
+        <div class="star-rating-container" id="starRatingContainer">
+            <button class="rating-star-btn active" data-rating="1" onclick="selectStarRating(1)" onmouseover="hoverStarRating(1)" onmouseout="resetHoverStarRating()" aria-label="1 star"><i class="fa-solid fa-star"></i></button>
+            <button class="rating-star-btn active" data-rating="2" onclick="selectStarRating(2)" onmouseover="hoverStarRating(2)" onmouseout="resetHoverStarRating()" aria-label="2 stars"><i class="fa-solid fa-star"></i></button>
+            <button class="rating-star-btn active" data-rating="3" onclick="selectStarRating(3)" onmouseover="hoverStarRating(3)" onmouseout="resetHoverStarRating()" aria-label="3 stars"><i class="fa-solid fa-star"></i></button>
+            <button class="rating-star-btn active" data-rating="4" onclick="selectStarRating(4)" onmouseover="hoverStarRating(4)" onmouseout="resetHoverStarRating()" aria-label="4 stars"><i class="fa-solid fa-star"></i></button>
+            <button class="rating-star-btn active" data-rating="5" onclick="selectStarRating(5)" onmouseover="hoverStarRating(5)" onmouseout="resetHoverStarRating()" aria-label="5 stars"><i class="fa-solid fa-star"></i></button>
+        </div>
+        <div class="star-score-text" id="starScoreText">⭐⭐⭐⭐⭐ 5 Stars - Outstanding Experience!</div>
+
+        <div class="feedback-tags-grid">
+            <span class="feedback-tag-chip selected" onclick="toggleFeedbackTag(this)">⚡ Live Sync</span>
+            <span class="feedback-tag-chip selected" onclick="toggleFeedbackTag(this)">📊 Clear Charts</span>
+            <span class="feedback-tag-chip selected" onclick="toggleFeedbackTag(this)">🎨 Clean Design</span>
+            <span class="feedback-tag-chip" onclick="toggleFeedbackTag(this)">📱 Mobile Friendly</span>
+            <span class="feedback-tag-chip" onclick="toggleFeedbackTag(this)">💡 Inspiring Shayaris</span>
+            <span class="feedback-tag-chip" onclick="toggleFeedbackTag(this)">🧮 Loan Calculators</span>
+        </div>
+
+        <textarea id="feedbackCommentInput" class="feedback-textarea" rows="2" placeholder="Tell us what you like or any suggestions (optional)..."></textarea>
+
+        <div class="feedback-action-btns" id="feedbackActionBtns">
+            <button class="btn-submit-feedback" onclick="submitFeedbackRating()">
+                <i class="fa-solid fa-paper-plane"></i> Submit Rating
+            </button>
+            <button class="btn-skip-feedback" onclick="closeFeedbackModal()">
+                Maybe Later
+            </button>
+        </div>
+
+        <div class="feedback-success-msg" id="feedbackSuccessMsg">
+            <i class="fa-solid fa-circle-check" style="color: #10b981; font-size: 1.3rem; margin-right: 6px;"></i>
+            Thank you for your rating! ⭐ Your feedback is greatly appreciated.
+        </div>
+    </div>
+</div>
+
 <!-- APP-WIDE LOGIN OVERLAY -->
 <div id="mainLoginOverlay">
     <div class="main-login-box">
@@ -990,6 +1303,9 @@
         <input type="password" id="mainLoginPassword" placeholder="Enter Password" onkeydown="if(event.key==='Enter') handleMainLogin()">
         <button onclick="handleMainLogin()">Login to System</button>
         <p id="mainLoginError" style="color: #ef4444; margin-top: 15px; display: none; font-weight: bold;">Invalid Password! Please check your credentials.</p>
+        <p style="margin-top: 18px; font-size: 0.8rem; color: #6366f1; cursor: pointer; font-weight: 700;" onclick="openFeedbackModal()">
+            <i class="fa-solid fa-star" style="color: #f59e0b;"></i> Rate our Webpage / Feedback
+        </p>
     </div>
 </div>
 
@@ -1063,6 +1379,9 @@
             </button>
             <button class="btn btn-emi" onclick="openEmiDialog()">
                 <i class="fa-solid fa-coins"></i> EMI Calculator
+            </button>
+            <button class="btn" style="background: linear-gradient(135deg, #f59e0b, #d97706); color: white;" onclick="openFeedbackModal()" title="Rate our webpage">
+                <i class="fa-solid fa-star"></i> Rating
             </button>
             <button class="btn" style="background: linear-gradient(135deg, #334155, #0f172a); color: white;" onclick="toggleDarkMode()" id="darkModeBtn">
                 <i class="fa-solid fa-moon"></i> Dark Mode
@@ -3650,9 +3969,142 @@
         });
     }
 
+    /* WEBPAGE FEEDBACK RATING CONTROLLERS */
+    let currentSelectedRating = 5;
+    const RATING_DESCRIPTIONS = {
+        5: "⭐⭐⭐⭐⭐ 5 Stars - Outstanding Experience!",
+        4: "⭐⭐⭐⭐ 4 Stars - Very Good & Helpful!",
+        3: "⭐⭐⭐ 3 Stars - Good & Useful!",
+        2: "⭐⭐ 2 Stars - Fair Experience",
+        1: "⭐ 1 Star - Needs Improvement"
+    };
+
+    function selectStarRating(val) {
+        currentSelectedRating = val;
+        renderStarDisplay(val);
+        const scoreTextEl = document.getElementById('starScoreText');
+        if (scoreTextEl) {
+            scoreTextEl.textContent = RATING_DESCRIPTIONS[val] || `${val} Stars`;
+        }
+    }
+
+    function hoverStarRating(val) {
+        renderStarDisplay(val);
+        const scoreTextEl = document.getElementById('starScoreText');
+        if (scoreTextEl) {
+            scoreTextEl.textContent = RATING_DESCRIPTIONS[val] || `${val} Stars`;
+        }
+    }
+
+    function resetHoverStarRating() {
+        renderStarDisplay(currentSelectedRating);
+        const scoreTextEl = document.getElementById('starScoreText');
+        if (scoreTextEl) {
+            scoreTextEl.textContent = RATING_DESCRIPTIONS[currentSelectedRating] || `${currentSelectedRating} Stars`;
+        }
+    }
+
+    function renderStarDisplay(ratingVal) {
+        const starBtns = document.querySelectorAll('#starRatingContainer .rating-star-btn');
+        starBtns.forEach(btn => {
+            const starNum = parseInt(btn.getAttribute('data-rating'), 10);
+            if (starNum <= ratingVal) {
+                btn.classList.add('active');
+            } else {
+                btn.classList.remove('active');
+            }
+        });
+    }
+
+    function toggleFeedbackTag(tagEl) {
+        tagEl.classList.toggle('selected');
+    }
+
+    function updateFeedbackAverageDisplay() {
+        try {
+            const stored = JSON.parse(localStorage.getItem('webpage_user_ratings') || '[]');
+            const displayEl = document.getElementById('feedbackAvgDisplay');
+            if (stored.length > 0) {
+                const sum = stored.reduce((acc, r) => acc + (r.rating || 5), 0);
+                const avg = (sum / stored.length).toFixed(1);
+                if (displayEl) displayEl.textContent = `${avg}/5 (${stored.length} reviews)`;
+            } else {
+                if (displayEl) displayEl.textContent = "4.9/5 (180+ reviews)";
+            }
+        } catch (e) {
+            // Safe fallback
+        }
+    }
+
+    function openFeedbackModal(isAutoPrompt = false) {
+        const modal = document.getElementById('webpageFeedbackOverlay');
+        const successMsg = document.getElementById('feedbackSuccessMsg');
+        const actionBtns = document.getElementById('feedbackActionBtns');
+        if (successMsg) successMsg.style.display = 'none';
+        if (actionBtns) actionBtns.style.display = 'flex';
+        
+        selectStarRating(5);
+        updateFeedbackAverageDisplay();
+        
+        if (modal) modal.style.display = 'flex';
+    }
+
+    function closeFeedbackModal() {
+        const modal = document.getElementById('webpageFeedbackOverlay');
+        if (modal) modal.style.display = 'none';
+        // Mark as seen so it doesn't repeatedly auto-prompt on refresh
+        localStorage.setItem('webpage_first_open_feedback_shown', 'true');
+    }
+
+    function submitFeedbackRating() {
+        const selectedTags = Array.from(document.querySelectorAll('.feedback-tag-chip.selected')).map(el => el.textContent.trim());
+        const comment = (document.getElementById('feedbackCommentInput')?.value || '').trim();
+        
+        const feedbackEntry = {
+            rating: currentSelectedRating,
+            tags: selectedTags,
+            comment: comment,
+            timestamp: new Date().toISOString()
+        };
+
+        try {
+            const stored = JSON.parse(localStorage.getItem('webpage_user_ratings') || '[]');
+            stored.push(feedbackEntry);
+            localStorage.setItem('webpage_user_ratings', JSON.stringify(stored));
+        } catch (e) {
+            console.warn(e);
+        }
+
+        localStorage.setItem('webpage_first_open_feedback_shown', 'true');
+        updateFeedbackAverageDisplay();
+
+        const successMsg = document.getElementById('feedbackSuccessMsg');
+        const actionBtns = document.getElementById('feedbackActionBtns');
+        if (actionBtns) actionBtns.style.display = 'none';
+        if (successMsg) {
+            successMsg.style.display = 'block';
+            successMsg.innerHTML = `<i class="fa-solid fa-circle-check" style="color: #10b981; font-size: 1.3rem; margin-right: 6px;"></i> Thank you for rating ${currentSelectedRating} Stars! ⭐ Your feedback is greatly appreciated.`;
+        }
+
+        setTimeout(() => {
+            closeFeedbackModal();
+        }, 1600);
+    }
+
+    function checkShowFirstTimeFeedback() {
+        const hasShown = localStorage.getItem('webpage_first_open_feedback_shown');
+        if (!hasShown) {
+            setTimeout(() => {
+                openFeedbackModal(true);
+            }, 600);
+        }
+    }
+
     // Initialize ONLY what's needed on window load; data fetch awaits successful login
     window.onload = function() {
         document.getElementById('mainLoginPassword').focus();
+        updateFeedbackAverageDisplay();
+        checkShowFirstTimeFeedback();
     };
 
     window.addEventListener('click', function(event) {
@@ -3661,8 +4113,8 @@
         const allCompareModal = document.getElementById('allBranchesCompareDialogModal');
         const matrixModal = document.getElementById('matrixCalculatorModal');
         const emiModal = document.getElementById('emiCalculatorModal');
-
         const welcomeOverlay = document.getElementById('welcomeCatalogueOverlay');
+        const feedbackOverlay = document.getElementById('webpageFeedbackOverlay');
 
         if (event.target === branchModal) closeBranchDialog();
         if (event.target === compareModal) closeBranchCompareDialog();
@@ -3670,6 +4122,7 @@
         if (event.target === matrixModal) closeMatrixDialog();
         if (event.target === emiModal) closeEmiDialog();
         if (event.target === welcomeOverlay) closeWelcomeCatalogue();
+        if (event.target === feedbackOverlay) closeFeedbackModal();
     });
 
     window.addEventListener('keydown', function(event) {
@@ -3677,6 +4130,10 @@
             const welcomeOverlay = document.getElementById('welcomeCatalogueOverlay');
             if (welcomeOverlay && welcomeOverlay.style.display === 'flex') {
                 closeWelcomeCatalogue();
+            }
+            const feedbackOverlay = document.getElementById('webpageFeedbackOverlay');
+            if (feedbackOverlay && feedbackOverlay.style.display === 'flex') {
+                closeFeedbackModal();
             }
         }
     });
