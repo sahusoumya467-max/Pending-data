@@ -198,3 +198,27 @@ export function calculateAverageRating(ratings: number[]): { average: number; co
     return { average: avg, count: ratings.length };
 }
 
+export interface ClientDetailData {
+    loanId: string;
+    memberName: string;
+    groupName: string;
+    subCategory: string;
+    cmRemarks: string;
+}
+
+export function formatClientModalDetails(
+    loanId?: string,
+    memberName?: string,
+    groupName?: string,
+    subCategory?: string,
+    cmRemarks?: string
+): ClientDetailData {
+    return {
+        loanId: (loanId || '-').trim(),
+        memberName: (memberName || '-').trim(),
+        groupName: (groupName || '-').trim(),
+        subCategory: (subCategory && subCategory.trim()) ? subCategory.trim() : 'None / Not Specified',
+        cmRemarks: (cmRemarks && cmRemarks.trim()) ? cmRemarks.trim() : 'No remarks recorded'
+    };
+}
+

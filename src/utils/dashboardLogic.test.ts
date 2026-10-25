@@ -7,7 +7,8 @@ import {
     TIMING_WISE_CONTENT,
     validateRating,
     getRatingLabel,
-    calculateAverageRating
+    calculateAverageRating,
+    formatClientModalDetails
 } from './dashboardLogic';
 
 test('authenticateUser: validates master password correctly', () => {
@@ -88,5 +89,21 @@ test('calculateAverageRating: computes accurate average and count', () => {
     const res = calculateAverageRating([5, 4, 5, 5, 4]);
     assert.equal(res.average, 4.6);
     assert.equal(res.count, 5);
+});
+
+test('formatClientModalDetails: correctly formats client modal fields and handles fallbacks', () => {
+    const populated = formatClientModalDetails('100234', 'Sunita Devi', 'Maa Tarini SHG', 'KYC image blank', 'Please re-upload voter ID');
+    assert.equal(populated.loanId, '100234');
+    assert.equal(populated.memberName, 'Sunita Devi');
+    assert.equal(populated.groupName, 'Maa Tarini SHG');
+    assert.equal(populated.subCategory, 'KYC image blank');
+    assert.equal(populated.cmRemarks, 'Please re-upload voter ID');
+
+    const empty = formatClientModalDetails('', '', '', '', '');
+    assert.equal(empty.loanId, '-');
+    assert.equal(empty.memberName, '-');
+    assert.equal(empty.groupName, '-');
+    assert.equal(empty.subCategory, 'None / Not Specified');
+    assert.equal(empty.cmRemarks, 'No remarks recorded');
 });
 
