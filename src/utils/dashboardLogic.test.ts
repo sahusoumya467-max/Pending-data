@@ -8,7 +8,8 @@ import {
     validateRating,
     getRatingLabel,
     calculateAverageRating,
-    formatClientModalDetails
+    formatClientModalDetails,
+    getFestivalAndOccasionInfo
 } from './dashboardLogic';
 
 test('authenticateUser: validates master password correctly', () => {
@@ -105,5 +106,37 @@ test('formatClientModalDetails: correctly formats client modal fields and handle
     assert.equal(empty.groupName, '-');
     assert.equal(empty.subCategory, 'None / Not Specified');
     assert.equal(empty.cmRemarks, 'No remarks recorded');
+});
+
+test('getFestivalAndOccasionInfo: correctly detects Diwali season for October 26', () => {
+    const testDate = new Date(2026, 9, 26); // October is month index 9
+    const info = getFestivalAndOccasionInfo(testDate);
+    assert.equal(info.isFestival, true);
+    assert.ok(info.occasionName.includes('Deepavali'));
+    assert.ok(info.wishTitle.includes('Deepavali'));
+    assert.equal(info.hasLightsSky, true);
+    assert.equal(info.hasBalloons, true);
+    assert.ok(info.formattedDate.includes('26 October 2026'));
+});
+
+test('getFestivalAndOccasionInfo: detects New Year, Republic Day, and Independence Day', () => {
+    const ny = getFestivalAndOccasionInfo(new Date(2026, 0, 1)); // Jan 1
+    assert.ok(ny.occasionName.includes('New Year'));
+
+    const rep = getFestivalAndOccasionInfo(new Date(2026, 0, 26)); // Jan 26
+    assert.ok(rep.occasionName.includes('Republic Day'));
+
+    const ind = getFestivalAndOccasionInfo(new Date(2026, 7, 15)); // Aug 15
+    assert.ok(ind.occasionName.includes('Independence Day'));
+});
+
+test('getFestivalAndOccasionInfo: provides auspicious daily wish on non-designated dates', () => {
+    const regularDate = new Date(2026, 4, 10); // May 10
+    const info = getFestivalAndOccasionInfo(regularDate);
+    assert.equal(info.isFestival, false);
+    assert.ok(info.wishTitle.includes('Auspicious Day'));
+    assert.ok(info.formattedDate.includes('10 May 2026'));
+    assert.equal(info.hasLightsSky, true);
+    assert.equal(info.hasBalloons, true);
 });
 

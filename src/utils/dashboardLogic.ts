@@ -222,3 +222,302 @@ export function formatClientModalDetails(
     };
 }
 
+export interface FestivalOccasionInfo {
+    isFestival: boolean;
+    occasionName: string;
+    occasionHindi: string;
+    formattedDate: string;
+    wishTitle: string;
+    wishMessage: string;
+    wishHindi: string;
+    symbol: string;
+    themeColor: string;
+    bgGradient: string;
+    hasLightsSky: boolean;
+    hasBalloons: boolean;
+}
+
+export function getFestivalAndOccasionInfo(targetDate: Date = new Date()): FestivalOccasionInfo {
+    const month = targetDate.getMonth() + 1; // 1-12
+    const day = targetDate.getDate(); // 1-31
+    const year = targetDate.getFullYear();
+
+    const dayNames = ['Sunday', 'Monday', 'Tuesday', 'Wednesday', 'Thursday', 'Friday', 'Saturday'];
+    const monthNames = [
+        'January', 'February', 'March', 'April', 'May', 'June',
+        'July', 'August', 'September', 'October', 'November', 'December'
+    ];
+    
+    const dayName = dayNames[targetDate.getDay()];
+    const monthName = monthNames[targetDate.getMonth()];
+    const formattedDate = `${dayName}, ${day} ${monthName} ${year}`;
+
+    // 1. Diwali & Dhanteras / Kali Puja festive season (Late October / Early November)
+    if ((month === 10 && day >= 24) || (month === 11 && day <= 12)) {
+        return {
+            isFestival: true,
+            occasionName: "Shubh Deepavali & Dhanteras Mahotsav",
+            occasionHindi: "दीपावली व धनतेरस महापर्व की हार्दिक शुभकामनाएं",
+            formattedDate,
+            wishTitle: "✨ Shubh Deepavali & Festive Lights Celebration ✨",
+            wishMessage: "May the celestial golden lights of Deepavali illuminate your path with infinite wealth, vibrant health, supreme peace, and joyful achievements for you and your family!",
+            wishHindi: "सुख, समृद्धि, शांति और उत्तम स्वास्थ्य के मंगल दीप आपके जीवन को सदैव जगमगाते रहें। दीपावली महापर्व की अनंत शुभकामनाएं!",
+            symbol: "🪔",
+            themeColor: "#f59e0b",
+            bgGradient: "linear-gradient(135deg, #1e1b4b 0%, #311042 50%, #1e1b4b 100%)",
+            hasLightsSky: true,
+            hasBalloons: true
+        };
+    }
+
+    // 2. Chhath Puja (Late October / November)
+    if ((month === 10 && day >= 28) || (month === 11 && day >= 13 && day <= 18)) {
+        return {
+            isFestival: true,
+            occasionName: "Shubh Chhath Puja Mahaparv",
+            occasionHindi: "छठ पूजा महापर्व की हार्दिक शुभकामनाएं",
+            formattedDate,
+            wishTitle: "🌅 Shubh Chhath Puja Blessings 🌅",
+            wishMessage: "May Lord Surya and Chhathi Maiya shower divine radiance, good health, longevity, and boundless prosperity upon you and your loved ones!",
+            wishHindi: "सूर्यदेव और छठी मइया की असीम कृपा से आपका जीवन सदैव निरोगी, समृद्ध और खुशहाल रहे।",
+            symbol: "☀️",
+            themeColor: "#ea580c",
+            bgGradient: "linear-gradient(135deg, #431407 0%, #7c2d12 50%, #1e1b4b 100%)",
+            hasLightsSky: true,
+            hasBalloons: true
+        };
+    }
+
+    // 3. New Year (Dec 31 - Jan 3)
+    if ((month === 12 && day >= 31) || (month === 1 && day <= 3)) {
+        return {
+            isFestival: true,
+            occasionName: `Happy New Year ${month === 12 ? year + 1 : year}`,
+            occasionHindi: "नव वर्ष की हार्दिक शुभकामनाएं",
+            formattedDate,
+            wishTitle: `🎉 Happy New Year ${month === 12 ? year + 1 : year} Celebration 🎉`,
+            wishMessage: `Wishing you and your family 365 days of good health, magnificent milestones, joy, and grand success in ${month === 12 ? year + 1 : year}!`,
+            wishHindi: "यह नया साल आपके जीवन में नई उम्मीदें, अपार खुशियां, उत्तम स्वास्थ्य और सफलता के नए कीर्तिमान लेकर आए।",
+            symbol: "🎊",
+            themeColor: "#ec4899",
+            bgGradient: "linear-gradient(135deg, #1e1b4b 0%, #172554 50%, #3b0764 100%)",
+            hasLightsSky: true,
+            hasBalloons: true
+        };
+    }
+
+    // 4. Makar Sankranti / Pongal / Lohri (Jan 13 - 17)
+    if (month === 1 && day >= 13 && day <= 17) {
+        return {
+            isFestival: true,
+            occasionName: "Happy Makar Sankranti & Pongal",
+            occasionHindi: "मकर संक्रांति व पोंगल की हार्दिक शुभकामनाएं",
+            formattedDate,
+            wishTitle: "🪁 Makar Sankranti & Pongal Festive Joy 🪁",
+            wishMessage: "May the golden rays of the Uttarayan sun bless your days with sweet harvested happiness, warmth, and soaring success!",
+            wishHindi: "तिल-गुड़ की मिठास और पतंगों की उड़ान आपके जीवन में सुख, शांति और समृद्धि की नई ऊंचाई लाए।",
+            symbol: "🪁",
+            themeColor: "#f59e0b",
+            bgGradient: "linear-gradient(135deg, #1c1917 0%, #451a03 50%, #1e1b4b 100%)",
+            hasLightsSky: true,
+            hasBalloons: true
+        };
+    }
+
+    // 5. Republic Day (Jan 26)
+    if (month === 1 && day === 26) {
+        return {
+            isFestival: true,
+            occasionName: "Happy Republic Day of India",
+            occasionHindi: "गणतंत्र दिवस की हार्दिक शुभकामनाएं",
+            formattedDate,
+            wishTitle: "🇮🇳 Proud Republic Day Greetings 🇮🇳",
+            wishMessage: "Saluting the glorious constitution, rich heritage, and sovereign spirit of our nation. Wishing you a proud and inspired Republic Day!",
+            wishHindi: "संविधान और संप्रभुता के पावन पर्व पर देश के अमर बलिदानियों को नमन। जय हिन्द, जय भारत!",
+            symbol: "🇮🇳",
+            themeColor: "#0284c7",
+            bgGradient: "linear-gradient(135deg, #082f49 0%, #1e1b4b 50%, #064e3b 100%)",
+            hasLightsSky: true,
+            hasBalloons: true
+        };
+    }
+
+    // 6. Maha Shivratri (Feb/March)
+    if ((month === 2 && day >= 20) || (month === 3 && day <= 10)) {
+        return {
+            isFestival: true,
+            occasionName: "Har Har Mahadev - Shubh Maha Shivratri",
+            occasionHindi: "महाशिवरात्रि महापर्व की हार्दिक शुभकामनाएं",
+            formattedDate,
+            wishTitle: "🔱 Shubh Maha Shivratri Blessings 🔱",
+            wishMessage: "May Lord Shiva bestow divine wisdom, profound peace, unwavering strength, and everlasting auspiciousness upon your journey!",
+            wishHindi: "देवों के देव महादेव का आशीर्वाद आपके परिवार पर सदैव बना रहे। हर हर महादेव!",
+            symbol: "🔱",
+            themeColor: "#8b5cf6",
+            bgGradient: "linear-gradient(135deg, #1e1b4b 0%, #2e1065 50%, #0f172a 100%)",
+            hasLightsSky: true,
+            hasBalloons: true
+        };
+    }
+
+    // 7. Holi & Dola Purnima (March 15-30)
+    if (month === 3 && day >= 15 && day <= 30) {
+        return {
+            isFestival: true,
+            occasionName: "Happy Holi & Dola Purnima",
+            occasionHindi: "होली व डोल पूर्णिमा की हार्दिक शुभकामनाएं",
+            formattedDate,
+            wishTitle: "🎨 Vibrant Holi Celebration & Colors of Joy 🎨",
+            wishMessage: "May your life be painted with dazzling colors of joy, sweet affection, harmony, and grand prosperity this Holi!",
+            wishHindi: "रंगों का यह पावन उत्सव आपके जीवन में प्रेम, आनंद, उत्साह और खुशहाली के अनगिनत रंग भर दे।",
+            symbol: "🎨",
+            themeColor: "#ec4899",
+            bgGradient: "linear-gradient(135deg, #3b0764 0%, #701a75 50%, #1e1b4b 100%)",
+            hasLightsSky: true,
+            hasBalloons: true
+        };
+    }
+
+    // 8. Odia New Year (Maha Vishuva / Pana Sankranti) & Baisakhi / Poila Boishakh (April 13 - 16)
+    if (month === 4 && day >= 13 && day <= 16) {
+        return {
+            isFestival: true,
+            occasionName: "Maha Vishuva Pana Sankranti & Odia New Year",
+            occasionHindi: "महाविषुव संक्रांति, उड़िया नववर्ष व बैसाखी की शुभकामनाएं",
+            formattedDate,
+            wishTitle: "🌿 Subha Maha Vishuva Pana Sankranti 🌿",
+            wishMessage: "ମହାବିଷୁବ ସଂକ୍ରାନ୍ତି ଓ ଓଡ଼ିଆ ନବବର୍ଷର ଅନେକ ଅନେକ ଶୁଭେଚ୍ଛା! May the refreshing Pana and divine grace bring peace, good health, and sweet prosperity to your life.",
+            wishHindi: "महाविषुव संक्रांति और नववर्ष आपके जीवन में अमृतमयी ऊर्जा, सुख और अपार समृद्धि लेकर आए।",
+            symbol: "🏺",
+            themeColor: "#10b981",
+            bgGradient: "linear-gradient(135deg, #064e3b 0%, #065f46 50%, #1e1b4b 100%)",
+            hasLightsSky: true,
+            hasBalloons: true
+        };
+    }
+
+    // 9. Rath Yatra (June / July)
+    if ((month === 6 && day >= 20) || (month === 7 && day <= 15)) {
+        return {
+            isFestival: true,
+            occasionName: "Jai Jagannath - Holy Rath Yatra Mahotsav",
+            occasionHindi: "पवित्र रथयात्रा महोत्सव की हार्दिक शुभकामनाएं",
+            formattedDate,
+            wishTitle: "🚩 Jai Jagannath - Grand Rath Yatra Blessings 🚩",
+            wishMessage: "ଜୟ ଜଗନ୍ନାଥ! May Mahaprabhu Jagannath, Balabhadra, and Devi Subhadra bless your home with divine grace, good health, and everlasting happiness.",
+            wishHindi: "महाप्रभु जगन्नाथ जी की कृपा से आपके जीवन का रथ सुख, शांति, भक्ति और सफलता की ओर अग्रसर रहे।",
+            symbol: "🚩",
+            themeColor: "#ea580c",
+            bgGradient: "linear-gradient(135deg, #451a03 0%, #7c2d12 50%, #1e1b4b 100%)",
+            hasLightsSky: true,
+            hasBalloons: true
+        };
+    }
+
+    // 10. Independence Day (August 15)
+    if (month === 8 && day === 15) {
+        return {
+            isFestival: true,
+            occasionName: "Happy Independence Day of India",
+            occasionHindi: "स्वतंत्रता दिवस की हार्दिक शुभकामनाएं",
+            formattedDate,
+            wishTitle: "🇮🇳 Happy Independence Day 🇮🇳",
+            wishMessage: "Saluting the valor of our freedom heroes and celebrating 79 years of independence, unity, and growth. Vande Mataram!",
+            wishHindi: "आजादी के पावन पर्व पर सभी देशवासियों को हार्दिक शुभकामनाएं। विजयी विश्व तिरंगा प्यारा, झंडा ऊंचा रहे हमारा!",
+            symbol: "🇮🇳",
+            themeColor: "#0284c7",
+            bgGradient: "linear-gradient(135deg, #082f49 0%, #1e1b4b 50%, #064e3b 100%)",
+            hasLightsSky: true,
+            hasBalloons: true
+        };
+    }
+
+    // 11. Raksha Bandhan (August 18 - 25)
+    if (month === 8 && day >= 18 && day <= 25) {
+        return {
+            isFestival: true,
+            occasionName: "Happy Raksha Bandhan",
+            occasionHindi: "रक्षाबंधन पर्व की हार्दिक शुभकामनाएं",
+            formattedDate,
+            wishTitle: "🧵 Happy Raksha Bandhan Celebrations 🧵",
+            wishMessage: "Celebrating the sacred bond of unconditional love, lifelong care, and protection. Wishing you a blessed and joyful Raksha Bandhan!",
+            wishHindi: "स्नेह और विश्वास का पावन धागा आपके जीवन में सदा खुशियां और मधुर रिश्ते बनाए रखे।",
+            symbol: "🧵",
+            themeColor: "#ec4899",
+            bgGradient: "linear-gradient(135deg, #1e1b4b 0%, #4c0519 50%, #1e1b4b 100%)",
+            hasLightsSky: true,
+            hasBalloons: true
+        };
+    }
+
+    // 12. Ganesh Chaturthi (August 26 - Sep 15)
+    if ((month === 8 && day >= 26) || (month === 9 && day <= 15)) {
+        return {
+            isFestival: true,
+            occasionName: "Ganpati Bappa Morya - Shubh Ganesh Chaturthi",
+            occasionHindi: "गणेश चतुर्थी महापर्व की हार्दिक शुभकामनाएं",
+            formattedDate,
+            wishTitle: "🐘 Ganpati Bappa Morya 🐘",
+            wishMessage: "May Lord Ganesha, the Vighnaharta, remove all obstacles from your journey and bestow wisdom, health, and abundant prosperity!",
+            wishHindi: "विघ्नहर्ता भगवान श्री गणेश आपके जीवन के सभी संकट दूर करें और सुख-समृद्धि का वरदान दें।",
+            symbol: "🐘",
+            themeColor: "#f59e0b",
+            bgGradient: "linear-gradient(135deg, #1e1b4b 0%, #451a03 50%, #1e1b4b 100%)",
+            hasLightsSky: true,
+            hasBalloons: true
+        };
+    }
+
+    // 13. Gandhi Jayanti (Oct 2)
+    if (month === 10 && day === 2) {
+        return {
+            isFestival: true,
+            occasionName: "Shubh Gandhi Jayanti",
+            occasionHindi: "गांधी जयंती की हार्दिक शुभकामनाएं",
+            formattedDate,
+            wishTitle: "🕊️ Remembering Mahatma Gandhi 🕊️",
+            wishMessage: "Honoring the father of the nation and upholding eternal values of truth, harmony, non-violence, and selfless dedication.",
+            wishHindi: "सत्य, अहिंसा और सादगी के अमर प्रतीक राष्ट्रपिता महात्मा गांधी को कोटि-कोटि नमन।",
+            symbol: "🕊️",
+            themeColor: "#0284c7",
+            bgGradient: "linear-gradient(135deg, #082f49 0%, #1e1b4b 50%, #064e3b 100%)",
+            hasLightsSky: true,
+            hasBalloons: true
+        };
+    }
+
+    // 14. Christmas (Dec 22 - 28)
+    if (month === 12 && day >= 22 && day <= 28) {
+        return {
+            isFestival: true,
+            occasionName: "Merry Christmas & Season's Greetings",
+            occasionHindi: "क्रिसमस व नववर्ष की हार्दिक शुभकामनाएं",
+            formattedDate,
+            wishTitle: "🎄 Merry Christmas Celebrations 🎄",
+            wishMessage: "May the wonder of Christmas fill your heart with divine peace, warmth, cheerful laughter, and cherished memories with loved ones!",
+            wishHindi: "प्रभु ईसा मसीह की कृपा से आपका जीवन प्रेम, शांति, सद्भाव और आनंद से परिपूर्ण रहे।",
+            symbol: "🎄",
+            themeColor: "#10b981",
+            bgGradient: "linear-gradient(135deg, #064e3b 0%, #1e1b4b 50%, #881337 100%)",
+            hasLightsSky: true,
+            hasBalloons: true
+        };
+    }
+
+    // 15. Default: Auspicious Daily Occasion for any date of the year
+    return {
+        isFestival: false,
+        occasionName: "Shubh Din & Auspicious Daily Greetings",
+        occasionHindi: "आज का दिन आपके लिए शुभ व मंगलमय हो",
+        formattedDate,
+        wishTitle: "🌟 Auspicious Day Celebration & Warm Wishes 🌟",
+        wishMessage: `Wishing you a vibrant, healthy, and highly prosperous day on this auspicious ${dayName}! May your efforts bring outstanding accomplishments and peace to your family.`,
+        wishHindi: "आज का पावन दिन आपके जीवन में नई ऊर्जा, सकारात्मक विचार, उत्तम स्वास्थ्य और सफलता के स्वर्णिम अवसर लेकर आए।",
+        symbol: "✨",
+        themeColor: "#6366f1",
+        bgGradient: "linear-gradient(135deg, #1e1b4b 0%, #312e81 50%, #0f172a 100%)",
+        hasLightsSky: true,
+        hasBalloons: true
+    };
+}
+
