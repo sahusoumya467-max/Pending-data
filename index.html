@@ -3111,15 +3111,15 @@
 
 <!-- FEATURE DISABLED NOTIFICATION MODAL -->
 <div class="modal" id="featureDisabledModal" style="display: none; z-index: 1060;" onclick="if(event.target === this) closeFeatureDisabledModal()">
-    <div class="modal-content" style="max-width: 440px; text-align: center; padding: 24px;">
+    <div class="modal-content" style="max-width: 450px; text-align: center; padding: 24px; border-radius: 20px;">
         <div style="width: 56px; height: 56px; margin: 0 auto 14px; border-radius: 50%; background: #fee2e2; display: flex; align-items: center; justify-content: center; color: #ef4444; font-size: 1.6rem; box-shadow: 0 4px 14px rgba(239, 68, 68, 0.25);">
             <i class="fa-solid fa-ban"></i>
         </div>
         <h3 style="font-size: 1.15rem; font-weight: 800; color: #1e1b4b; margin-bottom: 8px;" id="disabledModalTitle">Option Disabled</h3>
         <p style="font-size: 0.88rem; color: #475569; line-height: 1.5; margin-bottom: 16px;" id="disabledModalText">
-            This option is currently disabled by administrator.
+            This option is currently disabled by administrator in Google Sheet. Disabled in Master password also.
         </p>
-        <div style="background: #f8fafc; border: 1.5px dashed #cbd5e1; border-radius: 12px; padding: 12px 14px; margin-bottom: 18px; text-align: left;">
+        <div style="background: #f8fafc; border: 1.5px dashed #cbd5e1; border-radius: 12px; padding: 12px 14px; margin-bottom: 16px; text-align: left;">
             <div style="font-size: 0.72rem; text-transform: uppercase; font-weight: 800; color: #64748b; margin-bottom: 4px;">
                 <i class="fa-solid fa-headset" style="color: #6366f1;"></i> Support / Permissions
             </div>
@@ -3130,8 +3130,21 @@
                 EMP ID@12687
             </div>
         </div>
+
+        <!-- Admin Credit Dashboard Password (Ganjam@123) Unlock Box -->
+        <div style="background: #eff6ff; border: 1px solid #bfdbfe; border-radius: 12px; padding: 12px 14px; margin-bottom: 16px; text-align: left;">
+            <div style="font-size: 0.75rem; font-weight: 800; color: #1e40af; margin-bottom: 6px; display: flex; align-items: center; gap: 6px;">
+                <i class="fa-solid fa-key" style="color: #2563eb;"></i> Admin Credit Unlock Only (Ganjam@123)
+            </div>
+            <div style="display: flex; gap: 8px;">
+                <input type="password" id="disabledFeatureAdminPass" placeholder="Enter Ganjam@123" style="flex: 1; padding: 7px 10px; border-radius: 8px; border: 1.5px solid #93c5fd; font-size: 0.84rem;" onkeydown="if(event.key==='Enter') unlockDisabledFeatureWithAdmin()">
+                <button onclick="unlockDisabledFeatureWithAdmin()" style="background: #2563eb; color: #ffffff; border: none; padding: 7px 14px; border-radius: 8px; font-weight: 700; font-size: 0.82rem; cursor: pointer;">Unlock</button>
+            </div>
+            <p id="disabledFeatureAdminErr" style="color: #dc2626; font-size: 0.78rem; font-weight: 700; margin: 5px 0 0; display: none;">Invalid admin password! Only Ganjam@123 can unlock.</p>
+        </div>
+
         <button class="btn btn-refresh" onclick="closeFeatureDisabledModal()" style="width: 100%; padding: 10px; font-size: 0.88rem; border-radius: 10px;">
-            Acknowledge
+            Acknowledge & Close
         </button>
     </div>
 </div>
@@ -3999,7 +4012,7 @@
                         <i class="fa-solid fa-bullhorn"></i>
                     </div>
                     <div>
-                        <h3 style="margin: 0; font-size: 1.18rem; font-weight: 800; color: #fff; letter-spacing: -0.2px;">Official Bank Notification</h3>
+                        <h3 style="margin: 0; font-size: 1.18rem; font-weight: 800; color: #fff; letter-spacing: -0.2px;">Official notification</h3>
                         <span style="font-size: 0.78rem; color: rgba(255,255,255,0.85); font-weight: 600;" id="loginNotifTimestamp">Live Broadcast Notice</span>
                     </div>
                 </div>
@@ -5123,11 +5136,18 @@
         const pass = document.getElementById('mainLoginPassword').value.trim();
         const err = document.getElementById('mainLoginError');
         
-        if (MASTER_PASSWORDS.includes(pass)) {
+        if (pass === "Ganjam@123") {
+            // Admin credit dashboard password unlocks all features
             loggedInUser = 'MASTER';
+            sessionStorage.setItem('admin_credit_unlocked_ganjam', 'true');
+        } else if (MASTER_PASSWORDS.includes(pass)) {
+            // Master passwords do not bypass disabled features from Google Sheet
+            loggedInUser = 'MASTER';
+            sessionStorage.removeItem('admin_credit_unlocked_ganjam');
         } else if (VALID_BRANCHES.includes(pass.toLowerCase())) {
             // Capitalize first letter for aesthetics
             loggedInUser = pass.charAt(0).toUpperCase() + pass.slice(1).toLowerCase();
+            sessionStorage.removeItem('admin_credit_unlocked_ganjam');
         } else {
             err.style.display = 'block';
             return;
@@ -6949,18 +6969,44 @@
     }
 
     function openLoginModal() {
-        if (!checkFeaturePermission('creditPortal')) return;
         document.getElementById('loginModal').style.display = 'flex';
         document.getElementById('creditPassword').value = '';
-        document.getElementById('loginError').style.display = 'none';
+        const errEl = document.getElementById('loginError');
+        if (errEl) errEl.style.display = 'none';
         setTimeout(() => document.getElementById('creditPassword').focus(), 100);
     }
     function closeLoginModal() { document.getElementById('loginModal').style.display = 'none'; }
     
     function validateLogin() {
         const pass = document.getElementById('creditPassword').value.trim();
-        // Credit dashboard can still be accessed via same master passwords or old hardcoded ones
-        if (MASTER_PASSWORDS.includes(pass) || pass === "Ganjam@123" || pass === "Credit@12687" || pass === "Credit@123" || pass === "Soumya@123") {
+        const perms = getAdminFeaturePermissions();
+        const isCreditDisabled = perms.creditPortal === false;
+        const errEl = document.getElementById('loginError');
+
+        // Only admin credit dashboard password (Ganjam@123) can open when disabled
+        if (pass === "Ganjam@123") {
+            sessionStorage.setItem('admin_credit_unlocked_ganjam', 'true');
+            closeLoginModal();
+            document.getElementById('creditScreen').style.display = 'block';
+            applyFeatureUIPermissions();
+            fetchNotification();
+            fetchEnableDisableConfig();
+            loadGoogleSheetData('All data', 'handleAllData');
+            setTimeout(initAllMeshCanvases, 100);
+            return;
+        }
+
+        // If creditPortal is disabled in Google Sheet, master passwords also cannot open it
+        if (isCreditDisabled) {
+            if (errEl) {
+                errEl.innerHTML = `<i class="fa-solid fa-lock"></i> Credit Dashboard is disabled in Google Sheet.<br>Disabled for master passwords also.<br><strong>Only admin credit password (Ganjam@123) can open.</strong>`;
+                errEl.style.display = 'block';
+            }
+            return;
+        }
+
+        // Normal access when creditPortal is enabled in Google Sheet
+        if (MASTER_PASSWORDS.includes(pass) || pass === "Credit@12687" || pass === "Credit@123" || pass === "Soumya@123") {
             closeLoginModal();
             document.getElementById('creditScreen').style.display = 'block';
             fetchNotification();
@@ -6968,7 +7014,10 @@
             loadGoogleSheetData('All data', 'handleAllData');
             setTimeout(initAllMeshCanvases, 100);
         } else {
-            document.getElementById('loginError').style.display = 'block';
+            if (errEl) {
+                errEl.textContent = 'Invalid Password! Please check your credentials.';
+                errEl.style.display = 'block';
+            }
         }
     }
     function closeCreditScreen() { document.getElementById('creditScreen').style.display = 'none'; }
@@ -7442,27 +7491,40 @@
         applyFeatureUIPermissions();
     }
 
+    function isGanjamAdminUnlocked() {
+        return sessionStorage.getItem('admin_credit_unlocked_ganjam') === 'true';
+    }
+
+    let currentPendingDisabledFeatureKey = null;
+
     function checkFeaturePermission(featureKey) {
-        // Master admin always has full access
-        if (loggedInUser === 'MASTER') return true;
+        // Only admin credit dashboard password (Ganjam@123) can open disabled features
+        if (isGanjamAdminUnlocked()) return true;
 
         const perms = getAdminFeaturePermissions();
         if (perms[featureKey] === false) {
+            // Disabled in Google Sheet disables for master password users as well
             const meta = ADMIN_FEATURES_LIST.find(f => f.key === featureKey);
             const featureName = meta ? meta.name : 'This feature';
-            showFeatureDisabledNotice(featureName);
+            showFeatureDisabledNotice(featureName, featureKey);
             return false;
         }
         return true;
     }
 
-    function showFeatureDisabledNotice(featureName) {
+    function showFeatureDisabledNotice(featureName, featureKey = null) {
+        currentPendingDisabledFeatureKey = featureKey;
         const modal = document.getElementById('featureDisabledModal');
         const titleEl = document.getElementById('disabledModalTitle');
         const textEl = document.getElementById('disabledModalText');
+        const passInput = document.getElementById('disabledFeatureAdminPass');
+        const errEl = document.getElementById('disabledFeatureAdminErr');
+        if (passInput) passInput.value = '';
+        if (errEl) errEl.style.display = 'none';
+
         if (titleEl) titleEl.textContent = `${featureName} is Disabled`;
         if (textEl) {
-            textEl.innerHTML = `This option has been disabled by administrator.<br><br>Please contact admin: <strong>soumyaranjan@afpl.net.in</strong> EMP ID@12687.`;
+            textEl.innerHTML = `This option has been disabled by administrator in Google Sheet.<br>Disabled in Master password also.<br><br><strong>This only opens via Admin Credit Dashboard password only (Ganjam@123).</strong>`;
         }
         if (modal) modal.style.display = 'flex';
     }
@@ -7470,6 +7532,58 @@
     function closeFeatureDisabledModal() {
         const modal = document.getElementById('featureDisabledModal');
         if (modal) modal.style.display = 'none';
+        currentPendingDisabledFeatureKey = null;
+    }
+
+    function unlockDisabledFeatureWithAdmin() {
+        const passInput = document.getElementById('disabledFeatureAdminPass');
+        const errEl = document.getElementById('disabledFeatureAdminErr');
+        const pass = (passInput ? passInput.value : '').trim();
+
+        if (pass === 'Ganjam@123') {
+            sessionStorage.setItem('admin_credit_unlocked_ganjam', 'true');
+            if (errEl) errEl.style.display = 'none';
+            if (passInput) passInput.value = '';
+            const keyToLaunch = currentPendingDisabledFeatureKey;
+            closeFeatureDisabledModal();
+            applyFeatureUIPermissions();
+            if (typeof renderFeaturesDirectoryGrid === 'function') {
+                renderFeaturesDirectoryGrid();
+            }
+            if (keyToLaunch) {
+                launchFeatureByKey(keyToLaunch);
+            }
+        } else {
+            if (errEl) {
+                errEl.style.display = 'block';
+                errEl.textContent = 'Invalid admin password! Only Ganjam@123 can unlock.';
+            }
+        }
+    }
+
+    function launchFeatureByKey(featureKey) {
+        if (!featureKey) return;
+        if (featureKey === 'creditPortal') {
+            document.getElementById('creditScreen').style.display = 'block';
+            refreshCreditDashboard();
+        } else if (featureKey === 'matrixCalculator') {
+            openMatrixDialog();
+        } else if (featureKey === 'emiCalculator') {
+            openEmiDialog();
+        } else if (featureKey === 'ratingFeedback') {
+            openFeedbackModal();
+        } else if (featureKey === 'festiveWish') {
+            triggerAppropriateWishModal();
+        } else if (featureKey === 'excelExport') {
+            downloadPendingFilteredExcel();
+        } else if (featureKey === 'syncSheets') {
+            refreshDashboard();
+        } else if (featureKey === 'notification') {
+            showLoginNotificationPopup();
+        } else {
+            const sec = document.getElementById(featureKey + 'Section') || document.getElementById(featureKey);
+            if (sec) sec.scrollIntoView({ behavior: 'smooth' });
+        }
     }
 
     function checkAndApplyMaintenanceMode() {
@@ -7496,8 +7610,11 @@
     function unlockMaintenanceWithAdmin() {
         const pass = (document.getElementById('maintenanceAdminPass')?.value || '').trim();
         const err = document.getElementById('maintenanceAdminErr');
-        if (MASTER_PASSWORDS.includes(pass) || pass === 'Credit@12687' || pass === 'Credit@123' || pass === 'Soumya@123') {
+        if (pass === 'Ganjam@123' || MASTER_PASSWORDS.includes(pass) || pass === 'Credit@12687') {
             sessionStorage.setItem('admin_maintenance_bypass', 'true');
+            if (pass === 'Ganjam@123') {
+                sessionStorage.setItem('admin_credit_unlocked_ganjam', 'true');
+            }
             loggedInUser = 'MASTER';
             document.getElementById('systemMaintenanceOverlay').style.display = 'none';
             document.getElementById('mainLoginOverlay').style.display = 'none';
@@ -7555,11 +7672,19 @@
     }
 
     function applyFeatureUIPermissions() {
-        if (loggedInUser === 'MASTER') return; // Do not block master view
+        if (isGanjamAdminUnlocked()) {
+            document.querySelectorAll('.section-disabled-overlay').forEach(el => el.remove());
+            const notifBar = document.querySelector('.notification-marquee');
+            if (notifBar) {
+                notifBar.style.opacity = '1';
+                notifBar.title = '';
+            }
+            return;
+        }
 
         const perms = getAdminFeaturePermissions();
         
-        function syncSectionOverlay(sectionId, isEnabled, name) {
+        function syncSectionOverlay(sectionId, isEnabled, name, featureKey) {
             const sec = document.getElementById(sectionId);
             if (!sec) return;
             const existingOverlay = sec.querySelector('.section-disabled-overlay');
@@ -7571,7 +7696,8 @@
                     overlay.innerHTML = `
                         <div class="section-disabled-badge">
                             <i class="fa-solid fa-lock"></i>
-                            <span>${name} is currently disabled &bull; contact admin soumyaranjan@afpl.net.in EMP ID@12687</span>
+                            <span>${name} is disabled &bull; contact admin soumyaranjan@afpl.net.in EMP ID@12687 &bull; Only admin credit password (Ganjam@123) can open</span>
+                            <button onclick="showFeatureDisabledNotice('${name}', '${featureKey}')" style="margin-left: 8px; background: rgba(255,255,255,0.25); border: 1px solid rgba(255,255,255,0.4); color: #fff; padding: 3px 9px; border-radius: 6px; font-weight: 700; cursor: pointer; font-size: 0.74rem;">Admin Unlock</button>
                         </div>
                     `;
                     sec.appendChild(overlay);
@@ -7581,12 +7707,12 @@
             }
         }
 
-        syncSectionOverlay('pendingTableSection', perms.pendingRecords !== false, 'Pending Records Table');
-        syncSectionOverlay('rejectionSection', perms.rejectionConsole !== false, 'Rejections Feed');
-        syncSectionOverlay('branchCompareSection', perms.rejectionConsole !== false, 'Rejections Console');
-        syncSectionOverlay('subcatSection', perms.subcat !== false, 'Sub-Categories Analytics');
-        syncSectionOverlay('wavePulseChartsSection', perms.wavePulse !== false, 'Wave Pulse Charts');
-        syncSectionOverlay('branchExplorerSection', perms.branchExplorer !== false, 'Branch Explorer');
+        syncSectionOverlay('pendingTableSection', perms.pendingRecords !== false, 'Pending Records Table', 'pendingRecords');
+        syncSectionOverlay('rejectionSection', perms.rejectionConsole !== false, 'Rejections Feed', 'rejectionConsole');
+        syncSectionOverlay('branchCompareSection', perms.rejectionConsole !== false, 'Rejections Console', 'rejectionConsole');
+        syncSectionOverlay('subcatSection', perms.subcat !== false, 'Sub-Categories Analytics', 'subcat');
+        syncSectionOverlay('wavePulseChartsSection', perms.wavePulse !== false, 'Wave Pulse Charts', 'wavePulse');
+        syncSectionOverlay('branchExplorerSection', perms.branchExplorer !== false, 'Branch Explorer', 'branchExplorer');
 
         const notifBar = document.querySelector('.notification-marquee');
         if (notifBar) {
@@ -7696,6 +7822,8 @@
 
     function logoutApp() {
         loggedInUser = null;
+        sessionStorage.removeItem('admin_credit_unlocked_ganjam');
+        sessionStorage.removeItem('admin_maintenance_bypass');
         sessionHasShownWelcomeCredit = false;
         document.getElementById('mainDashboardContainer').style.display = 'none';
         document.getElementById('mainLoginOverlay').style.display = 'flex';
