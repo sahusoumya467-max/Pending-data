@@ -3098,13 +3098,60 @@
             </button>
         </div>
 
-        <div id="maintenanceAdminBox" style="display: none; margin-top: 15px; width: 100%;">
-            <input type="password" id="maintenanceAdminPass" placeholder="Enter Master Admin Password" style="width: 100%; padding: 10px 14px; border-radius: 10px; border: 1.5px solid #cbd5e1; font-size: 0.9rem;" onkeydown="if(event.key==='Enter') unlockMaintenanceWithAdmin()">
-            <div style="display: flex; gap: 8px; margin-top: 8px;">
-                <button onclick="unlockMaintenanceWithAdmin()" style="flex: 1; padding: 8px; background: #6366f1; color: white; border: none; border-radius: 8px; font-weight: 700; cursor: pointer;">Unlock</button>
-                <button onclick="document.getElementById('maintenanceAdminBox').style.display='none'" style="padding: 8px 14px; background: #e2e8f0; color: #475569; border: none; border-radius: 8px; font-weight: 600; cursor: pointer;">Cancel</button>
+        <div id="maintenanceAdminBox" style="display: none; margin-top: 15px; width: 100%; text-align: left;">
+            <!-- Step 1: Admin Password Entry -->
+            <div id="maintenanceStep1PassBox">
+                <label style="font-size: 0.78rem; font-weight: 700; color: #475569; display: block; margin-bottom: 5px;">
+                    <i class="fa-solid fa-key" style="color: #6366f1;"></i> Step 1: Admin Password
+                </label>
+                <input type="password" id="maintenanceAdminPass" placeholder="Enter Admin Password (e.g. Ganjam@123)" style="width: 100%; padding: 10px 14px; border-radius: 10px; border: 1.5px solid #cbd5e1; font-size: 0.88rem; box-sizing: border-box;" onkeydown="if(event.key==='Enter') verifyMaintenancePassword()">
+                <div style="display: flex; gap: 8px; margin-top: 8px;">
+                    <button onclick="verifyMaintenancePassword()" style="flex: 1; padding: 9px; background: #6366f1; color: white; border: none; border-radius: 8px; font-weight: 700; font-size: 0.86rem; cursor: pointer;">
+                        Verify Password & Continue
+                    </button>
+                    <button onclick="closeMaintenanceAdminBox()" style="padding: 9px 14px; background: #e2e8f0; color: #475569; border: none; border-radius: 8px; font-weight: 600; font-size: 0.84rem; cursor: pointer;">
+                        Cancel
+                    </button>
+                </div>
+                <p id="maintenanceAdminErr" style="color: #ef4444; font-size: 0.8rem; margin-top: 6px; display: none; font-weight: 700;">
+                    Invalid Admin Credentials
+                </p>
             </div>
-            <p id="maintenanceAdminErr" style="color: #ef4444; font-size: 0.8rem; margin-top: 6px; display: none; font-weight: 700;">Invalid Admin Credentials</p>
+
+            <!-- Step 2: Secret Code Entry -->
+            <div id="maintenanceStep2SecretBox" style="display: none; background: #f8fafc; border: 1.5px dashed #6366f1; border-radius: 12px; padding: 14px; margin-top: 4px;">
+                <div style="display: flex; align-items: center; justify-content: space-between; margin-bottom: 8px;">
+                    <label style="font-size: 0.8rem; font-weight: 800; color: #1e1b4b; display: flex; align-items: center; gap: 6px; margin: 0;">
+                        <i class="fa-solid fa-shield-halved" style="color: #6366f1;"></i> Step 2: Enter Secret Code
+                    </label>
+                    <span style="font-size: 0.7rem; font-weight: 700; color: #6366f1; background: #e0e7ff; padding: 2px 7px; border-radius: 6px;">Required</span>
+                </div>
+                <p style="font-size: 0.78rem; color: #64748b; margin: 0 0 8px 0;">Please enter the secret code to confirm admin access unlock:</p>
+                <input type="text" id="maintenanceAdminSecretCode" placeholder="Enter Secret Code" style="width: 100%; padding: 10px 14px; border-radius: 8px; border: 1.5px solid #94a3b8; font-size: 0.9rem; font-weight: 700; box-sizing: border-box;" onkeydown="if(event.key==='Enter') submitMaintenanceSecretCode()">
+                <div style="display: flex; gap: 8px; margin-top: 10px;">
+                    <button onclick="submitMaintenanceSecretCode()" style="flex: 1; padding: 9px; background: linear-gradient(135deg, #4f46e5, #6366f1); color: white; border: none; border-radius: 8px; font-weight: 800; font-size: 0.86rem; cursor: pointer;">
+                        Submit
+                    </button>
+                    <button onclick="backToMaintenancePassword()" style="padding: 9px 12px; background: #e2e8f0; color: #475569; border: none; border-radius: 8px; font-weight: 600; font-size: 0.82rem; cursor: pointer;">
+                        Back
+                    </button>
+                </div>
+                <p id="maintenanceSecretErr" style="color: #ef4444; font-size: 0.8rem; margin-top: 6px; display: none; font-weight: 700;">
+                    Invalid Secret Code! Secret code must be "Papuni" or "Soumya".
+                </p>
+            </div>
+
+            <!-- Step 3: Secret Code Verified OK Confirmation -->
+            <div id="maintenanceStep3OkBox" style="display: none; background: #ecfdf5; border: 1.5px solid #10b981; border-radius: 12px; padding: 16px; text-align: center; margin-top: 4px;">
+                <div style="width: 44px; height: 44px; border-radius: 50%; background: #d1fae5; color: #059669; display: flex; align-items: center; justify-content: center; font-size: 1.4rem; margin: 0 auto 10px;">
+                    <i class="fa-solid fa-circle-check"></i>
+                </div>
+                <h4 style="margin: 0 0 6px 0; color: #065f46; font-size: 1rem; font-weight: 800;">Secret Code Verified!</h4>
+                <p style="margin: 0 0 14px 0; font-size: 0.82rem; color: #047857; font-weight: 600;">Admin identity verified. Click OK to open workspace.</p>
+                <button id="btnMaintenanceConfirmOk" onclick="confirmMaintenanceAccessOk()" style="width: 100%; padding: 10px; background: #10b981; color: white; border: none; border-radius: 8px; font-weight: 800; font-size: 0.92rem; cursor: pointer; box-shadow: 0 4px 12px rgba(16, 185, 129, 0.35);">
+                    <i class="fa-solid fa-check" style="margin-right: 6px;"></i> OK
+                </button>
+            </div>
         </div>
     </div>
 </div>
@@ -7599,35 +7646,107 @@
         }
     }
 
+    let tempVerifiedMaintenancePass = '';
+
     function openMaintenanceAdminLogin() {
         const box = document.getElementById('maintenanceAdminBox');
         if (box) {
             box.style.display = 'block';
-            document.getElementById('maintenanceAdminPass')?.focus();
+            const s1 = document.getElementById('maintenanceStep1PassBox');
+            const s2 = document.getElementById('maintenanceStep2SecretBox');
+            const s3 = document.getElementById('maintenanceStep3OkBox');
+            if (s1) s1.style.display = 'block';
+            if (s2) s2.style.display = 'none';
+            if (s3) s3.style.display = 'none';
+            const passInput = document.getElementById('maintenanceAdminPass');
+            const secretInput = document.getElementById('maintenanceAdminSecretCode');
+            if (passInput) passInput.value = '';
+            if (secretInput) secretInput.value = '';
+            const err1 = document.getElementById('maintenanceAdminErr');
+            const err2 = document.getElementById('maintenanceSecretErr');
+            if (err1) err1.style.display = 'none';
+            if (err2) err2.style.display = 'none';
+            tempVerifiedMaintenancePass = '';
+            setTimeout(() => document.getElementById('maintenanceAdminPass')?.focus(), 80);
         }
     }
 
-    function unlockMaintenanceWithAdmin() {
+    function closeMaintenanceAdminBox() {
+        const box = document.getElementById('maintenanceAdminBox');
+        if (box) box.style.display = 'none';
+        tempVerifiedMaintenancePass = '';
+    }
+
+    function verifyMaintenancePassword() {
         const pass = (document.getElementById('maintenanceAdminPass')?.value || '').trim();
         const err = document.getElementById('maintenanceAdminErr');
-        if (pass === 'Ganjam@123' || MASTER_PASSWORDS.includes(pass) || pass === 'Credit@12687') {
-            sessionStorage.setItem('admin_maintenance_bypass', 'true');
-            if (pass === 'Ganjam@123') {
-                sessionStorage.setItem('admin_credit_unlocked_ganjam', 'true');
-            }
-            loggedInUser = 'MASTER';
-            document.getElementById('systemMaintenanceOverlay').style.display = 'none';
-            document.getElementById('mainLoginOverlay').style.display = 'none';
-            const dash = document.getElementById('mainDashboardContainer');
-            if (dash) dash.style.display = (window.innerWidth >= 1025 ? 'flex' : 'block');
-            refreshDashboard();
-            document.getElementById('creditScreen').style.display = 'block';
-            fetchNotification();
-            fetchEnableDisableConfig();
-            loadGoogleSheetData('All data', 'handleAllData');
+        if (pass === 'Ganjam@123' || MASTER_PASSWORDS.includes(pass) || pass === 'Credit@12687' || pass === 'Credit@123' || pass === 'Soumya@123') {
+            tempVerifiedMaintenancePass = pass;
+            if (err) err.style.display = 'none';
+            const s1 = document.getElementById('maintenanceStep1PassBox');
+            const s2 = document.getElementById('maintenanceStep2SecretBox');
+            if (s1) s1.style.display = 'none';
+            if (s2) s2.style.display = 'block';
+            const secretInput = document.getElementById('maintenanceAdminSecretCode');
+            if (secretInput) secretInput.value = '';
+            const err2 = document.getElementById('maintenanceSecretErr');
+            if (err2) err2.style.display = 'none';
+            setTimeout(() => document.getElementById('maintenanceAdminSecretCode')?.focus(), 100);
         } else {
-            if (err) err.style.display = 'block';
+            if (err) {
+                err.textContent = 'Invalid Admin Password! Please check credentials.';
+                err.style.display = 'block';
+            }
         }
+    }
+
+    function backToMaintenancePassword() {
+        const s1 = document.getElementById('maintenanceStep1PassBox');
+        const s2 = document.getElementById('maintenanceStep2SecretBox');
+        const s3 = document.getElementById('maintenanceStep3OkBox');
+        if (s1) s1.style.display = 'block';
+        if (s2) s2.style.display = 'none';
+        if (s3) s3.style.display = 'none';
+        document.getElementById('maintenanceAdminPass')?.focus();
+    }
+
+    function submitMaintenanceSecretCode() {
+        const code = (document.getElementById('maintenanceAdminSecretCode')?.value || '').trim().toLowerCase();
+        const err = document.getElementById('maintenanceSecretErr');
+
+        // Valid secret code must strictly be ("Papuni" or "Soumya")
+        if (code === 'papuni' || code === 'soumya') {
+            if (err) err.style.display = 'none';
+            const s2 = document.getElementById('maintenanceStep2SecretBox');
+            const s3 = document.getElementById('maintenanceStep3OkBox');
+            if (s2) s2.style.display = 'none';
+            if (s3) s3.style.display = 'block';
+            setTimeout(() => document.getElementById('btnMaintenanceConfirmOk')?.focus(), 100);
+        } else {
+            if (err) {
+                err.textContent = 'Invalid Secret Code! Secret code must strictly be "Papuni" or "Soumya".';
+                err.style.display = 'block';
+            }
+        }
+    }
+
+    function confirmMaintenanceAccessOk() {
+        sessionStorage.setItem('admin_maintenance_bypass', 'true');
+        if (tempVerifiedMaintenancePass === 'Ganjam@123') {
+            sessionStorage.setItem('admin_credit_unlocked_ganjam', 'true');
+        }
+        loggedInUser = 'MASTER';
+        document.getElementById('systemMaintenanceOverlay').style.display = 'none';
+        document.getElementById('mainLoginOverlay').style.display = 'none';
+        const dash = document.getElementById('mainDashboardContainer');
+        if (dash) dash.style.display = (window.innerWidth >= 1025 ? 'flex' : 'block');
+        applyFeatureUIPermissions();
+        refreshDashboard();
+        document.getElementById('creditScreen').style.display = 'block';
+        fetchNotification();
+        fetchEnableDisableConfig();
+        loadGoogleSheetData('All data', 'handleAllData');
+        closeMaintenanceAdminBox();
     }
 
     function toggleAdminMaintenance(enabled) {

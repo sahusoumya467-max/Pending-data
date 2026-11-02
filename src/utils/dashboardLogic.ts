@@ -804,3 +804,12 @@ export function isMaintenanceActive(
     return Boolean(maintenanceSetting);
 }
 
+export const VALID_MAINTENANCE_SECRET_CODES = ["Papuni", "Soumya"];
+
+export function validateMaintenanceSecretCode(code: string): boolean {
+    if (!code) return false;
+    const trimmed = code.trim().toLowerCase();
+    return VALID_MAINTENANCE_SECRET_CODES.map(c => c.toLowerCase()).includes(trimmed);
+}
+
+

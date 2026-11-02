@@ -13,7 +13,9 @@ import {
     calculateEmiWithBankingCharges,
     isFeatureAccessible,
     isMaintenanceActive,
-    parseEnableDisableSheet
+    parseEnableDisableSheet,
+    validateMaintenanceSecretCode,
+    VALID_MAINTENANCE_SECRET_CODES
 } from './dashboardLogic';
 
 test('authenticateUser: validates master password correctly', () => {
@@ -315,4 +317,23 @@ test('parseEnableDisableSheet: correctly parses column-based feature statuses', 
     assert.equal(result.permissions.rejectionConsole, false);
     assert.equal(result.maintenanceMode, true);
 });
+
+test('validateMaintenanceSecretCode: allows only "Papuni" or "Soumya" case-insensitively', () => {
+    assert.equal(validateMaintenanceSecretCode('Papuni'), true);
+    assert.equal(validateMaintenanceSecretCode('papuni'), true);
+    assert.equal(validateMaintenanceSecretCode('PAPUNI'), true);
+    assert.equal(validateMaintenanceSecretCode('Soumya'), true);
+    assert.equal(validateMaintenanceSecretCode('soumya'), true);
+    assert.equal(validateMaintenanceSecretCode('SOUMYA'), true);
+    assert.equal(validateMaintenanceSecretCode('  Papuni  '), true);
+    assert.equal(validateMaintenanceSecretCode('  Soumya  '), true);
+
+    // Invalid codes
+    assert.equal(validateMaintenanceSecretCode('admin'), false);
+    assert.equal(validateMaintenanceSecretCode('Credit@123'), false);
+    assert.equal(validateMaintenanceSecretCode('Ganjam@123'), false);
+    assert.equal(validateMaintenanceSecretCode(''), false);
+    assert.equal(validateMaintenanceSecretCode('random123'), false);
+});
+
 
