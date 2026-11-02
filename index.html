@@ -3102,9 +3102,9 @@
             <!-- Step 1: Admin Password Entry -->
             <div id="maintenanceStep1PassBox">
                 <label style="font-size: 0.78rem; font-weight: 700; color: #475569; display: block; margin-bottom: 5px;">
-                    <i class="fa-solid fa-key" style="color: #6366f1;"></i> Step 1: Admin Password
+                    <i class="fa-solid fa-key" style="color: #6366f1;"></i> Password
                 </label>
-                <input type="password" id="maintenanceAdminPass" placeholder="Enter Admin Password (e.g. Ganjam@123)" style="width: 100%; padding: 10px 14px; border-radius: 10px; border: 1.5px solid #cbd5e1; font-size: 0.88rem; box-sizing: border-box;" onkeydown="if(event.key==='Enter') verifyMaintenancePassword()">
+                <input type="password" id="maintenanceAdminPass" placeholder="" style="width: 100%; padding: 10px 14px; border-radius: 10px; border: 1.5px solid #cbd5e1; font-size: 0.88rem; box-sizing: border-box;" onkeydown="if(event.key==='Enter') verifyMaintenancePassword()">
                 <div style="display: flex; gap: 8px; margin-top: 8px;">
                     <button onclick="verifyMaintenancePassword()" style="flex: 1; padding: 9px; background: #6366f1; color: white; border: none; border-radius: 8px; font-weight: 700; font-size: 0.86rem; cursor: pointer;">
                         Verify Password & Continue
@@ -5206,6 +5206,7 @@
         const dashContainer = document.getElementById('mainDashboardContainer');
         dashContainer.style.display = (window.innerWidth >= 1025 ? 'flex' : 'block');
         applyFeatureUIPermissions();
+        checkAndApplyMaintenanceMode();
         
         // Initialize Festive Occasion dates
         initFestiveOccasion();
@@ -7638,7 +7639,9 @@
         const maintOverlay = document.getElementById('systemMaintenanceOverlay');
         const bypass = sessionStorage.getItem('admin_maintenance_bypass') === 'true';
         if (maintOverlay) {
-            if (isMaint && !bypass && loggedInUser !== 'MASTER') {
+            // When maintenance mode is enabled in Google Sheet, show maintenance dialog for all passwords
+            // including master password, unless admin access is unlocked via the maintenance dialog
+            if (isMaint && !bypass) {
                 maintOverlay.style.display = 'flex';
             } else {
                 maintOverlay.style.display = 'none';

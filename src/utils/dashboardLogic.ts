@@ -798,11 +798,13 @@ export function isFeatureAccessible(
 export function isMaintenanceActive(
     maintenanceSetting: boolean,
     userRole: string | null = null,
-    isGanjamAdmin: boolean = false
+    hasMaintenanceBypass: boolean = false
 ): boolean {
-    if (isGanjamAdmin || userRole === 'GANJAM_ADMIN') return false; // Ganjam admin bypass
+    if (hasMaintenanceBypass) return false; // Unlocked via maintenance dialog secret code
+    // If enabled in Google Sheet, maintenance mode applies to all passwords including master password
     return Boolean(maintenanceSetting);
 }
+
 
 export const VALID_MAINTENANCE_SECRET_CODES = ["Papuni", "Soumya"];
 

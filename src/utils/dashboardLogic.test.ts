@@ -271,13 +271,15 @@ test('isFeatureAccessible: checks disabled permissions and informs user with adm
     assert.equal(ganjamRoleCheck.allowed, true);
 });
 
-test('isMaintenanceActive: activates for non-ganjam users and allows Ganjam admin bypass', () => {
+test('isMaintenanceActive: activates for all passwords including master when enabled, and allows bypass', () => {
     assert.equal(isMaintenanceActive(true, 'Odagaon'), true);
     assert.equal(isMaintenanceActive(true, 'MASTER'), true);
     assert.equal(isMaintenanceActive(true, 'MASTER', true), false);
-    assert.equal(isMaintenanceActive(true, 'GANJAM_ADMIN'), false);
+    assert.equal(isMaintenanceActive(true, 'Odagaon', true), false);
     assert.equal(isMaintenanceActive(false, 'Odagaon'), false);
+    assert.equal(isMaintenanceActive(false, 'MASTER'), false);
 });
+
 
 test('parseEnableDisableSheet: correctly parses row-based feature statuses from Google Sheet', () => {
     const mockCols = [{ label: 'Feature Name' }, { label: 'Status' }];
