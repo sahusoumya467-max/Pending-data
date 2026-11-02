@@ -252,8 +252,8 @@ export function getFestivalAndOccasionInfo(targetDate: Date = new Date()): Festi
     const monthName = monthNames[targetDate.getMonth()];
     const formattedDate = `${dayName}, ${day} ${monthName} ${year}`;
 
-    // 1. Diwali & Dhanteras / Kali Puja festive season (Late October / Early November)
-    if ((month === 10 && day >= 24) || (month === 11 && day <= 12)) {
+    // 1. Diwali & Dhanteras (Late October / Nov 1-2)
+    if ((month === 10 && day >= 29) || (month === 11 && day <= 2)) {
         return {
             isFestival: true,
             occasionName: "Shubh Deepavali & Dhanteras Mahotsav",
@@ -270,8 +270,8 @@ export function getFestivalAndOccasionInfo(targetDate: Date = new Date()): Festi
         };
     }
 
-    // 2. Chhath Puja (Late October / November)
-    if ((month === 10 && day >= 28) || (month === 11 && day >= 13 && day <= 18)) {
+    // 2. Chhath Puja (November 6-8)
+    if (month === 11 && day >= 6 && day <= 8) {
         return {
             isFestival: true,
             occasionName: "Shubh Chhath Puja Mahaparv",
@@ -288,8 +288,8 @@ export function getFestivalAndOccasionInfo(targetDate: Date = new Date()): Festi
         };
     }
 
-    // 3. New Year (Dec 31 - Jan 3)
-    if ((month === 12 && day >= 31) || (month === 1 && day <= 3)) {
+    // 3. New Year (Dec 31 & Jan 1)
+    if ((month === 12 && day === 31) || (month === 1 && day === 1)) {
         return {
             isFestival: true,
             occasionName: `Happy New Year ${month === 12 ? year + 1 : year}`,
@@ -306,8 +306,8 @@ export function getFestivalAndOccasionInfo(targetDate: Date = new Date()): Festi
         };
     }
 
-    // 4. Makar Sankranti / Pongal / Lohri (Jan 13 - 17)
-    if (month === 1 && day >= 13 && day <= 17) {
+    // 4. Makar Sankranti / Pongal / Lohri (Jan 13 - 15)
+    if (month === 1 && day >= 13 && day <= 15) {
         return {
             isFestival: true,
             occasionName: "Happy Makar Sankranti & Pongal",
@@ -342,8 +342,8 @@ export function getFestivalAndOccasionInfo(targetDate: Date = new Date()): Festi
         };
     }
 
-    // 6. Maha Shivratri (Feb/March)
-    if ((month === 2 && day >= 20) || (month === 3 && day <= 10)) {
+    // 6. Maha Shivratri (Feb 26)
+    if (month === 2 && day === 26) {
         return {
             isFestival: true,
             occasionName: "Har Har Mahadev - Shubh Maha Shivratri",
@@ -360,8 +360,8 @@ export function getFestivalAndOccasionInfo(targetDate: Date = new Date()): Festi
         };
     }
 
-    // 7. Holi & Dola Purnima (March 15-30)
-    if (month === 3 && day >= 15 && day <= 30) {
+    // 7. Holi & Dola Purnima (March 24-26)
+    if (month === 3 && day >= 24 && day <= 26) {
         return {
             isFestival: true,
             occasionName: "Happy Holi & Dola Purnima",
@@ -378,8 +378,8 @@ export function getFestivalAndOccasionInfo(targetDate: Date = new Date()): Festi
         };
     }
 
-    // 8. Odia New Year (Maha Vishuva / Pana Sankranti) & Baisakhi / Poila Boishakh (April 13 - 16)
-    if (month === 4 && day >= 13 && day <= 16) {
+    // 8. Odia New Year (Maha Vishuva / Pana Sankranti) & Baisakhi (April 13 - 14)
+    if (month === 4 && (day === 13 || day === 14)) {
         return {
             isFestival: true,
             occasionName: "Maha Vishuva Pana Sankranti & Odia New Year",
@@ -396,8 +396,8 @@ export function getFestivalAndOccasionInfo(targetDate: Date = new Date()): Festi
         };
     }
 
-    // 9. Rath Yatra (June / July)
-    if ((month === 6 && day >= 20) || (month === 7 && day <= 15)) {
+    // 9. Rath Yatra (July 7-15)
+    if (month === 7 && day >= 7 && day <= 15) {
         return {
             isFestival: true,
             occasionName: "Jai Jagannath - Holy Rath Yatra Mahotsav",
@@ -432,8 +432,8 @@ export function getFestivalAndOccasionInfo(targetDate: Date = new Date()): Festi
         };
     }
 
-    // 11. Raksha Bandhan (August 18 - 25)
-    if (month === 8 && day >= 18 && day <= 25) {
+    // 11. Raksha Bandhan (August 19)
+    if (month === 8 && day === 19) {
         return {
             isFestival: true,
             occasionName: "Happy Raksha Bandhan",
@@ -450,8 +450,8 @@ export function getFestivalAndOccasionInfo(targetDate: Date = new Date()): Festi
         };
     }
 
-    // 12. Ganesh Chaturthi (August 26 - Sep 15)
-    if ((month === 8 && day >= 26) || (month === 9 && day <= 15)) {
+    // 12. Ganesh Chaturthi (September 7)
+    if (month === 9 && day === 7) {
         return {
             isFestival: true,
             occasionName: "Ganpati Bappa Morya - Shubh Ganesh Chaturthi",
@@ -486,8 +486,8 @@ export function getFestivalAndOccasionInfo(targetDate: Date = new Date()): Festi
         };
     }
 
-    // 14. Christmas (Dec 22 - 28)
-    if (month === 12 && day >= 22 && day <= 28) {
+    // 14. Christmas (Dec 24 - 25)
+    if (month === 12 && (day === 24 || day === 25)) {
         return {
             isFestival: true,
             occasionName: "Merry Christmas & Season's Greetings",
@@ -519,5 +519,159 @@ export function getFestivalAndOccasionInfo(targetDate: Date = new Date()): Festi
         hasLightsSky: true,
         hasBalloons: true
     };
+}
+
+/* ============================================================
+   BANKING EMI CALCULATOR (LPF, GST & INSURANCE EXPANSION)
+   ============================================================ */
+export interface EmiCalculatorParams {
+    loanAmount: number;
+    roiAnnual: number;
+    tenureMonths: number;
+    lpfPercent?: number;
+    lpfOverride?: number | null;
+    hasGst?: boolean;
+    insuranceType?: 'none' | 'single' | 'double';
+}
+
+export interface EmiCalculatorResult {
+    loanAmount: number;
+    monthlyEmi: number;
+    lpfPercent: number;
+    lpf: number;
+    isLpfManual: boolean;
+    gstOnLpf: number;
+    insuranceAmount: number;
+    insuranceType: 'none' | 'single' | 'double';
+    totalDeductions: number;
+    netDisbursed: number;
+    totalRepayment: number;
+    totalInterest: number;
+}
+
+export function calculateEmiWithBankingCharges(params: EmiCalculatorParams): EmiCalculatorResult {
+    const loanAmount = Math.max(0, params.loanAmount || 0);
+    const roiAnnual = Math.max(0, params.roiAnnual || 0);
+    const tenureMonths = Math.max(0, params.tenureMonths || 0);
+    const tenureYears = tenureMonths / 12;
+
+    // Monthly EMI calculation
+    let monthlyEmi = 0;
+    if (loanAmount > 0 && roiAnnual > 0 && tenureMonths > 0) {
+        const monthlyRate = (roiAnnual / 12) / 100;
+        const factor = Math.pow(1 + monthlyRate, tenureMonths);
+        monthlyEmi = Math.round(loanAmount * monthlyRate * factor / (factor - 1));
+    }
+
+    // LPF calculation: percentage (default 1.5%), or manual override provided (for IBL)
+    const isLpfManual = typeof params.lpfOverride === 'number' && !isNaN(params.lpfOverride) && params.lpfOverride >= 0;
+    const lpfPercent = typeof params.lpfPercent === 'number' && !isNaN(params.lpfPercent) ? params.lpfPercent : 1.5;
+    const lpf = isLpfManual ? Math.round(params.lpfOverride!) : Math.round(loanAmount * (lpfPercent / 100));
+
+    // GST option: 18% of LPF
+    const hasGst = params.hasGst !== false;
+    const gstOnLpf = hasGst ? Math.round(lpf * 0.18) : 0;
+
+    // Insurance calculation:
+    // Single: 7.5 per thousand per year -> (loanAmount / 1000) * 7.5 * tenureYears
+    // Double: 15 per thousand per year (2 * Single) -> (loanAmount / 1000) * 15 * tenureYears
+    const insuranceType = params.insuranceType || 'single';
+    let insuranceAmount = 0;
+    if (loanAmount > 0 && tenureYears > 0) {
+        if (insuranceType === 'single') {
+            insuranceAmount = Math.round((loanAmount / 1000) * 7.5 * tenureYears);
+        } else if (insuranceType === 'double') {
+            insuranceAmount = Math.round((loanAmount / 1000) * 15 * tenureYears);
+        }
+    }
+
+    const totalDeductions = lpf + gstOnLpf + insuranceAmount;
+    const netDisbursed = Math.max(0, loanAmount - totalDeductions);
+    const totalRepayment = monthlyEmi * tenureMonths;
+    const totalInterest = Math.max(0, totalRepayment - loanAmount);
+
+    return {
+        loanAmount,
+        monthlyEmi,
+        lpfPercent,
+        lpf,
+        isLpfManual,
+        gstOnLpf,
+        insuranceAmount,
+        insuranceType,
+        totalDeductions,
+        netDisbursed,
+        totalRepayment,
+        totalInterest
+    };
+}
+
+/* ============================================================
+   ADMIN CONTROL PANEL & MAINTENANCE MODE LOGIC
+   ============================================================ */
+export const CONTACT_ADMIN_INFO = {
+    email: "soumyaranjan@afpl.net.in",
+    empId: "12687",
+    formattedNotice: "contact admin soumyaranjan@afpl.net.in EMP ID@12687"
+};
+
+export interface AdminFeaturePermissions {
+    overview: boolean;
+    subcat: boolean;
+    branchExplorer: boolean;
+    rejectionConsole: boolean;
+    pendingRecords: boolean;
+    wavePulse: boolean;
+    creditPortal: boolean;
+    matrixCalculator: boolean;
+    emiCalculator: boolean;
+    ratingFeedback: boolean;
+    syncSheets: boolean;
+    festiveWish: boolean;
+    excelExport: boolean;
+    branchReplies: boolean;
+}
+
+export const DEFAULT_ADMIN_PERMISSIONS: AdminFeaturePermissions = {
+    overview: true,
+    subcat: true,
+    branchExplorer: true,
+    rejectionConsole: true,
+    pendingRecords: true,
+    wavePulse: true,
+    creditPortal: true,
+    matrixCalculator: true,
+    emiCalculator: true,
+    ratingFeedback: true,
+    syncSheets: true,
+    festiveWish: true,
+    excelExport: true,
+    branchReplies: true
+};
+
+export function isFeatureAccessible(
+    featureKey: keyof AdminFeaturePermissions,
+    permissions: AdminFeaturePermissions = DEFAULT_ADMIN_PERMISSIONS,
+    userRole: string | null = null
+): { allowed: boolean; message?: string } {
+    if (userRole === 'MASTER') {
+        return { allowed: true };
+    }
+    const enabled = permissions[featureKey] !== false;
+    if (!enabled) {
+        return {
+            allowed: false,
+            message: `This option is disabled. Please ${CONTACT_ADMIN_INFO.formattedNotice}`
+        };
+    }
+    return { allowed: true };
+}
+
+export function isMaintenanceActive(
+    maintenanceSetting: boolean,
+    userRole: string | null = null
+): boolean {
+    if (userRole === 'MASTER') return false; // Admin bypass
+    return Boolean(maintenanceSetting);
 }
 

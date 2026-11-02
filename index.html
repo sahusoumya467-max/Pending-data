@@ -2416,9 +2416,725 @@
             border: none;
             box-shadow: 0 2px 6px rgba(245, 158, 11, 0.25);
         }
+
+        .topbar-action-btn.btn-features-theme {
+            background: linear-gradient(135deg, #8b5cf6, #6366f1);
+            color: #ffffff;
+            border: none;
+            box-shadow: 0 2px 6px rgba(139, 92, 246, 0.25);
+        }
+
+        .topbar-action-btn.btn-features-theme:hover {
+            background: linear-gradient(135deg, #7c3aed, #4f46e5);
+            box-shadow: 0 4px 12px rgba(139, 92, 246, 0.4);
+            transform: translateY(-1px);
+        }
+
+        /* ALL FEATURES DIRECTORY MODAL STYLES */
+        #allFeaturesDialogModal .modal-content {
+            max-width: 860px;
+            width: 95%;
+            max-height: 88vh;
+            display: flex;
+            flex-direction: column;
+            padding: 22px 24px;
+        }
+
+        .features-search-bar {
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            background: #f8fafc;
+            border: 1.5px solid #e2e8f0;
+            border-radius: 12px;
+            padding: 8px 14px;
+            margin: 12px 0;
+            transition: border-color 0.2s;
+        }
+
+        .features-search-bar:focus-within {
+            border-color: #6366f1;
+            background: #ffffff;
+            box-shadow: 0 0 0 3px rgba(99, 102, 241, 0.12);
+        }
+
+        .features-search-bar input {
+            border: none;
+            outline: none;
+            background: transparent;
+            width: 100%;
+            font-size: 0.88rem;
+            color: #1e293b;
+        }
+
+        .features-filter-tabs {
+            display: flex;
+            gap: 8px;
+            overflow-x: auto;
+            padding-bottom: 6px;
+            margin-bottom: 14px;
+            scrollbar-width: thin;
+        }
+
+        .feature-tab-btn {
+            background: #f1f5f9;
+            border: 1px solid #cbd5e1;
+            color: #475569;
+            padding: 5px 12px;
+            border-radius: 20px;
+            font-size: 0.76rem;
+            font-weight: 700;
+            cursor: pointer;
+            white-space: nowrap;
+            transition: all 0.2s;
+        }
+
+        .feature-tab-btn.active {
+            background: linear-gradient(135deg, #6366f1, #8b5cf6);
+            color: #ffffff;
+            border-color: transparent;
+            box-shadow: 0 2px 8px rgba(99, 102, 241, 0.3);
+        }
+
+        .features-directory-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(250px, 1fr));
+            gap: 12px;
+            overflow-y: auto;
+            padding-right: 4px;
+            max-height: 52vh;
+        }
+
+        .feature-item-card {
+            background: #ffffff;
+            border: 1.5px solid #e2e8f0;
+            border-radius: 14px;
+            padding: 14px;
+            display: flex;
+            flex-direction: column;
+            justify-content: space-between;
+            transition: all 0.22s ease;
+            box-shadow: 0 2px 6px rgba(0, 0, 0, 0.02);
+            position: relative;
+        }
+
+        .feature-item-card:hover {
+            transform: translateY(-2px);
+            border-color: #c7d2fe;
+            box-shadow: 0 8px 18px rgba(99, 102, 241, 0.1);
+        }
+
+        body.dark-mode .feature-item-card {
+            background: #1e293b;
+            border-color: #334155;
+        }
+
+        .feature-card-top {
+            display: flex;
+            align-items: flex-start;
+            gap: 10px;
+            margin-bottom: 10px;
+        }
+
+        .feature-card-icon {
+            width: 40px;
+            height: 40px;
+            border-radius: 10px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 1.1rem;
+            flex-shrink: 0;
+        }
+
+        .feature-card-badge {
+            font-size: 0.68rem;
+            font-weight: 800;
+            text-transform: uppercase;
+            padding: 2px 7px;
+            border-radius: 6px;
+            display: inline-block;
+            margin-bottom: 3px;
+        }
+
+        .feature-card-title {
+            font-size: 0.88rem;
+            font-weight: 800;
+            color: #0f172a;
+            line-height: 1.25;
+        }
+
+        body.dark-mode .feature-card-title {
+            color: #f8fafc;
+        }
+
+        .feature-card-desc {
+            font-size: 0.76rem;
+            color: #64748b;
+            line-height: 1.45;
+            margin-bottom: 12px;
+        }
+
+        body.dark-mode .feature-card-desc {
+            color: #94a3b8;
+        }
+
+        .feature-card-action-btn {
+            width: 100%;
+            background: #f8fafc;
+            border: 1px solid #cbd5e1;
+            color: #334155;
+            padding: 6px 12px;
+            border-radius: 8px;
+            font-size: 0.78rem;
+            font-weight: 700;
+            cursor: pointer;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 6px;
+            transition: all 0.2s;
+        }
+
+        .feature-card-action-btn:hover {
+            background: linear-gradient(135deg, #6366f1, #8b5cf6);
+            color: #ffffff;
+            border-color: transparent;
+            box-shadow: 0 2px 8px rgba(99, 102, 241, 0.3);
+        }
+
+        body.dark-mode .feature-card-action-btn {
+            background: #0f172a;
+            border-color: #334155;
+            color: #cbd5e1;
+        }
+
+        /* ============================================================
+           7. SYSTEM MAINTENANCE OVERLAY STYLING
+           ============================================================ */
+        #systemMaintenanceOverlay {
+            position: fixed;
+            inset: 0;
+            background: linear-gradient(135deg, rgba(15, 23, 42, 0.98) 0%, rgba(30, 27, 75, 0.98) 100%);
+            backdrop-filter: blur(14px);
+            z-index: 99999;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            padding: 20px;
+        }
+
+        .maintenance-box {
+            background: #ffffff;
+            width: 100%;
+            max-width: 520px;
+            border-radius: 24px;
+            padding: 34px 28px;
+            text-align: center;
+            box-shadow: 0 25px 70px rgba(0, 0, 0, 0.45);
+            border: 2px solid rgba(99, 102, 241, 0.35);
+            animation: modalScaleUp 0.3s cubic-bezier(0.16, 1, 0.3, 1);
+        }
+
+        .maintenance-icon-wrap {
+            width: 72px;
+            height: 72px;
+            margin: 0 auto 16px;
+            border-radius: 22px;
+            background: linear-gradient(135deg, #f59e0b, #d97706);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            color: #ffffff;
+            font-size: 2rem;
+            box-shadow: 0 10px 25px rgba(245, 158, 11, 0.4);
+        }
+
+        .maintenance-badge {
+            display: inline-flex;
+            align-items: center;
+            gap: 6px;
+            background: #fef3c7;
+            color: #b45309;
+            font-size: 0.76rem;
+            font-weight: 800;
+            text-transform: uppercase;
+            letter-spacing: 0.5px;
+            padding: 4px 12px;
+            border-radius: 20px;
+            margin-bottom: 12px;
+            border: 1px solid #fde68a;
+        }
+
+        .maintenance-box h2 {
+            margin: 0 0 10px;
+            font-size: 1.45rem;
+            color: #1e1b4b;
+            font-weight: 800;
+        }
+
+        .maintenance-sub {
+            font-size: 0.88rem;
+            color: #475569;
+            line-height: 1.5;
+            margin: 0 0 20px;
+        }
+
+        .maintenance-contact-card {
+            background: #f8fafc;
+            border: 1.5px dashed #cbd5e1;
+            border-radius: 16px;
+            padding: 16px;
+            margin-bottom: 22px;
+            text-align: center;
+        }
+
+        .maintenance-contact-title {
+            font-size: 0.78rem;
+            font-weight: 800;
+            text-transform: uppercase;
+            color: #64748b;
+            margin-bottom: 8px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 6px;
+        }
+
+        .maintenance-contact-body p {
+            margin: 0 0 8px;
+            font-size: 0.86rem;
+            color: #334155;
+            font-weight: 600;
+        }
+
+        .admin-email-pill {
+            display: inline-flex;
+            align-items: center;
+            gap: 8px;
+            background: #e0e7ff;
+            color: #4338ca;
+            padding: 8px 18px;
+            border-radius: 20px;
+            font-weight: 800;
+            font-size: 0.92rem;
+            text-decoration: none;
+            transition: all 0.2s;
+            box-shadow: 0 2px 6px rgba(99, 102, 241, 0.2);
+        }
+
+        .admin-email-pill:hover {
+            background: #c7d2fe;
+            transform: translateY(-1px);
+        }
+
+        .admin-emp-tag {
+            margin-top: 8px;
+            font-size: 0.82rem;
+            font-weight: 700;
+            color: #e11d48;
+        }
+
+        .maintenance-actions {
+            display: flex;
+            gap: 10px;
+            justify-content: center;
+        }
+
+        .btn-maintenance-admin {
+            background: linear-gradient(135deg, #6366f1, #4f46e5);
+            color: #ffffff;
+            border: none;
+            padding: 10px 18px;
+            border-radius: 12px;
+            font-weight: 700;
+            font-size: 0.86rem;
+            cursor: pointer;
+            display: inline-flex;
+            align-items: center;
+            gap: 6px;
+            box-shadow: 0 4px 12px rgba(99, 102, 241, 0.3);
+            transition: all 0.2s;
+        }
+
+        .btn-maintenance-admin:hover {
+            background: linear-gradient(135deg, #4f46e5, #4338ca);
+            transform: translateY(-1px);
+        }
+
+        .btn-maintenance-refresh {
+            background: #f1f5f9;
+            color: #475569;
+            border: 1px solid #cbd5e1;
+            padding: 10px 16px;
+            border-radius: 12px;
+            font-weight: 700;
+            font-size: 0.86rem;
+            cursor: pointer;
+            display: inline-flex;
+            align-items: center;
+            gap: 6px;
+            transition: all 0.2s;
+        }
+
+        .btn-maintenance-refresh:hover {
+            background: #e2e8f0;
+        }
+
+        /* ============================================================
+           8. ADMIN PANEL IN CREDIT PORTAL STYLING
+           ============================================================ */
+        .admin-panel-box {
+            margin-top: 24px;
+            border: 2px solid #6366f1 !important;
+            background: #ffffff !important;
+        }
+
+        .admin-identity-badge {
+            display: inline-flex;
+            align-items: center;
+            gap: 8px;
+            background: #e0e7ff;
+            color: #3730a3;
+            padding: 6px 14px;
+            border-radius: 20px;
+            font-size: 0.78rem;
+            font-weight: 700;
+            border: 1px solid #c7d2fe;
+        }
+
+        .admin-badge-dot {
+            width: 8px;
+            height: 8px;
+            border-radius: 50%;
+            background: #10b981;
+            box-shadow: 0 0 6px #10b981;
+        }
+
+        .admin-maintenance-banner {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            background: linear-gradient(135deg, #fffbeb 0%, #fef3c7 100%);
+            border: 1.5px solid #fcd34d;
+            border-radius: 16px;
+            padding: 16px 20px;
+            margin: 16px 0 20px;
+            gap: 16px;
+            flex-wrap: wrap;
+        }
+
+        .admin-maint-left {
+            display: flex;
+            align-items: center;
+            gap: 14px;
+            max-width: 680px;
+        }
+
+        .maint-icon-badge {
+            width: 44px;
+            height: 44px;
+            border-radius: 12px;
+            background: #f59e0b;
+            color: #ffffff;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 1.3rem;
+            flex-shrink: 0;
+            box-shadow: 0 4px 10px rgba(245, 158, 11, 0.35);
+        }
+
+        .admin-maint-right {
+            display: flex;
+            align-items: center;
+            gap: 12px;
+        }
+
+        /* Toggle Switch */
+        .admin-switch {
+            position: relative;
+            display: inline-block;
+            width: 52px;
+            height: 28px;
+        }
+
+        .admin-switch input {
+            opacity: 0;
+            width: 0;
+            height: 0;
+        }
+
+        .admin-slider {
+            position: absolute;
+            cursor: pointer;
+            top: 0; left: 0; right: 0; bottom: 0;
+            background-color: #cbd5e1;
+            transition: .3s;
+            border-radius: 28px;
+        }
+
+        .admin-slider:before {
+            position: absolute;
+            content: "";
+            height: 22px;
+            width: 22px;
+            left: 3px;
+            bottom: 3px;
+            background-color: white;
+            transition: .3s;
+            border-radius: 50%;
+            box-shadow: 0 2px 4px rgba(0,0,0,0.2);
+        }
+
+        .admin-switch input:checked + .admin-slider {
+            background-color: #ef4444;
+        }
+
+        .admin-switch input:checked + .admin-slider:before {
+            transform: translateX(24px);
+        }
+
+        .admin-switch-status {
+            font-size: 0.85rem;
+            font-weight: 800;
+            color: #475569;
+            min-width: 60px;
+        }
+
+        .admin-features-header {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            margin-bottom: 16px;
+            flex-wrap: wrap;
+            gap: 12px;
+            padding-bottom: 12px;
+            border-bottom: 1px solid #e2e8f0;
+        }
+
+        .admin-actions-group {
+            display: flex;
+            gap: 8px;
+            flex-wrap: wrap;
+        }
+
+        .btn-admin-action {
+            background: #f1f5f9;
+            color: #334155;
+            border: 1px solid #cbd5e1;
+            padding: 6px 14px;
+            border-radius: 8px;
+            font-size: 0.78rem;
+            font-weight: 700;
+            cursor: pointer;
+            display: inline-flex;
+            align-items: center;
+            gap: 6px;
+            transition: all 0.2s;
+        }
+
+        .btn-admin-action:hover {
+            background: #e2e8f0;
+            color: #0f172a;
+        }
+
+        .btn-admin-reset {
+            background: #fef2f2;
+            color: #dc2626;
+            border-color: #fecaca;
+        }
+
+        .btn-admin-reset:hover {
+            background: #fee2e2;
+        }
+
+        .admin-features-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(280px, 1fr));
+            gap: 12px;
+        }
+
+        .admin-feature-card {
+            background: #f8fafc;
+            border: 1px solid #e2e8f0;
+            border-radius: 14px;
+            padding: 12px 14px;
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            transition: all 0.2s;
+        }
+
+        .admin-feature-card:hover {
+            border-color: #cbd5e1;
+            box-shadow: 0 4px 12px rgba(0,0,0,0.04);
+        }
+
+        .admin-feature-card.is-disabled {
+            background: #fff1f2;
+            border-color: #fecdd3;
+        }
+
+        .feat-meta-left {
+            display: flex;
+            align-items: center;
+            gap: 10px;
+        }
+
+        .feat-icon-bubble {
+            width: 36px;
+            height: 36px;
+            border-radius: 10px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 1rem;
+            flex-shrink: 0;
+        }
+
+        .feat-title-text {
+            font-size: 0.85rem;
+            font-weight: 700;
+            color: #1e293b;
+            display: block;
+        }
+
+        .feat-sub-text {
+            font-size: 0.72rem;
+            color: #64748b;
+            display: block;
+        }
+
+        /* Insurance option buttons */
+        .insurance-opt-btn {
+            background: #f8fafc;
+            border: 1.5px solid #cbd5e1;
+            padding: 8px 6px;
+            border-radius: 10px;
+            font-size: 0.78rem;
+            font-weight: 700;
+            color: #475569;
+            cursor: pointer;
+            transition: all 0.2s;
+            text-align: center;
+        }
+
+        .insurance-opt-btn.active {
+            background: #ecfdf5;
+            border-color: #10b981;
+            color: #047857;
+            box-shadow: 0 2px 8px rgba(16, 185, 129, 0.2);
+        }
+
+        /* Feature disabled overlay banner on main sections */
+        .section-disabled-overlay {
+            position: absolute;
+            inset: 0;
+            background: rgba(255, 255, 255, 0.92);
+            backdrop-filter: blur(4px);
+            z-index: 20;
+            border-radius: inherit;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            padding: 24px;
+            text-align: center;
+        }
+
+        .section-disabled-badge {
+            background: #fee2e2;
+            color: #b91c1c;
+            padding: 10px 18px;
+            border-radius: 12px;
+            font-weight: 700;
+            font-size: 0.86rem;
+            display: inline-flex;
+            align-items: center;
+            gap: 8px;
+            border: 1px solid #fca5a5;
+            box-shadow: 0 4px 14px rgba(220, 38, 38, 0.15);
+        }
     </style>
 </head>
 <body>
+
+<!-- SYSTEM MAINTENANCE OVERLAY -->
+<div id="systemMaintenanceOverlay" style="display: none;">
+    <div class="maintenance-box">
+        <div class="maintenance-icon-wrap">
+            <i class="fa-solid fa-screwdriver-wrench"></i>
+        </div>
+        <div class="maintenance-badge">
+            <i class="fa-solid fa-triangle-exclamation"></i> Scheduled Maintenance
+        </div>
+        <h2>System Under Maintenance</h2>
+        <p class="maintenance-sub">
+            The Credit Portal & Intelligence Workspace is currently undergoing scheduled maintenance and system optimization. Normal operations will resume shortly.
+        </p>
+        
+        <div class="maintenance-contact-card">
+            <div class="maintenance-contact-title">
+                <i class="fa-solid fa-headset" style="color: #6366f1;"></i> Administrator Contact Support
+            </div>
+            <div class="maintenance-contact-body">
+                <p>For urgent access or operational inquiries, please contact admin:</p>
+                <a href="mailto:soumyaranjan@afpl.net.in" class="admin-email-pill">
+                    <i class="fa-solid fa-envelope"></i> soumyaranjan@afpl.net.in
+                </a>
+                <div class="admin-emp-tag">
+                    <i class="fa-solid fa-id-badge"></i> EMP ID: <strong>12687</strong>
+                </div>
+            </div>
+        </div>
+
+        <div class="maintenance-actions">
+            <button class="btn-maintenance-admin" onclick="openMaintenanceAdminLogin()">
+                <i class="fa-solid fa-lock-open"></i> Admin Access Unlock
+            </button>
+            <button class="btn-maintenance-refresh" onclick="location.reload()">
+                <i class="fa-solid fa-arrows-rotate"></i> Check Again
+            </button>
+        </div>
+
+        <div id="maintenanceAdminBox" style="display: none; margin-top: 15px; width: 100%;">
+            <input type="password" id="maintenanceAdminPass" placeholder="Enter Master Admin Password" style="width: 100%; padding: 10px 14px; border-radius: 10px; border: 1.5px solid #cbd5e1; font-size: 0.9rem;" onkeydown="if(event.key==='Enter') unlockMaintenanceWithAdmin()">
+            <div style="display: flex; gap: 8px; margin-top: 8px;">
+                <button onclick="unlockMaintenanceWithAdmin()" style="flex: 1; padding: 8px; background: #6366f1; color: white; border: none; border-radius: 8px; font-weight: 700; cursor: pointer;">Unlock</button>
+                <button onclick="document.getElementById('maintenanceAdminBox').style.display='none'" style="padding: 8px 14px; background: #e2e8f0; color: #475569; border: none; border-radius: 8px; font-weight: 600; cursor: pointer;">Cancel</button>
+            </div>
+            <p id="maintenanceAdminErr" style="color: #ef4444; font-size: 0.8rem; margin-top: 6px; display: none; font-weight: 700;">Invalid Admin Credentials</p>
+        </div>
+    </div>
+</div>
+
+<!-- FEATURE DISABLED NOTIFICATION MODAL -->
+<div class="modal" id="featureDisabledModal" style="display: none; z-index: 1060;" onclick="if(event.target === this) closeFeatureDisabledModal()">
+    <div class="modal-content" style="max-width: 440px; text-align: center; padding: 24px;">
+        <div style="width: 56px; height: 56px; margin: 0 auto 14px; border-radius: 50%; background: #fee2e2; display: flex; align-items: center; justify-content: center; color: #ef4444; font-size: 1.6rem; box-shadow: 0 4px 14px rgba(239, 68, 68, 0.25);">
+            <i class="fa-solid fa-ban"></i>
+        </div>
+        <h3 style="font-size: 1.15rem; font-weight: 800; color: #1e1b4b; margin-bottom: 8px;" id="disabledModalTitle">Option Disabled</h3>
+        <p style="font-size: 0.88rem; color: #475569; line-height: 1.5; margin-bottom: 16px;" id="disabledModalText">
+            This option is currently disabled by administrator.
+        </p>
+        <div style="background: #f8fafc; border: 1.5px dashed #cbd5e1; border-radius: 12px; padding: 12px 14px; margin-bottom: 18px; text-align: left;">
+            <div style="font-size: 0.72rem; text-transform: uppercase; font-weight: 800; color: #64748b; margin-bottom: 4px;">
+                <i class="fa-solid fa-headset" style="color: #6366f1;"></i> Support / Permissions
+            </div>
+            <div style="font-size: 0.88rem; font-weight: 700; color: #0f172a; word-break: break-all;">
+                contact admin <a href="mailto:soumyaranjan@afpl.net.in" style="color: #6366f1; text-decoration: underline;">soumyaranjan@afpl.net.in</a>
+            </div>
+            <div style="font-size: 0.84rem; font-weight: 800; color: #e11d48; margin-top: 4px;">
+                EMP ID@12687
+            </div>
+        </div>
+        <button class="btn btn-refresh" onclick="closeFeatureDisabledModal()" style="width: 100%; padding: 10px; font-size: 0.88rem; border-radius: 10px;">
+            Acknowledge
+        </button>
+    </div>
+</div>
 
 <!-- WEBPAGE FEEDBACK RATING MODAL (FIRST TIME OPEN & ON DEMAND) -->
 <div id="webpageFeedbackOverlay" onclick="if(event.target === this) closeFeedbackModal()">
@@ -2630,6 +3346,11 @@
                 <i class="fa-solid fa-wave-square"></i>
                 <span>Wave Pulse Flow</span>
             </button>
+            <button class="nav-item" onclick="openAllFeaturesModal(); toggleWorkspaceSidebar(false);">
+                <i class="fa-solid fa-shapes"></i>
+                <span>All Features</span>
+                <span class="nav-badge-pill" style="background: linear-gradient(135deg, #8b5cf6, #6366f1); color: #fff;">15</span>
+            </button>
 
             <div class="nav-section-title" style="margin-top: 14px;">Productivity Tools</div>
             <button class="nav-item nav-btn-highlight" onclick="openLoginModal(); toggleWorkspaceSidebar(false);">
@@ -2694,6 +3415,7 @@
                 <button class="topbar-nav-btn" onclick="activateNavItem(null, 'branchExplorerSection')"><i class="fa-solid fa-building-circle-check" style="color: #06b6d4;"></i> Branches</button>
                 <button class="topbar-nav-btn" onclick="activateNavItem(null, 'rejectionConsoleSection')"><i class="fa-solid fa-ban" style="color: #e11d48;"></i> Rejections</button>
                 <button class="topbar-nav-btn" onclick="activateNavItem(null, 'pendingTableSection')"><i class="fa-solid fa-clock" style="color: #f59e0b;"></i> Pending</button>
+                <button class="topbar-nav-btn" onclick="openAllFeaturesModal()"><i class="fa-solid fa-shapes" style="color: #8b5cf6;"></i> Features</button>
             </nav>
 
             <div class="topbar-middle-search">
@@ -2704,6 +3426,10 @@
             </div>
 
             <div class="topbar-right-actions">
+                <button class="topbar-action-btn btn-features-theme" onclick="openAllFeaturesModal()" title="View All Portal Features Directory">
+                    <i class="fa-solid fa-shapes"></i>
+                    <span class="action-btn-label">Features</span>
+                </button>
                 <button class="topbar-action-btn btn-credit-theme" onclick="openLoginModal()" title="Open Credit Portal">
                     <i class="fa-solid fa-user-lock"></i>
                     <span class="action-btn-label">Credit</span>
@@ -2720,8 +3446,8 @@
                     <i class="fa-solid fa-coins"></i>
                     <span class="action-btn-label">EMI</span>
                 </button>
-                <button class="topbar-action-btn btn-festive-theme" onclick="showFestiveOccasionModal()" title="View Today's Festival & Sky Lights Celebration">
-                    <i class="fa-solid fa-wand-magic-sparkles"></i>
+                <button class="topbar-action-btn btn-festive-theme" onclick="triggerAppropriateWishModal()" title="View Today's Greetings & Wish">
+                    <i class="fa-solid fa-wand-magic-sparkles" id="topbarOccasionBtnIcon"></i>
                     <span class="action-btn-label" id="topbarOccasionBtnLabel">Occasion Wish</span>
                 </button>
                 <button class="topbar-action-btn btn-rating-theme" onclick="openFeedbackModal()" title="Rate Webpage">
@@ -2742,7 +3468,7 @@
         <div class="workspace-body-container" id="workspaceBodyTop">
 
         <!-- FESTIVE OCCASION & DATE CELEBRATION RIBBON -->
-        <div class="festive-occasion-ribbon" id="festiveOccasionRibbon" onclick="showFestiveOccasionModal()" title="Click to view Sky Lights & Floating Balloons celebration">
+        <div class="festive-occasion-ribbon" id="festiveOccasionRibbon" onclick="triggerAppropriateWishModal()" title="Click to view today's greetings & celebrations">
             <div class="festive-ribbon-left">
                 <span class="festive-ribbon-symbol" id="ribbonSymbol">🪔</span>
                 <div class="festive-ribbon-text">
@@ -2754,8 +3480,8 @@
                 ✨ May the divine lights bring wealth, vibrant health, peace & grand success to you and your family!
             </div>
             <div class="festive-ribbon-right">
-                <button class="festive-ribbon-btn" title="View Full Sky Lights & Balloon Celebration">
-                    <i class="fa-solid fa-wand-magic-sparkles"></i> Sky Lights & Balloons 🎈
+                <button class="festive-ribbon-btn" id="ribbonActionBtn" title="Click to open wish">
+                    <i class="fa-solid fa-wand-magic-sparkles" id="ribbonActionBtnIcon"></i> <span id="ribbonActionBtnText">Sky Lights & Balloons 🎈</span>
                 </button>
             </div>
         </div>
@@ -3122,28 +3848,143 @@
 
         <div class="form-group">
             <label>Loan Amount (₹)</label>
-            <input type="number" id="dialogEmiLoanAmt" placeholder="e.g. 50000" oninput="computeDialogQuickEmi()">
+            <input type="number" id="dialogEmiLoanAmt" placeholder="Enter loan amount (e.g. 50000)" oninput="computeDialogQuickEmi()">
         </div>
 
+        <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 12px;">
+            <div class="form-group">
+                <label>Annual ROI (% Rate)</label>
+                <input type="number" id="dialogEmiRoi" step="0.01" value="24.49" placeholder="e.g. 24.49" oninput="computeDialogQuickEmi()">
+            </div>
+            <div class="form-group">
+                <label>Tenure (Months)</label>
+                <input type="number" id="dialogEmiTenure" value="24" placeholder="e.g. 12, 18, 24, 36" oninput="computeDialogQuickEmi()">
+            </div>
+        </div>
+
+        <!-- LPF Percentage (Editable) with instruction right side of LPF (For IBL LPF change manually) -->
         <div class="form-group">
-            <label>Annual Interest Rate (% ROI)</label>
-            <input type="number" id="dialogEmiRoi" step="0.01" value="24.49" placeholder="e.g. 24.49" oninput="computeDialogQuickEmi()">
+            <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 6px;">
+                <label style="margin: 0;"><i class="fa-solid fa-percent" style="color: #d97706;"></i> LPF Rate (%) (Loan Processing Fee)</label>
+                <span class="lpf-instruction-badge" style="font-size: 0.74rem; font-weight: 700; color: #b45309; background: #fef3c7; padding: 2px 8px; border-radius: 6px; border: 1px solid #fcd34d;">
+                    (For IBL LPF change manually)
+                </span>
+            </div>
+            <div style="position: relative;">
+                <input type="number" id="dialogEmiLpfPercent" step="0.01" value="1.5" placeholder="1.5" oninput="computeDialogQuickEmi()">
+            </div>
         </div>
 
+        <!-- LPF Amount (Below showing LPF amount - Non Editable) -->
         <div class="form-group">
-            <label>Tenure (Months)</label>
-            <input type="number" id="dialogEmiTenure" value="24" placeholder="e.g. 12, 18, 24, 36" oninput="computeDialogQuickEmi()">
+            <label style="font-size: 0.78rem; color: #475569; margin-bottom: 4px; display: flex; align-items: center; justify-content: space-between;">
+                <span><i class="fa-solid fa-calculator" style="color: #0284c7;"></i> LPF Amount (Auto Computed)</span>
+                <span style="font-size: 0.72rem; font-weight: 600; color: #64748b;">(Non-editable · Loan Amount × LPF %)</span>
+            </label>
+            <div style="position: relative;">
+                <input type="text" id="dialogEmiLpf" readonly style="background: #f1f5f9; cursor: not-allowed; font-weight: 700; color: #1e293b;" placeholder="₹ 0">
+            </div>
         </div>
 
-        <div class="result-box-matrix" style="background: #fffbeb; border-color: #fde68a;">
+        <!-- GST Option (LPF * 18%) -->
+        <div class="form-group" style="background: #f8fafc; padding: 10px 14px; border-radius: 10px; border: 1px solid #e2e8f0;">
             <div style="display: flex; justify-content: space-between; align-items: center;">
+                <label style="margin: 0; display: flex; align-items: center; gap: 8px; cursor: pointer;">
+                    <input type="checkbox" id="dialogEmiGstToggle" checked onchange="computeDialogQuickEmi()" style="width: 16px; height: 16px; cursor: pointer;">
+                    <span style="font-size: 0.84rem; font-weight: 700; color: #1e293b;">GST Option (LPF * 18%)</span>
+                </label>
+                <span id="dialogEmiGstVal" style="font-size: 0.86rem; font-weight: 800; color: #0284c7;">₹ 0</span>
+            </div>
+        </div>
+
+        <!-- Insurance Option: Single or Double (7.5 per thousand per year for single) -->
+        <div class="form-group">
+            <label><i class="fa-solid fa-shield-heart" style="color: #10b981;"></i> Insurance Option (Single: ₹7.5 / ₹1,000 / Year)</label>
+            <div style="display: grid; grid-template-columns: 1fr 1fr 1fr; gap: 8px; margin-top: 6px;">
+                <button type="button" class="insurance-opt-btn active" id="insBtnSingle" onclick="setInsuranceOption('single')">
+                    Single (₹7.5/k)
+                </button>
+                <button type="button" class="insurance-opt-btn" id="insBtnDouble" onclick="setInsuranceOption('double')">
+                    Double (₹15/k)
+                </button>
+                <button type="button" class="insurance-opt-btn" id="insBtnNone" onclick="setInsuranceOption('none')">
+                    None (₹0)
+                </button>
+            </div>
+            <div style="display: flex; justify-content: space-between; align-items: center; margin-top: 6px; padding: 6px 10px; background: #ecfdf5; border-radius: 8px; border: 1px solid #a7f3d0;">
+                <span style="font-size: 0.78rem; font-weight: 600; color: #065f46;" id="dialogEmiInsLabel">Single Member Insurance (₹7.5 per 1k/yr):</span>
+                <span style="font-size: 0.86rem; font-weight: 800; color: #047857;" id="dialogEmiInsVal">₹ 0</span>
+            </div>
+        </div>
+
+        <!-- Results Box -->
+        <div class="result-box-matrix" style="background: #fffbeb; border-color: #fde68a;">
+            <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 8px;">
                 <span style="font-weight: 700; color: #92400e;">Monthly EMI:</span>
-                <span style="font-weight: 900; color: #b45309; font-size: 1.3rem;" id="dialogEmiOutput">₹ 0</span>
+                <span style="font-weight: 900; color: #b45309; font-size: 1.35rem;" id="dialogEmiOutput">₹ 0</span>
+            </div>
+            <div style="border-top: 1px dashed #fcd34d; padding-top: 8px; display: flex; flex-direction: column; gap: 4px; font-size: 0.8rem;">
+                <div style="display: flex; justify-content: space-between; color: #78350f;">
+                    <span>Total Upfront Deductions (LPF + GST + Ins):</span>
+                    <strong id="dialogEmiTotalDeductions">₹ 0</strong>
+                </div>
+                <div style="display: flex; justify-content: space-between; color: #047857; font-weight: 800; font-size: 0.88rem; background: #ecfdf5; padding: 5px 8px; border-radius: 6px;">
+                    <span>Net Disbursed to Client (In-Hand):</span>
+                    <span id="dialogEmiNetDisbursed">₹ 0</span>
+                </div>
+                <div style="display: flex; justify-content: space-between; color: #475569; margin-top: 2px;">
+                    <span>Total Repayment (EMI × Tenure):</span>
+                    <strong id="dialogEmiTotalRepayment">₹ 0</strong>
+                </div>
             </div>
         </div>
 
         <div style="display: flex; justify-content: flex-end; margin-top: 18px;">
             <button class="btn btn-refresh" onclick="closeEmiDialog()">Close</button>
+        </div>
+    </div>
+</div>
+
+<!-- Modal 3.5: ALL FEATURES DIRECTORY DIALOG MODAL -->
+<div class="modal" id="allFeaturesDialogModal">
+    <div class="modal-content" style="max-width: 960px; max-height: 90vh; display: flex; flex-direction: column; padding: 22px;">
+        <div class="branch-dialog-header" style="padding-bottom: 14px; border-bottom: 1px solid var(--border-color);">
+            <div class="branch-dialog-title">
+                <div style="width: 44px; height: 44px; border-radius: 12px; background: linear-gradient(135deg, #0284c7, #2563eb); display: flex; align-items: center; justify-content: center; color: #fff; font-size: 1.3rem; box-shadow: 0 4px 12px rgba(37,99,235,0.3);">
+                    <i class="fa-solid fa-layer-group"></i>
+                </div>
+                <div>
+                    <h2 style="margin: 0; font-size: 1.25rem; font-weight: 800; color: var(--text-primary);">All Portal Features & Tools</h2>
+                    <span style="font-size: 0.8rem; color: var(--text-secondary); font-weight: 600;">Interactive directory & quick launcher for all Banking & Credit features</span>
+                </div>
+                <span class="branch-badge-pill" id="featuresTotalBadge" style="background: #e0f2fe; color: #0369a1;">15 Features</span>
+            </div>
+            <button class="btn-close-dialog" onclick="closeAllFeaturesModal()" title="Close Directory"><i class="fa-solid fa-xmark"></i></button>
+        </div>
+
+        <div style="padding: 16px 4px 10px 4px;">
+            <div class="features-search-bar">
+                <i class="fa-solid fa-magnifying-glass" style="color: var(--text-secondary);"></i>
+                <input type="text" id="featuresDirectorySearch" placeholder="Search features by name, tool, calculation or description..." oninput="filterFeaturesDirectory(this.value)">
+            </div>
+            <div class="features-filter-tabs">
+                <button class="feature-tab-btn active" onclick="setFeatureCategoryFilter('ALL', this)"><i class="fa-solid fa-cubes"></i> All Features</button>
+                <button class="feature-tab-btn" onclick="setFeatureCategoryFilter('ANALYTICS', this)"><i class="fa-solid fa-chart-line"></i> Visual & Analytics</button>
+                <button class="feature-tab-btn" onclick="setFeatureCategoryFilter('OPERATIONS', this)"><i class="fa-solid fa-table-list"></i> Operations & Records</button>
+                <button class="feature-tab-btn" onclick="setFeatureCategoryFilter('CALCULATORS', this)"><i class="fa-solid fa-calculator"></i> Calculators & Tools</button>
+                <button class="feature-tab-btn" onclick="setFeatureCategoryFilter('EXPERIENCE', this)"><i class="fa-solid fa-wand-magic-sparkles"></i> Portal & Experience</button>
+            </div>
+        </div>
+
+        <div style="flex: 1; overflow-y: auto; padding: 6px 4px 12px 4px;">
+            <div class="features-directory-grid" id="featuresDirectoryGridContainer">
+                <!-- Dynamically populated -->
+            </div>
+        </div>
+
+        <div style="display: flex; justify-content: space-between; align-items: center; padding-top: 14px; border-top: 1px solid var(--border-color); margin-top: 6px;">
+            <span style="font-size: 0.82rem; color: var(--text-secondary); font-weight: 600;" id="featuresDirectoryCountSummary">Showing 15 of 15 features</span>
+            <button class="btn btn-refresh" onclick="closeAllFeaturesModal()" style="padding: 7px 18px; font-weight: 700;">Close Directory</button>
         </div>
     </div>
 </div>
@@ -3511,6 +4352,67 @@
                 </table>
             </div>
         </div>
+
+        <!-- ENTERPRISE ADMIN CONTROL PANEL (Credit Portal Section) -->
+        <div class="table-card mesh-container admin-panel-box" id="creditAdminPanelCard">
+            <canvas class="mesh-canvas"></canvas>
+            <div class="table-header" style="flex-wrap: wrap; gap: 10px;">
+                <div style="display: flex; align-items: center; gap: 10px;">
+                    <div style="width: 42px; height: 42px; border-radius: 12px; background: linear-gradient(135deg, #6366f1, #a855f7); display: flex; align-items: center; justify-content: center; color: #fff; font-size: 1.25rem; box-shadow: 0 4px 12px rgba(99, 102, 241, 0.35);">
+                        <i class="fa-solid fa-user-shield"></i>
+                    </div>
+                    <div>
+                        <h3 style="margin: 0; font-size: 1.12rem; color: #1e1b4b; font-weight: 800;">Enterprise Admin Control Panel</h3>
+                        <p style="margin: 2px 0 0; font-size: 0.76rem; color: #64748b; font-weight: 600;">System Governance, Feature Availability & Maintenance Controller</p>
+                    </div>
+                </div>
+                <div class="admin-identity-badge">
+                    <span class="admin-badge-dot"></span>
+                    <span>Admin: Soumyaranjan Sahu &bull; soumyaranjan@afpl.net.in &bull; EMP ID@12687</span>
+                </div>
+            </div>
+
+            <!-- Maintenance Mode Master Strip -->
+            <div class="admin-maintenance-banner" id="adminMaintenanceBanner">
+                <div class="admin-maint-left">
+                    <div class="maint-icon-badge">
+                        <i class="fa-solid fa-triangle-exclamation"></i>
+                    </div>
+                    <div>
+                        <h4 style="margin: 0; font-size: 0.98rem; font-weight: 800; color: #1e1b4b;">System Maintenance Mode</h4>
+                        <p style="margin: 3px 0 0; font-size: 0.8rem; color: #64748b; line-height: 1.4;">
+                            When enabled, any user opening this webpage will see the full-screen maintenance notice directing them to contact admin: <strong>soumyaranjan@afpl.net.in</strong> (EMP ID@12687).
+                        </p>
+                    </div>
+                </div>
+                <div class="admin-maint-right">
+                    <label class="admin-switch">
+                        <input type="checkbox" id="adminMaintenanceToggle" onchange="toggleAdminMaintenance(this.checked)">
+                        <span class="admin-slider"></span>
+                    </label>
+                    <span class="admin-switch-status" id="adminMaintenanceStatusText">Inactive</span>
+                </div>
+            </div>
+
+            <!-- Features Enable / Disable Matrix Grid -->
+            <div class="admin-features-header">
+                <div>
+                    <h4 style="margin: 0; font-size: 0.96rem; font-weight: 800; color: #1e1b4b;">All Options Enable & Disable Control Matrix</h4>
+                    <p style="margin: 2px 0 0; font-size: 0.78rem; color: #64748b;">
+                        If any option is disabled, other users will see: <em>"This option is disabled. Please contact admin soumyaranjan@afpl.net.in EMP ID@12687"</em>
+                    </p>
+                </div>
+                <div class="admin-actions-group">
+                    <button class="btn-admin-action" onclick="setAllAdminFeatures(true)"><i class="fa-solid fa-check-double" style="color: #10b981;"></i> Enable All</button>
+                    <button class="btn-admin-action" onclick="setAllAdminFeatures(false)"><i class="fa-solid fa-ban" style="color: #ef4444;"></i> Disable All</button>
+                    <button class="btn-admin-action btn-admin-reset" onclick="resetAdminFeaturesDefault()"><i class="fa-solid fa-rotate-left"></i> Reset Defaults</button>
+                </div>
+            </div>
+
+            <div class="admin-features-grid" id="adminFeaturesGridContainer">
+                <!-- Dynamically rendered and interactive in JS -->
+            </div>
+        </div>
     </div>
 </div>
 
@@ -3710,6 +4612,7 @@
     }
 
     function openMatrixDialog() {
+        if (!checkFeaturePermission('matrixCalculator')) return;
         document.getElementById('matrixCalculatorModal').style.display = 'flex';
         initMatrixAccountDropdown();
         computeMatrixDialogValues();
@@ -3719,9 +4622,27 @@
         document.getElementById('matrixCalculatorModal').style.display = 'none';
     }
 
-    /* EMI CALCULATOR DIALOG LOGIC */
+    /* EMI CALCULATOR DIALOG LOGIC (LPF, GST & INSURANCE) */
+    let emiSelectedInsurance = 'single';
+
+    function setInsuranceOption(opt) {
+        emiSelectedInsurance = opt;
+        document.querySelectorAll('.insurance-opt-btn').forEach(btn => btn.classList.remove('active'));
+        if (opt === 'single') document.getElementById('insBtnSingle')?.classList.add('active');
+        if (opt === 'double') document.getElementById('insBtnDouble')?.classList.add('active');
+        if (opt === 'none') document.getElementById('insBtnNone')?.classList.add('active');
+        computeDialogQuickEmi();
+    }
+
     function openEmiDialog() {
+        if (!checkFeaturePermission('emiCalculator')) return;
         document.getElementById('emiCalculatorModal').style.display = 'flex';
+        
+        // Loan Amount is blank by default as requested
+        const amtInput = document.getElementById('dialogEmiLoanAmt');
+        if (amtInput && !amtInput.value) {
+            amtInput.value = '';
+        }
         computeDialogQuickEmi();
     }
 
@@ -3733,14 +4654,67 @@
         const principal = parseFloat(document.getElementById('dialogEmiLoanAmt').value) || 0;
         const roiAnnual = parseFloat(document.getElementById('dialogEmiRoi').value) || 0;
         const months = parseFloat(document.getElementById('dialogEmiTenure').value) || 0;
-        const outSpan = document.getElementById('dialogEmiOutput');
+        const tenureYears = months / 12;
 
+        const outSpan = document.getElementById('dialogEmiOutput');
+        const gstSpan = document.getElementById('dialogEmiGstVal');
+        const insSpan = document.getElementById('dialogEmiInsVal');
+        const insLabel = document.getElementById('dialogEmiInsLabel');
+        const totalDedSpan = document.getElementById('dialogEmiTotalDeductions');
+        const netDisbSpan = document.getElementById('dialogEmiNetDisbursed');
+        const totalRepaySpan = document.getElementById('dialogEmiTotalRepayment');
+
+        // LPF calculation: LPF % is editable (default 1.5%), LPF amount below is non-editable auto-computed
+        const lpfPercentInput = document.getElementById('dialogEmiLpfPercent');
+        const lpfPercent = lpfPercentInput ? (parseFloat(lpfPercentInput.value) || 0) : 1.5;
+        
+        const lpf = principal > 0 ? Math.round(principal * (lpfPercent / 100)) : 0;
+        const lpfAmountInput = document.getElementById('dialogEmiLpf');
+        if (lpfAmountInput) {
+            lpfAmountInput.value = lpf > 0 ? `₹ ${lpf.toLocaleString('en-IN')}` : '₹ 0';
+        }
+
+        // GST calculation (LPF * 18%)
+        const gstToggle = document.getElementById('dialogEmiGstToggle');
+        const applyGst = gstToggle ? gstToggle.checked : true;
+        const gst = applyGst ? Math.round(lpf * 0.18) : 0;
+        if (gstSpan) gstSpan.textContent = `₹ ${gst.toLocaleString('en-IN')}`;
+
+        // Insurance calculation (7.5 per thousand per year for single, double is 2x)
+        let insurance = 0;
+        if (principal > 0 && tenureYears > 0) {
+            if (emiSelectedInsurance === 'single') {
+                insurance = Math.round((principal / 1000) * 7.5 * tenureYears);
+                if (insLabel) insLabel.textContent = `Single Member Insurance (₹7.5/k/yr · ${months} mos):`;
+            } else if (emiSelectedInsurance === 'double') {
+                insurance = Math.round((principal / 1000) * 15 * tenureYears);
+                if (insLabel) insLabel.textContent = `Double Member Insurance (₹15/k/yr · ${months} mos):`;
+            } else {
+                insurance = 0;
+                if (insLabel) insLabel.textContent = `No Insurance:`;
+            }
+        } else {
+            if (insLabel) insLabel.textContent = `Insurance Option:`;
+        }
+        if (insSpan) insSpan.textContent = `₹ ${insurance.toLocaleString('en-IN')}`;
+
+        // Deductions & Net Disbursement
+        const totalDeductions = lpf + gst + insurance;
+        const netDisbursed = principal > 0 ? Math.max(0, principal - totalDeductions) : 0;
+        if (totalDedSpan) totalDedSpan.textContent = `₹ ${totalDeductions.toLocaleString('en-IN')} (LPF: ₹${lpf.toLocaleString('en-IN')} + GST: ₹${gst.toLocaleString('en-IN')} + Ins: ₹${insurance.toLocaleString('en-IN')})`;
+        if (netDisbSpan) netDisbSpan.textContent = `₹ ${netDisbursed.toLocaleString('en-IN')}`;
+
+        // Monthly EMI calculation
         if (principal > 0 && roiAnnual > 0 && months > 0) {
             const monthlyRate = (roiAnnual / 12) / 100;
-            const emi = principal * monthlyRate * Math.pow(1 + monthlyRate, months) / (Math.pow(1 + monthlyRate, months) - 1);
-            outSpan.textContent = `₹ ${Math.round(emi).toLocaleString('en-IN')}`;
+            const factor = Math.pow(1 + monthlyRate, months);
+            const emi = Math.round(principal * monthlyRate * factor / (factor - 1));
+            const totalRepayment = emi * months;
+            if (outSpan) outSpan.textContent = `₹ ${emi.toLocaleString('en-IN')}`;
+            if (totalRepaySpan) totalRepaySpan.textContent = `₹ ${totalRepayment.toLocaleString('en-IN')}`;
         } else {
-            outSpan.textContent = '₹ 0';
+            if (outSpan) outSpan.textContent = '₹ 0';
+            if (totalRepaySpan) totalRepaySpan.textContent = '₹ 0';
         }
     }
 
@@ -3753,6 +4727,342 @@
         }
     }
     setInterval(updateRoboticClock, 1000);
+
+    /* ============================================================
+       ALL FEATURES DIRECTORY CONTROLLER
+       ============================================================ */
+    const ALL_PORTAL_FEATURES = [
+        {
+            id: 'emiCalculator',
+            title: 'Banking EMI & Charges Calculator',
+            category: 'CALCULATORS',
+            categoryLabel: 'Calculators & Tools',
+            badge: 'Charges & Net In-Hand',
+            badgeBg: '#fef3c7',
+            badgeColor: '#b45309',
+            icon: 'fa-coins',
+            iconBg: 'rgba(217, 119, 6, 0.12)',
+            iconColor: '#d97706',
+            description: 'Loan installment calculator with editable LPF (default 1.5%), auto-computed non-editable LPF amount, single/double insurance (₹7.5/k/yr), 18% GST and net disbursed amount.',
+            actionText: 'Open EMI Calculator',
+            actionIcon: 'fa-calculator',
+            actionHandler: "closeAllFeaturesModal(); openEmiDialog();"
+        },
+        {
+            id: 'matrixCalculator',
+            title: 'Underwriting Matrix Calculator',
+            category: 'CALCULATORS',
+            categoryLabel: 'Calculators & Tools',
+            badge: 'Policy & FOIR',
+            badgeBg: '#ecfdf5',
+            badgeColor: '#047857',
+            icon: 'fa-calculator',
+            iconBg: 'rgba(16, 185, 129, 0.12)',
+            iconColor: '#10b981',
+            description: 'Evaluate customer borrowing eligibility, loan slab matrices (Table B & D), multi-borrower installment divisions, and underwriting credit limits.',
+            actionText: 'Open Matrix Calculator',
+            actionIcon: 'fa-table-columns',
+            actionHandler: "closeAllFeaturesModal(); openMatrixDialog();"
+        },
+        {
+            id: 'festiveWish',
+            title: 'Festival & Daily Occasion Wishes',
+            category: 'EXPERIENCE',
+            categoryLabel: 'Portal & Experience',
+            badge: 'Sky Lights & Shayari',
+            badgeBg: '#fff7ed',
+            badgeColor: '#c2410c',
+            icon: 'fa-wand-magic-sparkles',
+            iconBg: 'rgba(245, 158, 11, 0.12)',
+            iconColor: '#f59e0b',
+            description: 'Automated date detector: triggers sky lights & balloons on accurate festive occasions (Diwali, Chhath, Holi, New Year, etc.); shows morning, afternoon, evening wishes with shayari on other days.',
+            actionText: 'View Today’s Wish',
+            actionIcon: 'fa-gift',
+            actionHandler: "closeAllFeaturesModal(); triggerAppropriateWishModal();"
+        },
+        {
+            id: 'ratingFeedback',
+            title: 'Webpage Community Rating & Reviews',
+            category: 'EXPERIENCE',
+            categoryLabel: 'Portal & Experience',
+            badge: 'User Feedback',
+            badgeBg: '#fdf2f8',
+            badgeColor: '#be185d',
+            icon: 'fa-star',
+            iconBg: 'rgba(236, 72, 153, 0.12)',
+            iconColor: '#ec4899',
+            description: 'Interactive 5-star rating system, tagged feedback chips, and persistent local storage review logging with overall portal satisfaction rating display.',
+            actionText: 'Rate Webpage',
+            actionIcon: 'fa-star-half-stroke',
+            actionHandler: "closeAllFeaturesModal(); openFeedbackModal();"
+        },
+        {
+            id: 'creditPortal',
+            title: 'Credit Operations Executive Portal',
+            category: 'OPERATIONS',
+            categoryLabel: 'Operations & Records',
+            badge: 'Protected Access',
+            badgeBg: '#f5f3ff',
+            badgeColor: '#6d28d9',
+            icon: 'fa-user-lock',
+            iconBg: 'rgba(139, 92, 246, 0.12)',
+            iconColor: '#8b5cf6',
+            description: 'Executive dashboard featuring total sanctions (amount & count), JLG 1st cycle portfolio, active hub breakdowns, live ticker, and administrative feature controls.',
+            actionText: 'Open Credit Portal',
+            actionIcon: 'fa-arrow-right-to-bracket',
+            actionHandler: "closeAllFeaturesModal(); openLoginModal();"
+        },
+        {
+            id: 'pendingRecords',
+            title: 'Pending Applications Live Table',
+            category: 'OPERATIONS',
+            categoryLabel: 'Operations & Records',
+            badge: 'Full Records',
+            badgeBg: '#fef3c7',
+            badgeColor: '#b45309',
+            icon: 'fa-table-list',
+            iconBg: 'rgba(245, 158, 11, 0.12)',
+            iconColor: '#f59e0b',
+            description: 'Complete searchable records table of pending loan files with real-time multi-field search query, branch filtering, loan details dialog, and status tracking.',
+            actionText: 'Jump to Pending Table',
+            actionIcon: 'fa-table',
+            actionHandler: "closeAllFeaturesModal(); document.getElementById('pendingTableSection')?.scrollIntoView({ behavior: 'smooth' });"
+        },
+        {
+            id: 'rejectionConsole',
+            title: 'Rejection Feed & Comparison Feed',
+            category: 'OPERATIONS',
+            categoryLabel: 'Operations & Records',
+            badge: 'Audit & Feed',
+            badgeBg: '#ffe4e6',
+            badgeColor: '#be123c',
+            icon: 'fa-ban',
+            iconBg: 'rgba(225, 29, 72, 0.12)',
+            iconColor: '#e11d48',
+            description: 'Rejection analytics feed detailing loan rejections, credit manager remarks, branch rejection comparison graphs, and client-level dispute replies.',
+            actionText: 'View Rejections Feed',
+            actionIcon: 'fa-list-check',
+            actionHandler: "closeAllFeaturesModal(); document.getElementById('rejectionSection')?.scrollIntoView({ behavior: 'smooth' });"
+        },
+        {
+            id: 'excelExport',
+            title: 'Excel Data Downloader (.xlsx)',
+            category: 'OPERATIONS',
+            categoryLabel: 'Operations & Records',
+            badge: 'Instant Export',
+            badgeBg: '#ecfdf5',
+            badgeColor: '#047857',
+            icon: 'fa-file-excel',
+            iconBg: 'rgba(5, 150, 105, 0.12)',
+            iconColor: '#059669',
+            description: 'One-click client-side spreadsheet compilation for filtered pending loans, rejection lists, and branch data formatted directly for Microsoft Excel.',
+            actionText: 'Export Pending Excel',
+            actionIcon: 'fa-download',
+            actionHandler: "closeAllFeaturesModal(); downloadPendingFilteredExcel();"
+        },
+        {
+            id: 'branchExplorer',
+            title: 'Branch Explorer & Queue Console',
+            category: 'ANALYTICS',
+            categoryLabel: 'Visual & Analytics',
+            badge: 'Hub Intelligence',
+            badgeBg: '#cffafe',
+            badgeColor: '#0e7490',
+            icon: 'fa-building-circle-check',
+            iconBg: 'rgba(6, 182, 212, 0.12)',
+            iconColor: '#06b6d4',
+            description: 'Explore active branches, view individual branch pending lists, check queue load status, and review submitted query replies.',
+            actionText: 'Open Branch Explorer',
+            actionIcon: 'fa-sitemap',
+            actionHandler: "closeAllFeaturesModal(); document.getElementById('branchExplorerSection')?.scrollIntoView({ behavior: 'smooth' });"
+        },
+        {
+            id: 'subcat',
+            title: 'Sub-Category Analytics Breakdown',
+            category: 'ANALYTICS',
+            categoryLabel: 'Visual & Analytics',
+            badge: 'Category Share',
+            badgeBg: '#f3e8ff',
+            badgeColor: '#7e22ce',
+            icon: 'fa-chart-pie',
+            iconBg: 'rgba(168, 85, 247, 0.12)',
+            iconColor: '#a855f7',
+            description: 'Dynamic visual progress bars and percentage share breakdown of loans categorised by underwriting reasons and operational stages.',
+            actionText: 'View Sub-Categories',
+            actionIcon: 'fa-chart-simple',
+            actionHandler: "closeAllFeaturesModal(); document.getElementById('subcatSection')?.scrollIntoView({ behavior: 'smooth' });"
+        },
+        {
+            id: 'overview',
+            title: 'Visual Overview & KPI Metrics',
+            category: 'ANALYTICS',
+            categoryLabel: 'Visual & Analytics',
+            badge: 'Live Overview',
+            badgeBg: '#e0e7ff',
+            badgeColor: '#3730a3',
+            icon: 'fa-chart-line',
+            iconBg: 'rgba(99, 102, 241, 0.12)',
+            iconColor: '#6366f1',
+            description: 'Official banking KPI cards displaying total pending applications, active reporting branches, top branch rank list, and live stream summary ticker.',
+            actionText: 'View Metrics',
+            actionIcon: 'fa-gauge-high',
+            actionHandler: "closeAllFeaturesModal(); window.scrollTo({ top: 0, behavior: 'smooth' });"
+        },
+        {
+            id: 'wavePulse',
+            title: 'Wave Pulse Visual Flow Charts',
+            category: 'ANALYTICS',
+            categoryLabel: 'Visual & Analytics',
+            badge: 'Branch Trends',
+            badgeBg: '#e0f2fe',
+            badgeColor: '#0369a1',
+            icon: 'fa-wave-square',
+            iconBg: 'rgba(14, 165, 233, 0.12)',
+            iconColor: '#0ea5e9',
+            description: 'Smooth gradient curved line charts illustrating the volume trajectory of pending files across all operating branch networks.',
+            actionText: 'View Charts',
+            actionIcon: 'fa-chart-area',
+            actionHandler: "closeAllFeaturesModal(); document.getElementById('wavePulseChartsSection')?.scrollIntoView({ behavior: 'smooth' });"
+        },
+        {
+            id: 'syncSheets',
+            title: 'Google Sheets Live Sync Engine',
+            category: 'OPERATIONS',
+            categoryLabel: 'Operations & Records',
+            badge: 'Zero-Latency',
+            badgeBg: '#e0f2fe',
+            badgeColor: '#0284c7',
+            icon: 'fa-arrows-rotate',
+            iconBg: 'rgba(2, 132, 199, 0.12)',
+            iconColor: '#0284c7',
+            description: 'Real-time JSONP Google Visualization API streaming from official spreadsheets with instant cache-busted updates upon clicking Refresh.',
+            actionText: 'Sync Data Now',
+            actionIcon: 'fa-rotate',
+            actionHandler: "closeAllFeaturesModal(); refreshDashboard();"
+        },
+        {
+            id: 'adminPanel',
+            title: 'Admin Control Panel & Maintenance',
+            category: 'OPERATIONS',
+            categoryLabel: 'Operations & Records',
+            badge: 'Admin Access',
+            badgeBg: '#fee2e2',
+            badgeColor: '#991b1b',
+            icon: 'fa-shield-halved',
+            iconBg: 'rgba(220, 38, 38, 0.12)',
+            iconColor: '#dc2626',
+            description: 'Granular control to enable or disable any individual portal option, system-wide maintenance mode lockdown with admin contact soumyaranjan@afpl.net.in EMP ID@12687.',
+            actionText: 'Open in Credit Portal',
+            actionIcon: 'fa-lock',
+            actionHandler: "closeAllFeaturesModal(); openLoginModal();"
+        },
+        {
+            id: 'darkMode',
+            title: 'Theme & Viewing Modes',
+            category: 'EXPERIENCE',
+            categoryLabel: 'Portal & Experience',
+            badge: 'Accessibility',
+            badgeBg: '#f1f5f9',
+            badgeColor: '#334155',
+            icon: 'fa-circle-half-stroke',
+            iconBg: 'rgba(100, 116, 139, 0.12)',
+            iconColor: '#64748b',
+            description: 'Toggle between clean official Banking Light theme and high-contrast Dark theme for optimal low-light eye comfort.',
+            actionText: 'Toggle Theme',
+            actionIcon: 'fa-moon',
+            actionHandler: "closeAllFeaturesModal(); toggleDarkMode();"
+        }
+    ];
+
+    let currentFeaturesCategoryFilter = 'ALL';
+    let currentFeaturesSearchQuery = '';
+
+    function openAllFeaturesModal() {
+        const modal = document.getElementById('allFeaturesDialogModal');
+        if (!modal) return;
+        currentFeaturesCategoryFilter = 'ALL';
+        currentFeaturesSearchQuery = '';
+        const searchInput = document.getElementById('featuresDirectorySearch');
+        if (searchInput) searchInput.value = '';
+
+        document.querySelectorAll('.feature-tab-btn').forEach(btn => {
+            btn.classList.toggle('active', btn.textContent.toLowerCase().includes('all'));
+        });
+
+        renderFeaturesDirectoryGrid();
+        modal.style.display = 'flex';
+    }
+
+    function closeAllFeaturesModal() {
+        const modal = document.getElementById('allFeaturesDialogModal');
+        if (modal) modal.style.display = 'none';
+    }
+
+    function setFeatureCategoryFilter(cat, btnEl) {
+        currentFeaturesCategoryFilter = cat;
+        document.querySelectorAll('.feature-tab-btn').forEach(b => b.classList.remove('active'));
+        if (btnEl) btnEl.classList.add('active');
+        renderFeaturesDirectoryGrid();
+    }
+
+    function filterFeaturesDirectory(query) {
+        currentFeaturesSearchQuery = (query || '').toLowerCase().trim();
+        renderFeaturesDirectoryGrid();
+    }
+
+    function renderFeaturesDirectoryGrid() {
+        const container = document.getElementById('featuresDirectoryGridContainer');
+        const countSummary = document.getElementById('featuresDirectoryCountSummary');
+        const totalBadge = document.getElementById('featuresTotalBadge');
+        if (!container) return;
+
+        const filtered = ALL_PORTAL_FEATURES.filter(item => {
+            const matchesCategory = (currentFeaturesCategoryFilter === 'ALL' || item.category === currentFeaturesCategoryFilter);
+            const matchesQuery = (!currentFeaturesSearchQuery) || 
+                item.title.toLowerCase().includes(currentFeaturesSearchQuery) ||
+                item.description.toLowerCase().includes(currentFeaturesSearchQuery) ||
+                item.categoryLabel.toLowerCase().includes(currentFeaturesSearchQuery) ||
+                item.badge.toLowerCase().includes(currentFeaturesSearchQuery);
+            return matchesCategory && matchesQuery;
+        });
+
+        if (totalBadge) totalBadge.textContent = `${ALL_PORTAL_FEATURES.length} Features`;
+        if (countSummary) countSummary.textContent = `Showing ${filtered.length} of ${ALL_PORTAL_FEATURES.length} features`;
+
+        if (filtered.length === 0) {
+            container.innerHTML = `
+                <div style="grid-column: 1 / -1; text-align: center; padding: 40px 20px; color: var(--text-secondary);">
+                    <i class="fa-solid fa-magnifying-glass" style="font-size: 2rem; margin-bottom: 12px; color: #94a3b8;"></i>
+                    <h4 style="margin: 0 0 6px 0; color: var(--text-primary); font-size: 1.05rem;">No matching features found</h4>
+                    <p style="margin: 0; font-size: 0.85rem;">Try adjusting your search terms or selecting 'All Features'.</p>
+                </div>
+            `;
+            return;
+        }
+
+        container.innerHTML = filtered.map(item => `
+            <div class="feature-item-card">
+                <div class="feature-card-header">
+                    <div class="feature-icon-box" style="background: ${item.iconBg}; color: ${item.iconColor};">
+                        <i class="fa-solid ${item.icon}"></i>
+                    </div>
+                    <div style="flex: 1; min-width: 0;">
+                        <h3 class="feature-item-title">${item.title}</h3>
+                        <span class="feature-category-badge" style="background: ${item.badgeBg}; color: ${item.badgeColor};">
+                            ${item.badge}
+                        </span>
+                    </div>
+                </div>
+                <p class="feature-item-desc">${item.description}</p>
+                <div class="feature-action-bar">
+                    <button class="feature-launch-btn" onclick="${item.actionHandler}">
+                        <i class="fa-solid ${item.actionIcon}"></i>
+                        <span>${item.actionText}</span>
+                    </button>
+                </div>
+            </div>
+        `).join('');
+    }
 
     /* WORKSPACE SIDEBAR & FILTER CONTROLLERS */
     function toggleWorkspaceSidebar(open) {
@@ -3819,10 +5129,16 @@
         document.getElementById('mainLoginOverlay').style.display = 'none';
         const dashContainer = document.getElementById('mainDashboardContainer');
         dashContainer.style.display = (window.innerWidth >= 1025 ? 'flex' : 'block');
+        applyFeatureUIPermissions();
         
-        // Automatic Date & Festival/Occasion Wish with lights sky & balloons!
+        // Check accurate particular festival day vs daily time-of-day shayari wish
         initFestiveOccasion();
-        showFestiveOccasionModal();
+        const festiveInfo = getFestivalAndOccasionClient(new Date());
+        if (festiveInfo.isFestival) {
+            showFestiveOccasionModal();
+        } else {
+            checkShowCatalogue(true);
+        }
         
         // Initialize everything now that we are logged in
         initAllMeshCanvases();
@@ -3931,8 +5247,8 @@
         return 'night';
     }
 
-    function checkShowCatalogue() {
-        if (!sessionHasShownWelcomeCredit) {
+    function checkShowCatalogue(force = false) {
+        if (!sessionHasShownWelcomeCredit || force) {
             sessionHasShownWelcomeCredit = true;
             
             const currentHour = new Date().getHours();
@@ -3998,8 +5314,8 @@
         const monthName = monthNames[targetDate.getMonth()];
         const formattedDate = `${dayName}, ${day} ${monthName} ${year}`;
 
-        // 1. Diwali & Dhanteras / Kali Puja festive season (Late October / Early November)
-        if ((month === 10 && day >= 24) || (month === 11 && day <= 12)) {
+        // 1. Diwali & Dhanteras (Late October / Nov 1-2)
+        if ((month === 10 && day >= 29) || (month === 11 && day <= 2)) {
             return {
                 isFestival: true,
                 occasionName: "Shubh Deepavali & Dhanteras Mahotsav",
@@ -4013,8 +5329,8 @@
             };
         }
 
-        // 2. Chhath Puja (Late October / November)
-        if ((month === 10 && day >= 28) || (month === 11 && day >= 13 && day <= 18)) {
+        // 2. Chhath Puja (November 6-8)
+        if (month === 11 && day >= 6 && day <= 8) {
             return {
                 isFestival: true,
                 occasionName: "Shubh Chhath Puja Mahaparv",
@@ -4028,8 +5344,8 @@
             };
         }
 
-        // 3. New Year (Dec 31 - Jan 3)
-        if ((month === 12 && day >= 31) || (month === 1 && day <= 3)) {
+        // 3. New Year (Dec 31 & Jan 1)
+        if ((month === 12 && day === 31) || (month === 1 && day === 1)) {
             return {
                 isFestival: true,
                 occasionName: `Happy New Year ${month === 12 ? year + 1 : year}`,
@@ -4043,8 +5359,8 @@
             };
         }
 
-        // 4. Makar Sankranti / Pongal / Lohri (Jan 13 - 17)
-        if (month === 1 && day >= 13 && day <= 17) {
+        // 4. Makar Sankranti / Pongal / Lohri (Jan 13 - 15)
+        if (month === 1 && day >= 13 && day <= 15) {
             return {
                 isFestival: true,
                 occasionName: "Happy Makar Sankranti & Pongal",
@@ -4073,8 +5389,8 @@
             };
         }
 
-        // 6. Maha Shivratri (Feb/March)
-        if ((month === 2 && day >= 20) || (month === 3 && day <= 10)) {
+        // 6. Maha Shivratri (Feb 26)
+        if (month === 2 && day === 26) {
             return {
                 isFestival: true,
                 occasionName: "Har Har Mahadev - Shubh Maha Shivratri",
@@ -4088,8 +5404,8 @@
             };
         }
 
-        // 7. Holi & Dola Purnima (March 15-30)
-        if (month === 3 && day >= 15 && day <= 30) {
+        // 7. Holi & Dola Purnima (March 24-26)
+        if (month === 3 && day >= 24 && day <= 26) {
             return {
                 isFestival: true,
                 occasionName: "Happy Holi & Dola Purnima",
@@ -4103,8 +5419,8 @@
             };
         }
 
-        // 8. Odia New Year (Maha Vishuva / Pana Sankranti) & Baisakhi (April 13 - 16)
-        if (month === 4 && day >= 13 && day <= 16) {
+        // 8. Odia New Year (Maha Vishuva / Pana Sankranti) & Baisakhi (April 13 - 14)
+        if (month === 4 && (day === 13 || day === 14)) {
             return {
                 isFestival: true,
                 occasionName: "Maha Vishuva Pana Sankranti & Odia New Year",
@@ -4118,8 +5434,8 @@
             };
         }
 
-        // 9. Rath Yatra (June / July)
-        if ((month === 6 && day >= 20) || (month === 7 && day <= 15)) {
+        // 9. Rath Yatra (July 7-15)
+        if (month === 7 && day >= 7 && day <= 15) {
             return {
                 isFestival: true,
                 occasionName: "Jai Jagannath - Holy Rath Yatra Mahotsav",
@@ -4148,8 +5464,8 @@
             };
         }
 
-        // 11. Raksha Bandhan (August 18 - 25)
-        if (month === 8 && day >= 18 && day <= 25) {
+        // 11. Raksha Bandhan (August 19)
+        if (month === 8 && day === 19) {
             return {
                 isFestival: true,
                 occasionName: "Happy Raksha Bandhan",
@@ -4163,8 +5479,8 @@
             };
         }
 
-        // 12. Ganesh Chaturthi (August 26 - Sep 15)
-        if ((month === 8 && day >= 26) || (month === 9 && day <= 15)) {
+        // 12. Ganesh Chaturthi (September 7)
+        if (month === 9 && day === 7) {
             return {
                 isFestival: true,
                 occasionName: "Ganpati Bappa Morya - Shubh Ganesh Chaturthi",
@@ -4193,8 +5509,8 @@
             };
         }
 
-        // 14. Christmas (Dec 22 - 28)
-        if (month === 12 && day >= 22 && day <= 28) {
+        // 14. Christmas (Dec 24 - 25)
+        if (month === 12 && (day === 24 || day === 25)) {
             return {
                 isFestival: true,
                 occasionName: "Merry Christmas & Season's Greetings",
@@ -4208,21 +5524,21 @@
             };
         }
 
-        // 15. Default: Auspicious Daily Occasion for any date of the year
+        // 15. Default: Auspicious Daily Greetings for any other date
         return {
             isFestival: false,
-            occasionName: "Shubh Din & Auspicious Daily Greetings",
+            occasionName: "Daily Shubh Muhurat & Inspirational Greetings",
             occasionHindi: "आज का दिन आपके लिए शुभ व मंगलमय हो",
             formattedDate,
-            wishTitle: "🌟 Auspicious Day Celebration & Warm Wishes 🌟",
-            wishMessage: `Wishing you a vibrant, healthy, and highly prosperous day on this auspicious ${dayName}! May your efforts bring outstanding accomplishments and peace to your family.`,
-            wishHindi: "आज का पावन दिन आपके जीवन में नई ऊर्जा, सकारात्मक विचार, उत्तम स्वास्थ्य और सफलता के स्वर्णिम अवसर लेकर आए।",
+            wishTitle: "🌟 Daily Inspirational Greetings & Warm Wishes 🌟",
+            wishMessage: `Wishing you a vibrant, healthy, and highly prosperous day on this ${dayName}! May your efforts bring outstanding accomplishments and peace to your family.`,
+            wishHindi: "आज का दिन आपके जीवन में नई ऊर्जा, सकारात्मक विचार, उत्तम स्वास्थ्य और सफलता के स्वर्णिम अवसर लेकर आए।",
             symbol: "✨",
-            snippet: `✨ Auspicious greetings for ${formattedDate} — Wishing you great success and health!`
+            snippet: `✨ Daily Greetings for ${formattedDate} — Wishing you great success and happiness!`
         };
     }
 
-    /* INITIALIZE & RENDER FESTIVE OCCASION */
+    /* INITIALIZE & RENDER FESTIVE OCCASION / DAILY SHAYARI */
     function initFestiveOccasion() {
         const info = getFestivalAndOccasionClient(new Date());
 
@@ -4231,19 +5547,38 @@
         const ribbonDate = document.getElementById('ribbonDateDisplay');
         const ribbonSnippet = document.getElementById('ribbonWishSnippet');
         const ribbonSymbol = document.getElementById('ribbonSymbol');
-
-        if (ribbonName) ribbonName.textContent = info.occasionName;
-        if (ribbonDate) ribbonDate.textContent = info.formattedDate;
-        if (ribbonSnippet) ribbonSnippet.textContent = info.snippet;
-        if (ribbonSymbol) ribbonSymbol.textContent = info.symbol;
-
-        // Update Topbar button label
         const topbarLabel = document.getElementById('topbarOccasionBtnLabel');
-        if (topbarLabel) {
-            topbarLabel.textContent = info.isFestival ? 'Festival Wish' : 'Occasion Wish';
+        const topbarIcon = document.getElementById('topbarOccasionBtnIcon');
+        const ribbonBtnText = document.getElementById('ribbonActionBtnText');
+        const ribbonBtnIcon = document.getElementById('ribbonActionBtnIcon');
+
+        if (info.isFestival) {
+            if (ribbonName) ribbonName.textContent = info.occasionName;
+            if (ribbonDate) ribbonDate.textContent = info.formattedDate;
+            if (ribbonSnippet) ribbonSnippet.textContent = info.snippet;
+            if (ribbonSymbol) ribbonSymbol.textContent = info.symbol;
+            if (topbarLabel) topbarLabel.textContent = 'Festival Wish';
+            if (topbarIcon) topbarIcon.className = 'fa-solid fa-wand-magic-sparkles';
+            if (ribbonBtnText) ribbonBtnText.textContent = 'Sky Lights & Balloons 🎈';
+            if (ribbonBtnIcon) ribbonBtnIcon.className = 'fa-solid fa-wand-magic-sparkles';
+        } else {
+            // Normal Day: display day's previously configured morning, afternoon, evening wishes with shayari!
+            const currentHour = new Date().getHours();
+            const slotKey = getTimingSlot(currentHour);
+            const slotData = TIMING_CATALOGUE_DATA[slotKey];
+            const sampleShayari = (slotData.shayaris[0] || '').replace(/<br>/g, ' ').replace(/<[^>]+>/g, '').trim();
+
+            if (ribbonName) ribbonName.textContent = slotData.greeting;
+            if (ribbonDate) ribbonDate.textContent = info.formattedDate;
+            if (ribbonSnippet) ribbonSnippet.textContent = sampleShayari.length > 95 ? sampleShayari.slice(0, 95) + '...' : sampleShayari;
+            if (ribbonSymbol) ribbonSymbol.textContent = slotKey === 'night' ? '🌙' : (slotKey === 'evening' ? '🌇' : (slotKey === 'afternoon' ? '☀️' : '🌄'));
+            if (topbarLabel) topbarLabel.textContent = 'Daily Shayari';
+            if (topbarIcon) topbarIcon.className = slotKey === 'night' ? 'fa-solid fa-moon' : 'fa-solid fa-sun';
+            if (ribbonBtnText) ribbonBtnText.textContent = "Today's Shayari 🌸";
+            if (ribbonBtnIcon) ribbonBtnIcon.className = 'fa-solid fa-feather-pointed';
         }
 
-        // Update Modal elements
+        // Update Modal elements if festival modal is invoked
         const modalDate = document.getElementById('festiveModalDate');
         const modalTitle = document.getElementById('festiveModalTitle');
         const modalHindiSub = document.getElementById('festiveModalHindiSub');
@@ -4259,6 +5594,16 @@
         if (modalHindiWish) modalHindiWish.textContent = info.wishHindi;
         if (diyaLeft) diyaLeft.textContent = info.symbol;
         if (diyaRight) diyaRight.textContent = info.symbol;
+    }
+
+    function triggerAppropriateWishModal() {
+        if (!checkFeaturePermission('festiveWish')) return;
+        const info = getFestivalAndOccasionClient(new Date());
+        if (info.isFestival) {
+            showFestiveOccasionModal();
+        } else {
+            checkShowCatalogue(true);
+        }
     }
 
     /* POPULATE SKY LIGHTS AND FLOATING BALLOONS */
@@ -4336,6 +5681,7 @@
     }
 
     function showFestiveOccasionModal() {
+        if (!checkFeaturePermission('festiveWish')) return;
         initFestiveOccasion();
         const modal = document.getElementById('festiveCelebrationModal');
         if (modal) {
@@ -4401,6 +5747,7 @@
     };
 
     function refreshDashboard() {
+        if (!checkFeaturePermission('syncSheets')) return;
         if (!loggedInUser) return; // Only refresh if logged in
         const icon = document.getElementById('refreshIcon');
         if (icon) icon.classList.add('spin-icon');
@@ -4929,6 +6276,7 @@
 
     /* OPEN MAXIMIZED BRANCH DIALOG */
     function openBranchDialog(branchName) {
+        if (!checkFeaturePermission('branchExplorer')) return;
         currentOpenBranchName = branchName;
         const modal = document.getElementById('branchDialogModal');
         const searchInput = document.getElementById('branchDialogSearchInput');
@@ -5312,6 +6660,7 @@
     }
 
     async function submitClientReply(branch, loanId, subCat, cmRemarks, inputId, btn) {
+        if (!checkFeaturePermission('branchReplies')) return;
         const inputEl = document.getElementById(inputId);
         const replyText = inputEl.value.trim();
 
@@ -5408,6 +6757,7 @@
     }
 
     function downloadPendingFilteredExcel() {
+        if (!checkFeaturePermission('excelExport')) return;
         if (!filteredRows || filteredRows.length === 0) {
             alert("No records found to download.");
             return;
@@ -5420,6 +6770,7 @@
     }
 
     function openLoginModal() {
+        if (!checkFeaturePermission('creditPortal')) return;
         document.getElementById('loginModal').style.display = 'flex';
         document.getElementById('creditPassword').value = '';
         document.getElementById('loginError').style.display = 'none';
@@ -5430,11 +6781,12 @@
     function validateLogin() {
         const pass = document.getElementById('creditPassword').value.trim();
         // Credit dashboard can still be accessed via same master passwords or old hardcoded ones
-        if (MASTER_PASSWORDS.includes(pass) || pass === "Ganjam@123" || pass === "Credit@12687") {
+        if (MASTER_PASSWORDS.includes(pass) || pass === "Ganjam@123" || pass === "Credit@12687" || pass === "Credit@123" || pass === "Soumya@123") {
             closeLoginModal();
             document.getElementById('creditScreen').style.display = 'block';
             fetchNotification();
             loadGoogleSheetData('All data', 'handleAllData');
+            renderAdminControlPanel();
             setTimeout(initAllMeshCanvases, 100);
         } else {
             document.getElementById('loginError').style.display = 'block';
@@ -5791,6 +7143,7 @@
     }
 
     function openFeedbackModal(isAutoPrompt = false) {
+        if (!isAutoPrompt && !checkFeaturePermission('ratingFeedback')) return;
         const modal = document.getElementById('webpageFeedbackOverlay');
         const successMsg = document.getElementById('feedbackSuccessMsg');
         const actionBtns = document.getElementById('feedbackActionBtns');
@@ -5854,12 +7207,246 @@
         }
     }
 
+    /* ============================================================
+       ENTERPRISE ADMIN CONTROL PANEL & MAINTENANCE CONTROLLER
+       ============================================================ */
+    const ADMIN_FEATURES_LIST = [
+        { key: 'overview', name: 'Overview & Key Metrics', icon: 'fa-chart-line', color: '#6366f1', desc: 'KPI counters, running stream, & overview' },
+        { key: 'subcat', name: 'Sub-Categories Breakdown', icon: 'fa-chart-pie', color: '#a855f7', desc: 'Category-wise loan distribution' },
+        { key: 'branchExplorer', name: 'Branch Explorer & Queue', icon: 'fa-building-circle-check', color: '#06b6d4', desc: 'Branch pending dialogs & direct queue' },
+        { key: 'rejectionConsole', name: 'Rejection Console & Feed', icon: 'fa-ban', color: '#e11d48', desc: 'Rejection graphs & comparison feed' },
+        { key: 'pendingRecords', name: 'Pending Records Table', icon: 'fa-table-list', color: '#f59e0b', desc: 'Interactive search table & loan list' },
+        { key: 'wavePulse', name: 'Wave Pulse Flow Charts', icon: 'fa-wave-square', color: '#0ea5e9', desc: 'Visual trajectory flow graphs' },
+        { key: 'creditPortal', name: 'Credit Dashboard Portal', icon: 'fa-user-lock', color: '#8b5cf6', desc: 'Sanction & business analytics' },
+        { key: 'matrixCalculator', name: 'Underwriting Matrix Calculator', icon: 'fa-calculator', color: '#10b981', desc: 'Slab-wise borrower installment matrix' },
+        { key: 'emiCalculator', name: 'EMI Calculator (LPF, GST & Ins)', icon: 'fa-coins', color: '#d97706', desc: 'Installment, LPF, GST, & insurance' },
+        { key: 'ratingFeedback', name: 'Webpage Rating & Feedback', icon: 'fa-star', color: '#ec4899', desc: 'Community star ratings submission' },
+        { key: 'syncSheets', name: 'Google Sheets Live Sync', icon: 'fa-arrows-rotate', color: '#0284c7', desc: 'Direct Google Sheet data refresh' },
+        { key: 'festiveWish', name: 'Festival & Occasion Wishes', icon: 'fa-wand-magic-sparkles', color: '#f59e0b', desc: 'Sky lights & balloon wishes' },
+        { key: 'excelExport', name: 'Pending Excel Export', icon: 'fa-file-excel', color: '#059669', desc: 'Excel spreadsheet download' },
+        { key: 'branchReplies', name: 'Branch Reply Submissions', icon: 'fa-paper-plane', color: '#6366f1', desc: 'Queue reply submission webhook' }
+    ];
+
+    function getAdminFeaturePermissions() {
+        try {
+            const stored = localStorage.getItem('app_admin_feature_permissions');
+            if (stored) return JSON.parse(stored);
+        } catch (e) {
+            console.warn(e);
+        }
+        return {
+            overview: true,
+            subcat: true,
+            branchExplorer: true,
+            rejectionConsole: true,
+            pendingRecords: true,
+            wavePulse: true,
+            creditPortal: true,
+            matrixCalculator: true,
+            emiCalculator: true,
+            ratingFeedback: true,
+            syncSheets: true,
+            festiveWish: true,
+            excelExport: true,
+            branchReplies: true
+        };
+    }
+
+    function saveAdminFeaturePermissions(perms) {
+        try {
+            localStorage.setItem('app_admin_feature_permissions', JSON.stringify(perms));
+        } catch (e) {
+            console.warn(e);
+        }
+        applyFeatureUIPermissions();
+    }
+
+    function checkFeaturePermission(featureKey) {
+        // Master admin always has full access
+        if (loggedInUser === 'MASTER') return true;
+
+        const perms = getAdminFeaturePermissions();
+        if (perms[featureKey] === false) {
+            const meta = ADMIN_FEATURES_LIST.find(f => f.key === featureKey);
+            const featureName = meta ? meta.name : 'This feature';
+            showFeatureDisabledNotice(featureName);
+            return false;
+        }
+        return true;
+    }
+
+    function showFeatureDisabledNotice(featureName) {
+        const modal = document.getElementById('featureDisabledModal');
+        const titleEl = document.getElementById('disabledModalTitle');
+        const textEl = document.getElementById('disabledModalText');
+        if (titleEl) titleEl.textContent = `${featureName} is Disabled`;
+        if (textEl) {
+            textEl.innerHTML = `This option has been disabled by administrator.<br><br>Please contact admin: <strong>soumyaranjan@afpl.net.in</strong> EMP ID@12687.`;
+        }
+        if (modal) modal.style.display = 'flex';
+    }
+
+    function closeFeatureDisabledModal() {
+        const modal = document.getElementById('featureDisabledModal');
+        if (modal) modal.style.display = 'none';
+    }
+
+    function checkAndApplyMaintenanceMode() {
+        const isMaint = localStorage.getItem('app_maintenance_mode') === 'true';
+        const maintOverlay = document.getElementById('systemMaintenanceOverlay');
+        const bypass = sessionStorage.getItem('admin_maintenance_bypass') === 'true';
+        if (maintOverlay) {
+            if (isMaint && !bypass && loggedInUser !== 'MASTER') {
+                maintOverlay.style.display = 'flex';
+            } else {
+                maintOverlay.style.display = 'none';
+            }
+        }
+    }
+
+    function openMaintenanceAdminLogin() {
+        const box = document.getElementById('maintenanceAdminBox');
+        if (box) {
+            box.style.display = 'block';
+            document.getElementById('maintenanceAdminPass')?.focus();
+        }
+    }
+
+    function unlockMaintenanceWithAdmin() {
+        const pass = (document.getElementById('maintenanceAdminPass')?.value || '').trim();
+        const err = document.getElementById('maintenanceAdminErr');
+        if (MASTER_PASSWORDS.includes(pass) || pass === 'Credit@12687' || pass === 'Credit@123' || pass === 'Soumya@123') {
+            sessionStorage.setItem('admin_maintenance_bypass', 'true');
+            loggedInUser = 'MASTER';
+            document.getElementById('systemMaintenanceOverlay').style.display = 'none';
+            document.getElementById('mainLoginOverlay').style.display = 'none';
+            const dash = document.getElementById('mainDashboardContainer');
+            if (dash) dash.style.display = (window.innerWidth >= 1025 ? 'flex' : 'block');
+            refreshDashboard();
+            document.getElementById('creditScreen').style.display = 'block';
+            fetchNotification();
+            loadGoogleSheetData('All data', 'handleAllData');
+            renderAdminControlPanel();
+        } else {
+            if (err) err.style.display = 'block';
+        }
+    }
+
+    function toggleAdminMaintenance(enabled) {
+        localStorage.setItem('app_maintenance_mode', enabled ? 'true' : 'false');
+        updateMaintenanceUIState(enabled);
+        checkAndApplyMaintenanceMode();
+    }
+
+    function updateMaintenanceUIState(isMaint) {
+        const toggle = document.getElementById('adminMaintenanceToggle');
+        const statusText = document.getElementById('adminMaintenanceStatusText');
+        if (toggle) toggle.checked = isMaint;
+        if (statusText) {
+            statusText.textContent = isMaint ? 'Active' : 'Inactive';
+            statusText.style.color = isMaint ? '#dc2626' : '#16a34a';
+        }
+    }
+
+    function toggleAdminFeature(featureKey, enabled) {
+        const perms = getAdminFeaturePermissions();
+        perms[featureKey] = enabled;
+        saveAdminFeaturePermissions(perms);
+        renderAdminControlPanel();
+    }
+
+    function setAllAdminFeatures(enabled) {
+        const perms = {};
+        ADMIN_FEATURES_LIST.forEach(f => { perms[f.key] = enabled; });
+        saveAdminFeaturePermissions(perms);
+        renderAdminControlPanel();
+    }
+
+    function resetAdminFeaturesDefault() {
+        const perms = {};
+        ADMIN_FEATURES_LIST.forEach(f => { perms[f.key] = true; });
+        saveAdminFeaturePermissions(perms);
+        localStorage.setItem('app_maintenance_mode', 'false');
+        updateMaintenanceUIState(false);
+        renderAdminControlPanel();
+    }
+
+    function renderAdminControlPanel() {
+        const container = document.getElementById('adminFeaturesGridContainer');
+        if (!container) return;
+
+        const isMaint = localStorage.getItem('app_maintenance_mode') === 'true';
+        updateMaintenanceUIState(isMaint);
+
+        const perms = getAdminFeaturePermissions();
+        container.innerHTML = ADMIN_FEATURES_LIST.map(f => {
+            const isEnabled = perms[f.key] !== false;
+            return `
+                <div class="admin-feature-card ${isEnabled ? '' : 'is-disabled'}">
+                    <div class="feat-meta-left">
+                        <div class="feat-icon-bubble" style="background: ${isEnabled ? `${f.color}15` : '#fee2e2'}; color: ${isEnabled ? f.color : '#dc2626'};">
+                            <i class="fa-solid ${f.icon}"></i>
+                        </div>
+                        <div>
+                            <span class="feat-title-text">${f.name}</span>
+                            <span class="feat-sub-text">${f.desc}</span>
+                        </div>
+                    </div>
+                    <div>
+                        <label class="admin-switch" style="width: 44px; height: 24px;">
+                            <input type="checkbox" ${isEnabled ? 'checked' : ''} onchange="toggleAdminFeature('${f.key}', this.checked)">
+                            <span class="admin-slider" style="border-radius: 24px;"></span>
+                        </label>
+                    </div>
+                </div>
+            `;
+        }).join('');
+    }
+
+    function applyFeatureUIPermissions() {
+        if (loggedInUser === 'MASTER') return; // Do not block master view
+
+        const perms = getAdminFeaturePermissions();
+        
+        function syncSectionOverlay(sectionId, isEnabled, name) {
+            const sec = document.getElementById(sectionId);
+            if (!sec) return;
+            const existingOverlay = sec.querySelector('.section-disabled-overlay');
+            if (!isEnabled) {
+                if (!existingOverlay) {
+                    sec.style.position = 'relative';
+                    const overlay = document.createElement('div');
+                    overlay.className = 'section-disabled-overlay';
+                    overlay.innerHTML = `
+                        <div class="section-disabled-badge">
+                            <i class="fa-solid fa-lock"></i>
+                            <span>${name} is currently disabled &bull; contact admin soumyaranjan@afpl.net.in EMP ID@12687</span>
+                        </div>
+                    `;
+                    sec.appendChild(overlay);
+                }
+            } else {
+                if (existingOverlay) existingOverlay.remove();
+            }
+        }
+
+        syncSectionOverlay('pendingTableSection', perms.pendingRecords !== false, 'Pending Records Table');
+        syncSectionOverlay('rejectionSection', perms.rejectionConsole !== false, 'Rejections Feed');
+        syncSectionOverlay('branchCompareSection', perms.rejectionConsole !== false, 'Rejections Console');
+        syncSectionOverlay('subcatSection', perms.subcat !== false, 'Sub-Categories Analytics');
+        syncSectionOverlay('wavePulseChartsSection', perms.wavePulse !== false, 'Wave Pulse Charts');
+        syncSectionOverlay('branchExplorerSection', perms.branchExplorer !== false, 'Branch Explorer');
+    }
+
     // Initialize ONLY what's needed on window load; data fetch awaits successful login
     window.onload = function() {
+        checkAndApplyMaintenanceMode();
         document.getElementById('mainLoginPassword').focus();
         initFestiveOccasion();
         updateFeedbackAverageDisplay();
         checkShowFirstTimeFeedback();
+        applyFeatureUIPermissions();
+        renderFeaturesDirectoryGrid();
     };
 
     window.addEventListener('resize', function() {
@@ -5879,6 +7466,7 @@
         const welcomeOverlay = document.getElementById('welcomeCatalogueOverlay');
         const feedbackOverlay = document.getElementById('webpageFeedbackOverlay');
         const festiveModal = document.getElementById('festiveCelebrationModal');
+        const featuresModal = document.getElementById('allFeaturesDialogModal');
 
         if (event.target === branchModal) closeBranchDialog();
         if (event.target === clientModal) closeClientDetailDialog();
@@ -5889,6 +7477,7 @@
         if (event.target === welcomeOverlay) closeWelcomeCatalogue();
         if (event.target === feedbackOverlay) closeFeedbackModal();
         if (event.target === festiveModal) closeFestiveOccasionModal();
+        if (event.target === featuresModal) closeAllFeaturesModal();
     });
 
     window.addEventListener('keydown', function(event) {
@@ -5912,6 +7501,10 @@
             const branchModal = document.getElementById('branchDialogModal');
             if (branchModal && branchModal.style.display === 'flex') {
                 closeBranchDialog();
+            }
+            const featuresModal = document.getElementById('allFeaturesDialogModal');
+            if (featuresModal && featuresModal.style.display === 'flex') {
+                closeAllFeaturesModal();
             }
         }
     });
