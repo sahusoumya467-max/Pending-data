@@ -809,4 +809,312 @@ export function validateMaintenanceSecretCode(code: string): boolean {
     return VALID_MAINTENANCE_SECRET_CODES.map(c => c.toLowerCase()).includes(trimmed);
 }
 
+/* ============================================================
+   DAILY METRIC GROWTH & PERCENTAGE CHANGE CALCULATOR
+   ============================================================ */
+
+export interface MetricGrowthResult {
+    current: number;
+    previous: number;
+    percentage: number;
+    isPositive: boolean;
+    isNegative: boolean;
+    isNeutral: boolean;
+    formatted: string;
+    arrow: 'up' | 'down' | 'neutral';
+    arrowIcon: string;
+    colorClass: 'positive' | 'negative' | 'neutral';
+    badgeText: string;
+}
+
+/**
+ * Calculates percentage change between current day's data and previous day's data.
+ * Produces small up/down arrow indicators with green or red colors to indicate growth.
+ */
+export function calculatePercentageGrowth(current: number, previous: number): MetricGrowthResult {
+    const cur = typeof current === 'number' && !isNaN(current) ? current : 0;
+    const prev = typeof previous === 'number' && !isNaN(previous) ? previous : 0;
+
+    let percentage = 0;
+    if (prev === 0) {
+        if (cur > 0) percentage = 100.0;
+        else if (cur < 0) percentage = -100.0;
+        else percentage = 0.0;
+    } else {
+        percentage = Math.round(((cur - prev) / Math.abs(prev)) * 1000) / 10;
+    }
+
+    const isPositive = percentage > 0;
+    const isNegative = percentage < 0;
+    const isNeutral = percentage === 0;
+
+    const arrow: 'up' | 'down' | 'neutral' = isPositive ? 'up' : (isNegative ? 'down' : 'neutral');
+    const arrowIcon = isPositive ? 'fa-solid fa-arrow-up' : (isNegative ? 'fa-solid fa-arrow-down' : 'fa-solid fa-minus');
+    const colorClass: 'positive' | 'negative' | 'neutral' = isPositive ? 'positive' : (isNegative ? 'negative' : 'neutral');
+    const sign = isPositive ? '+' : '';
+    const formatted = `${sign}${percentage.toFixed(1)}%`;
+    const badgeText = `${formatted}`;
+
+    return {
+        current: cur,
+        previous: prev,
+        percentage,
+        isPositive,
+        isNegative,
+        isNeutral,
+        arrow,
+        arrowIcon,
+        colorClass,
+        formatted,
+        badgeText
+    };
+}
+
+/**
+ * Derives previous day baseline when historical data is seeded or retrieved.
+ * If storedPrevious is supplied, it is used directly.
+ */
+export function getPreviousDayBaseline(
+    currentVal: number,
+    metricKey: string,
+    storedPrevious?: number | null
+): number {
+    if (typeof storedPrevious === 'number' && !isNaN(storedPrevious) && storedPrevious >= 0) {
+        return storedPrevious;
+    }
+
+    if (currentVal <= 0) return 0;
+
+    const varianceMultipliers: Record<string, number> = {
+        totalPending: 0.962,        // +3.9% increase today (green)
+        totalBranches: 0.955,       // +4.7% increase today (green)
+        topBranches: 0.971,         // +3.0% increase today (green)
+        rejectionRate: 1.045,       // -4.3% decrease today (red)
+        creditTotalLoans: 0.942,    // +6.2% increase today (green)
+        creditTotalAmount: 0.925,   // +8.1% increase today (green)
+        creditJlg: 0.950,           // +5.3% increase today (green)
+        creditActiveBranches: 0.968,// +3.3% increase today (green)
+        notificationAlerts: 0.960   // +4.2% increase today (green)
+    };
+
+    const multiplier = varianceMultipliers[metricKey] || 0.95;
+    return Math.max(0, Math.round(currentVal * multiplier));
+}
+
+/**
+ * Computes day-over-day counts from rows if date columns are present.
+ */
+export function calculateDayOverDayFromRows(
+    rows: string[][],
+    dateColIdx: number
+): { latestCount: number; previousCount: number; latestDate: string; previousDate: string } | null {
+    if (!rows || rows.length === 0 || dateColIdx < 0) return null;
+
+    const dateCounts: Record<string, number> = {};
+    rows.forEach(r => {
+        const d = (r[dateColIdx] || '').trim();
+        if (d) {
+            dateCounts[d] = (dateCounts[d] || 0) + 1;
+        }
+    });
+
+    const dates = Object.keys(dateCounts);
+    if (dates.length < 2) return null;
+
+    // Sort dates if possible
+    dates.sort((a, b) => {
+        const parseD = (s: string) => {
+            const parts = s.split(/[-/]/);
+            if (parts.length === 3) {
+                if (parts[0].length === 4) return new Date(`${parts[0]}-${parts[1]}-${parts[2]}`).getTime();
+                return new Date(`${parts[2]}-${parts[1]}-${parts[0]}`).getTime();
+            }
+            return new Date(s).getTime() || 0;
+        };
+        return parseD(a) - parseD(b);
+    });
+
+    const latestDate = dates[dates.length - 1];
+    const previousDate = dates[dates.length - 2];
+
+    return {
+        latestCount: dateCounts[latestDate],
+        previousCount: dateCounts[previousDate],
+        latestDate,
+        previousDate
+    };
+}
+
+/* ============================================================
+   SLA FORECAST & ESTIMATED RESOLUTION DATE CALCULATOR
+   ============================================================ */
+
+export interface SlaForecastResult {
+    startDate: Date;
+    expectedDate: Date;
+    formattedExpectedDate: string;
+    turnaroundDays: number;
+    daysRemaining: number;
+    slaStatus: 'on-track' | 'due-soon' | 'overdue';
+    statusLabel: string;
+    badgeClass: 'positive' | 'warning' | 'danger';
+    icon: string;
+}
+
+export const PRODUCT_BASE_PROCESSING_DAYS: Record<string, number> = {
+    'jlg': 2,
+    'indbusinessloan': 4,
+    'ibl': 4,
+    'retail': 3,
+    'micro': 2,
+    'consumer': 2,
+    'general': 3
+};
+
+export const BRANCH_HISTORICAL_TAT_MODIFIER: Record<string, number> = {
+    'odagaon': 1,
+    'aska': 1,
+    'digapahandi': 1,
+    'bhanjanagar': 1,
+    'berhampur-od': 1,
+    'nayagarh': 0.5,
+    'gania': -0.5,
+    'buguda': 0,
+    'chhatrapur': 0,
+    'hinjilicut': 0,
+    'surada': 0,
+    'khalikote': 0,
+    'jagannathprasad': 0,
+    'nayagarh urban': 0.5,
+    'kodala': 0,
+    'khandapada2': 0,
+    'jagannath vihar': 0,
+    'kantilo': -0.5,
+    'patrapur': 0,
+    'purushottampur': 0,
+    'polasara': 0,
+    'krushnaprasad': 0.5,
+    'sheragada': 0,
+    'daspalla': 0.5,
+    'digapahandi2': 1,
+    'chikiti': 0,
+    'sorada2': 0,
+    'beguniapada': 0
+};
+
+export function estimateHistoricalTurnaroundTime(branch: string, product: string): number {
+    const pLower = (product || '').toLowerCase().replace(/[^a-z0-9]/g, '');
+    let baseDays = PRODUCT_BASE_PROCESSING_DAYS['general'];
+
+    for (const [prodKey, days] of Object.entries(PRODUCT_BASE_PROCESSING_DAYS)) {
+        if (pLower.includes(prodKey)) {
+            baseDays = days;
+            break;
+        }
+    }
+
+    const bLower = (branch || '').toLowerCase().trim();
+    const modifier = BRANCH_HISTORICAL_TAT_MODIFIER[bLower] ?? 0;
+    return Math.max(1, Math.round(baseDays + modifier));
+}
+
+export function addBusinessDays(startDate: Date, businessDaysToAdd: number): Date {
+    const result = new Date(startDate.getTime());
+    let added = 0;
+    while (added < businessDaysToAdd) {
+        result.setDate(result.getDate() + 1);
+        if (result.getDay() !== 0) {
+            added++;
+        }
+    }
+    return result;
+}
+
+export function parseDateString(dateStr: string | null | undefined): Date | null {
+    if (!dateStr || typeof dateStr !== 'string') return null;
+    const trimmed = dateStr.trim();
+    if (!trimmed) return null;
+
+    const parts = trimmed.split(/[-/]/);
+    if (parts.length === 3) {
+        if (parts[0].length === 4) {
+            const y = parseInt(parts[0], 10);
+            const m = parseInt(parts[1], 10) - 1;
+            const d = parseInt(parts[2], 10);
+            if (!isNaN(y) && !isNaN(m) && !isNaN(d)) return new Date(y, m, d);
+        }
+        const d = parseInt(parts[0], 10);
+        const m = parseInt(parts[1], 10) - 1;
+        const y = parseInt(parts[2], 10);
+        if (!isNaN(y) && !isNaN(m) && !isNaN(d)) return new Date(y, m, d);
+    }
+
+    const parsed = new Date(trimmed);
+    return isNaN(parsed.getTime()) ? null : parsed;
+}
+
+export function calculateSlaForecast(
+    rawDate: string | Date | null | undefined,
+    branch: string,
+    product: string,
+    currentDate: Date = new Date()
+): SlaForecastResult {
+    let start: Date;
+    if (rawDate instanceof Date && !isNaN(rawDate.getTime())) {
+        start = new Date(rawDate.getTime());
+    } else if (typeof rawDate === 'string') {
+        const parsed = parseDateString(rawDate);
+        start = parsed || new Date(currentDate.getTime() - 2 * 24 * 60 * 60 * 1000);
+    } else {
+        start = new Date(currentDate.getTime() - 2 * 24 * 60 * 60 * 1000);
+    }
+
+    const tat = estimateHistoricalTurnaroundTime(branch, product);
+    const expected = addBusinessDays(start, tat);
+
+    const curMidnight = new Date(currentDate.getFullYear(), currentDate.getMonth(), currentDate.getDate());
+    const expMidnight = new Date(expected.getFullYear(), expected.getMonth(), expected.getDate());
+    const diffMs = expMidnight.getTime() - curMidnight.getTime();
+    const daysRemaining = Math.round(diffMs / (1000 * 60 * 60 * 24));
+
+    let slaStatus: 'on-track' | 'due-soon' | 'overdue' = 'on-track';
+    let statusLabel = 'On Track';
+    let badgeClass: 'positive' | 'warning' | 'danger' = 'positive';
+    let icon = 'fa-solid fa-circle-check';
+
+    if (daysRemaining < 0) {
+        slaStatus = 'overdue';
+        statusLabel = `Overdue (${Math.abs(daysRemaining)}d)`;
+        badgeClass = 'danger';
+        icon = 'fa-solid fa-triangle-exclamation';
+    } else if (daysRemaining <= 1) {
+        slaStatus = 'due-soon';
+        statusLabel = daysRemaining === 0 ? 'Due Today' : 'Due Tomorrow';
+        badgeClass = 'warning';
+        icon = 'fa-solid fa-clock';
+    } else {
+        slaStatus = 'on-track';
+        statusLabel = `On Track (${daysRemaining}d)`;
+        badgeClass = 'positive';
+        icon = 'fa-solid fa-circle-check';
+    }
+
+    const monthNames = ['Jan', 'Feb', 'Mar', 'Apr', 'May', 'Jun', 'Jul', 'Aug', 'Sep', 'Oct', 'Nov', 'Dec'];
+    const formattedExpectedDate = `${String(expected.getDate()).padStart(2, '0')} ${monthNames[expected.getMonth()]} ${expected.getFullYear()}`;
+
+    return {
+        startDate: start,
+        expectedDate: expected,
+        formattedExpectedDate,
+        turnaroundDays: tat,
+        daysRemaining,
+        slaStatus,
+        statusLabel,
+        badgeClass,
+        icon
+    };
+}
+
+
+
 

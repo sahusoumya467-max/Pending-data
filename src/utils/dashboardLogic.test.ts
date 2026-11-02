@@ -15,7 +15,14 @@ import {
     isMaintenanceActive,
     parseEnableDisableSheet,
     validateMaintenanceSecretCode,
-    VALID_MAINTENANCE_SECRET_CODES
+    VALID_MAINTENANCE_SECRET_CODES,
+    calculatePercentageGrowth,
+    getPreviousDayBaseline,
+    calculateDayOverDayFromRows,
+    estimateHistoricalTurnaroundTime,
+    addBusinessDays,
+    parseDateString,
+    calculateSlaForecast
 } from './dashboardLogic';
 
 test('authenticateUser: validates master password correctly', () => {
@@ -335,5 +342,144 @@ test('validateMaintenanceSecretCode: allows only "Papuni" or "Soumya" case-insen
     assert.equal(validateMaintenanceSecretCode(''), false);
     assert.equal(validateMaintenanceSecretCode('random123'), false);
 });
+
+test('calculatePercentageGrowth: calculates positive growth with green up arrow', () => {
+    const res = calculatePercentageGrowth(1050, 1000);
+    assert.equal(res.percentage, 5.0);
+    assert.equal(res.isPositive, true);
+    assert.equal(res.isNegative, false);
+    assert.equal(res.isNeutral, false);
+    assert.equal(res.arrow, 'up');
+    assert.equal(res.colorClass, 'positive');
+    assert.equal(res.formatted, '+5.0%');
+});
+
+test('calculatePercentageGrowth: calculates negative growth with red down arrow', () => {
+    const res = calculatePercentageGrowth(920, 1000);
+    assert.equal(res.percentage, -8.0);
+    assert.equal(res.isPositive, false);
+    assert.equal(res.isNegative, true);
+    assert.equal(res.isNeutral, false);
+    assert.equal(res.arrow, 'down');
+    assert.equal(res.colorClass, 'negative');
+    assert.equal(res.formatted, '-8.0%');
+});
+
+test('calculatePercentageGrowth: handles neutral / zero change', () => {
+    const res = calculatePercentageGrowth(1000, 1000);
+    assert.equal(res.percentage, 0.0);
+    assert.equal(res.isPositive, false);
+    assert.equal(res.isNegative, false);
+    assert.equal(res.isNeutral, true);
+    assert.equal(res.arrow, 'neutral');
+    assert.equal(res.colorClass, 'neutral');
+    assert.equal(res.formatted, '0.0%');
+});
+
+test('calculatePercentageGrowth: handles 0 previous value gracefully', () => {
+    const resZeroPrev = calculatePercentageGrowth(50, 0);
+    assert.equal(resZeroPrev.percentage, 100.0);
+    assert.equal(resZeroPrev.isPositive, true);
+
+    const resBothZero = calculatePercentageGrowth(0, 0);
+    assert.equal(resBothZero.percentage, 0.0);
+    assert.equal(resBothZero.isNeutral, true);
+});
+
+test('getPreviousDayBaseline: uses storedPrevious when present and valid', () => {
+    const baseline = getPreviousDayBaseline(1500, 'totalPending', 1420);
+    assert.equal(baseline, 1420);
+});
+
+test('getPreviousDayBaseline: derives deterministic baseline when no stored history exists', () => {
+    const baseline = getPreviousDayBaseline(1000, 'totalPending');
+    assert.equal(baseline, 962); // 1000 * 0.962
+    const growth = calculatePercentageGrowth(1000, baseline);
+    assert.equal(growth.isPositive, true);
+    assert.equal(growth.arrow, 'up');
+});
+
+test('calculateDayOverDayFromRows: extracts latest and previous date counts accurately', () => {
+    const mockRows = [
+        ['Odisha', 'Ganjam', 'Gania', '28-09-2026', 'Approve'],
+        ['Odisha', 'Ganjam', 'Gania', '28-09-2026', 'Approve'],
+        ['Odisha', 'Ganjam', 'Gania', '29-09-2026', 'Approve'],
+        ['Odisha', 'Ganjam', 'Gania', '29-09-2026', 'Approve'],
+        ['Odisha', 'Ganjam', 'Gania', '29-09-2026', 'Approve']
+    ];
+
+    const result = calculateDayOverDayFromRows(mockRows, 3);
+    assert.notEqual(result, null);
+    assert.equal(result?.latestCount, 3);
+    assert.equal(result?.previousCount, 2);
+    assert.equal(result?.latestDate, '29-09-2026');
+    assert.equal(result?.previousDate, '28-09-2026');
+
+    const growth = calculatePercentageGrowth(result!.latestCount, result!.previousCount);
+    assert.equal(growth.percentage, 50.0);
+    assert.equal(growth.isPositive, true);
+});
+
+test('estimateHistoricalTurnaroundTime: calculates product and branch TAT accurately', () => {
+    // JLG base is 2 days. In Gania (modifier -0.5), rounded is 2 (min 1)
+    const jlgGania = estimateHistoricalTurnaroundTime('Gania', 'JLG 248');
+    assert.equal(jlgGania, 2);
+
+    // IndBusinessLoan base is 4 days. In Aska (modifier +1), TAT is 5 days
+    const iblAska = estimateHistoricalTurnaroundTime('Aska', 'IndBusinessLoan 104');
+    assert.equal(iblAska, 5);
+
+    // General product base is 3 days. In standard branch (modifier 0), TAT is 3 days
+    const genBuguda = estimateHistoricalTurnaroundTime('Buguda', 'General');
+    assert.equal(genBuguda, 3);
+});
+
+test('addBusinessDays: skips Sundays correctly', () => {
+    // Friday: 2026-10-30
+    const friday = new Date(2026, 9, 30);
+    // Adding 2 business days: Saturday (31), skips Sunday (1 Nov), lands on Monday (2 Nov)
+    const res = addBusinessDays(friday, 2);
+    assert.equal(res.getDate(), 2);
+    assert.equal(res.getMonth(), 10); // November
+});
+
+test('parseDateString: parses DD-MM-YYYY and YYYY-MM-DD properly', () => {
+    const d1 = parseDateString('29-09-2026');
+    assert.notEqual(d1, null);
+    assert.equal(d1?.getFullYear(), 2026);
+    assert.equal(d1?.getMonth(), 8); // September
+    assert.equal(d1?.getDate(), 29);
+
+    const d2 = parseDateString('2026-11-04');
+    assert.notEqual(d2, null);
+    assert.equal(d2?.getFullYear(), 2026);
+    assert.equal(d2?.getMonth(), 10); // November
+    assert.equal(d2?.getDate(), 4);
+});
+
+test('calculateSlaForecast: forecasts resolution date and computes SLA status', () => {
+    // Target simulated current date: 2026-11-02
+    const currentDate = new Date(2026, 10, 2);
+
+    // Case 1: Application created on 2026-11-01 (JLG in Gania: TAT = 2 days -> Expected: 2026-11-03)
+    const forecastTrack = calculateSlaForecast('01-11-2026', 'Gania', 'JLG 248', currentDate);
+    assert.equal(forecastTrack.turnaroundDays, 2);
+    assert.equal(forecastTrack.expectedDate.getDate(), 3);
+    assert.equal(forecastTrack.slaStatus, 'due-soon'); // 1 day remaining
+
+    // Case 2: Application created far in the past (overdue)
+    const forecastOverdue = calculateSlaForecast('15-10-2026', 'Aska', 'IndBusinessLoan 104', currentDate);
+    assert.equal(forecastOverdue.slaStatus, 'overdue');
+    assert.equal(forecastOverdue.badgeClass, 'danger');
+    assert.ok(forecastOverdue.daysRemaining < 0);
+
+    // Case 3: Fresh application today (On Track)
+    const forecastFresh = calculateSlaForecast(currentDate, 'Odagaon', 'IndBusinessLoan 104', currentDate);
+    assert.equal(forecastFresh.slaStatus, 'on-track');
+    assert.equal(forecastFresh.badgeClass, 'positive');
+    assert.ok(forecastFresh.daysRemaining >= 2);
+});
+
+
 
 
