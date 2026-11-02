@@ -777,14 +777,9 @@ export const ADMIN_CREDIT_PASSWORD = "Ganjam@123";
 export function isFeatureAccessible(
     featureKey: keyof AdminFeaturePermissions,
     permissions: AdminFeaturePermissions = DEFAULT_ADMIN_PERMISSIONS,
-    userRole: string | null = null,
-    isGanjamAdmin: boolean = false
+    userRole: string | null = null
 ): { allowed: boolean; message?: string } {
-    // Only admin credit dashboard password (Ganjam@123) can open/bypass disabled features
-    if (isGanjamAdmin || userRole === 'GANJAM_ADMIN') {
-        return { allowed: true };
-    }
-    // Disabled in Google Sheet disables for master password users as well
+    // Access control is governed solely by Google Sheet permissions
     const enabled = permissions[featureKey] !== false;
     if (!enabled) {
         return {

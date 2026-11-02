@@ -3158,39 +3158,27 @@
 
 <!-- FEATURE DISABLED NOTIFICATION MODAL -->
 <div class="modal" id="featureDisabledModal" style="display: none; z-index: 1060;" onclick="if(event.target === this) closeFeatureDisabledModal()">
-    <div class="modal-content" style="max-width: 450px; text-align: center; padding: 24px; border-radius: 20px;">
-        <div style="width: 56px; height: 56px; margin: 0 auto 14px; border-radius: 50%; background: #fee2e2; display: flex; align-items: center; justify-content: center; color: #ef4444; font-size: 1.6rem; box-shadow: 0 4px 14px rgba(239, 68, 68, 0.25);">
-            <i class="fa-solid fa-ban"></i>
+    <div class="modal-content" style="max-width: 450px; text-align: center; padding: 26px 24px; border-radius: 20px; box-shadow: 0 20px 45px rgba(0,0,0,0.3);">
+        <div style="width: 58px; height: 58px; margin: 0 auto 14px; border-radius: 50%; background: #fee2e2; display: flex; align-items: center; justify-content: center; color: #ef4444; font-size: 1.6rem; box-shadow: 0 4px 14px rgba(239, 68, 68, 0.25);">
+            <i class="fa-solid fa-lock"></i>
         </div>
-        <h3 style="font-size: 1.15rem; font-weight: 800; color: #1e1b4b; margin-bottom: 8px;" id="disabledModalTitle">Option Disabled</h3>
-        <p style="font-size: 0.88rem; color: #475569; line-height: 1.5; margin-bottom: 16px;" id="disabledModalText">
-            This option is currently disabled by administrator in Google Sheet. Disabled in Master password also.
+        <h3 style="font-size: 1.18rem; font-weight: 800; color: #1e1b4b; margin-bottom: 8px;" id="disabledModalTitle">Option Disabled</h3>
+        <p style="font-size: 0.88rem; color: #475569; line-height: 1.5; margin-bottom: 18px;" id="disabledModalText">
+            This option is currently disabled by administrator in Google Sheet.
         </p>
-        <div style="background: #f8fafc; border: 1.5px dashed #cbd5e1; border-radius: 12px; padding: 12px 14px; margin-bottom: 16px; text-align: left;">
-            <div style="font-size: 0.72rem; text-transform: uppercase; font-weight: 800; color: #64748b; margin-bottom: 4px;">
-                <i class="fa-solid fa-headset" style="color: #6366f1;"></i> Support / Permissions
+        <div style="background: #f8fafc; border: 1.5px dashed #cbd5e1; border-radius: 12px; padding: 14px 16px; margin-bottom: 18px; text-align: center;">
+            <div style="font-size: 0.8rem; text-transform: uppercase; font-weight: 800; color: #64748b; margin-bottom: 6px; letter-spacing: 0.5px;">
+                <i class="fa-solid fa-headset" style="color: #6366f1; margin-right: 4px;"></i> Support / Permissions
             </div>
-            <div style="font-size: 0.88rem; font-weight: 700; color: #0f172a; word-break: break-all;">
-                contact admin <a href="mailto:soumyaranjan@afpl.net.in" style="color: #6366f1; text-decoration: underline;">soumyaranjan@afpl.net.in</a>
+            <div style="font-size: 0.94rem; font-weight: 700; color: #0f172a; word-break: break-all;">
+                contact admin <a href="mailto:soumyaranjan@afpl.net.in" style="color: #2563eb; text-decoration: underline;">soumyaranjan@afpl.net.in</a>
             </div>
-            <div style="font-size: 0.84rem; font-weight: 800; color: #e11d48; margin-top: 4px;">
+            <div style="font-size: 0.9rem; font-weight: 800; color: #e11d48; margin-top: 6px;">
                 EMP ID@12687
             </div>
         </div>
 
-        <!-- Admin Credit Dashboard Password (Ganjam@123) Unlock Box -->
-        <div style="background: #eff6ff; border: 1px solid #bfdbfe; border-radius: 12px; padding: 12px 14px; margin-bottom: 16px; text-align: left;">
-            <div style="font-size: 0.75rem; font-weight: 800; color: #1e40af; margin-bottom: 6px; display: flex; align-items: center; gap: 6px;">
-                <i class="fa-solid fa-key" style="color: #2563eb;"></i> Admin Credit Unlock Only (Ganjam@123)
-            </div>
-            <div style="display: flex; gap: 8px;">
-                <input type="password" id="disabledFeatureAdminPass" placeholder="Enter Ganjam@123" style="flex: 1; padding: 7px 10px; border-radius: 8px; border: 1.5px solid #93c5fd; font-size: 0.84rem;" onkeydown="if(event.key==='Enter') unlockDisabledFeatureWithAdmin()">
-                <button onclick="unlockDisabledFeatureWithAdmin()" style="background: #2563eb; color: #ffffff; border: none; padding: 7px 14px; border-radius: 8px; font-weight: 700; font-size: 0.82rem; cursor: pointer;">Unlock</button>
-            </div>
-            <p id="disabledFeatureAdminErr" style="color: #dc2626; font-size: 0.78rem; font-weight: 700; margin: 5px 0 0; display: none;">Invalid admin password! Only Ganjam@123 can unlock.</p>
-        </div>
-
-        <button class="btn btn-refresh" onclick="closeFeatureDisabledModal()" style="width: 100%; padding: 10px; font-size: 0.88rem; border-radius: 10px;">
+        <button class="btn btn-refresh" onclick="closeFeatureDisabledModal()" style="width: 100%; padding: 11px; font-size: 0.9rem; border-radius: 10px; font-weight: 700;">
             Acknowledge & Close
         </button>
     </div>
@@ -5123,7 +5111,7 @@
                 </div>
                 <p class="feature-item-desc">${item.description}</p>
                 <div class="feature-action-bar">
-                    <button class="feature-launch-btn" onclick="${item.actionHandler}" style="${isFeatureActive ? '' : 'background: #fee2e2; color: #991b1b; border-color: #fca5a5;'}">
+                    <button class="feature-launch-btn" onclick="${isFeatureActive ? item.actionHandler : `closeAllFeaturesModal(); showFeatureDisabledNotice('${item.title.replace(/'/g, "\\'")}', '${item.id}');`}" style="${isFeatureActive ? '' : 'background: #fee2e2; color: #991b1b; border-color: #fca5a5;'}">
                         <i class="fa-solid ${isFeatureActive ? item.actionIcon : 'fa-lock'}"></i>
                         <span>${isFeatureActive ? item.actionText : 'Disabled (Contact Admin)'}</span>
                     </button>
@@ -5183,18 +5171,11 @@
         const pass = document.getElementById('mainLoginPassword').value.trim();
         const err = document.getElementById('mainLoginError');
         
-        if (pass === "Ganjam@123") {
-            // Admin credit dashboard password unlocks all features
+        if (pass === "Ganjam@123" || MASTER_PASSWORDS.includes(pass)) {
             loggedInUser = 'MASTER';
-            sessionStorage.setItem('admin_credit_unlocked_ganjam', 'true');
-        } else if (MASTER_PASSWORDS.includes(pass)) {
-            // Master passwords do not bypass disabled features from Google Sheet
-            loggedInUser = 'MASTER';
-            sessionStorage.removeItem('admin_credit_unlocked_ganjam');
         } else if (VALID_BRANCHES.includes(pass.toLowerCase())) {
             // Capitalize first letter for aesthetics
             loggedInUser = pass.charAt(0).toUpperCase() + pass.slice(1).toLowerCase();
-            sessionStorage.removeItem('admin_credit_unlocked_ganjam');
         } else {
             err.style.display = 'block';
             return;
@@ -7017,6 +6998,7 @@
     }
 
     function openLoginModal() {
+        if (!checkFeaturePermission('creditPortal')) return;
         document.getElementById('loginModal').style.display = 'flex';
         document.getElementById('creditPassword').value = '';
         const errEl = document.getElementById('loginError');
@@ -7031,30 +7013,27 @@
         const isCreditDisabled = perms.creditPortal === false;
         const errEl = document.getElementById('loginError');
 
-        // Only admin credit dashboard password (Ganjam@123) can open when disabled
-        if (pass === "Ganjam@123") {
-            sessionStorage.setItem('admin_credit_unlocked_ganjam', 'true');
-            closeLoginModal();
-            document.getElementById('creditScreen').style.display = 'block';
-            applyFeatureUIPermissions();
-            fetchNotification();
-            fetchEnableDisableConfig();
-            loadGoogleSheetData('All data', 'handleAllData');
-            setTimeout(initAllMeshCanvases, 100);
-            return;
-        }
-
-        // If creditPortal is disabled in Google Sheet, master passwords also cannot open it
+        // If creditPortal is disabled in Google Sheet, no password can unlock it
         if (isCreditDisabled) {
             if (errEl) {
-                errEl.innerHTML = `<i class="fa-solid fa-lock"></i> Credit Dashboard is disabled in Google Sheet.<br>Disabled for master passwords also.<br><strong>Only admin credit password (Ganjam@123) can open.</strong>`;
+                errEl.innerHTML = `
+                    <div style="font-size: 0.78rem; text-transform: uppercase; font-weight: 800; color: #64748b; margin-bottom: 4px;">
+                        <i class="fa-solid fa-lock" style="color: #e11d48;"></i> Support / Permissions
+                    </div>
+                    <div style="font-size: 0.88rem; font-weight: 700; color: #0f172a;">
+                        contact admin <a href="mailto:soumyaranjan@afpl.net.in" style="color: #6366f1; text-decoration: underline;">soumyaranjan@afpl.net.in</a>
+                    </div>
+                    <div style="font-size: 0.84rem; font-weight: 800; color: #e11d48; margin-top: 3px;">
+                        EMP ID@12687
+                    </div>
+                `;
                 errEl.style.display = 'block';
             }
             return;
         }
 
-        // Normal access when creditPortal is enabled in Google Sheet
-        if (MASTER_PASSWORDS.includes(pass) || pass === "Credit@12687" || pass === "Credit@123" || pass === "Soumya@123") {
+        // Access when creditPortal is enabled in Google Sheet
+        if (pass === "Ganjam@123" || MASTER_PASSWORDS.includes(pass) || pass === "Credit@12687" || pass === "Credit@123" || pass === "Soumya@123") {
             closeLoginModal();
             document.getElementById('creditScreen').style.display = 'block';
             fetchNotification();
@@ -7540,18 +7519,14 @@
     }
 
     function isGanjamAdminUnlocked() {
-        return sessionStorage.getItem('admin_credit_unlocked_ganjam') === 'true';
+        return false;
     }
 
     let currentPendingDisabledFeatureKey = null;
 
     function checkFeaturePermission(featureKey) {
-        // Only admin credit dashboard password (Ganjam@123) can open disabled features
-        if (isGanjamAdminUnlocked()) return true;
-
         const perms = getAdminFeaturePermissions();
         if (perms[featureKey] === false) {
-            // Disabled in Google Sheet disables for master password users as well
             const meta = ADMIN_FEATURES_LIST.find(f => f.key === featureKey);
             const featureName = meta ? meta.name : 'This feature';
             showFeatureDisabledNotice(featureName, featureKey);
@@ -7565,14 +7540,10 @@
         const modal = document.getElementById('featureDisabledModal');
         const titleEl = document.getElementById('disabledModalTitle');
         const textEl = document.getElementById('disabledModalText');
-        const passInput = document.getElementById('disabledFeatureAdminPass');
-        const errEl = document.getElementById('disabledFeatureAdminErr');
-        if (passInput) passInput.value = '';
-        if (errEl) errEl.style.display = 'none';
 
         if (titleEl) titleEl.textContent = `${featureName} is Disabled`;
         if (textEl) {
-            textEl.innerHTML = `This option has been disabled by administrator in Google Sheet.<br>Disabled in Master password also.<br><br><strong>This only opens via Admin Credit Dashboard password only (Ganjam@123).</strong>`;
+            textEl.innerHTML = `This option has been disabled by administrator in Google Sheet.<br>Access control is managed solely via Google Sheet permissions.`;
         }
         if (modal) modal.style.display = 'flex';
     }
@@ -7581,32 +7552,6 @@
         const modal = document.getElementById('featureDisabledModal');
         if (modal) modal.style.display = 'none';
         currentPendingDisabledFeatureKey = null;
-    }
-
-    function unlockDisabledFeatureWithAdmin() {
-        const passInput = document.getElementById('disabledFeatureAdminPass');
-        const errEl = document.getElementById('disabledFeatureAdminErr');
-        const pass = (passInput ? passInput.value : '').trim();
-
-        if (pass === 'Ganjam@123') {
-            sessionStorage.setItem('admin_credit_unlocked_ganjam', 'true');
-            if (errEl) errEl.style.display = 'none';
-            if (passInput) passInput.value = '';
-            const keyToLaunch = currentPendingDisabledFeatureKey;
-            closeFeatureDisabledModal();
-            applyFeatureUIPermissions();
-            if (typeof renderFeaturesDirectoryGrid === 'function') {
-                renderFeaturesDirectoryGrid();
-            }
-            if (keyToLaunch) {
-                launchFeatureByKey(keyToLaunch);
-            }
-        } else {
-            if (errEl) {
-                errEl.style.display = 'block';
-                errEl.textContent = 'Invalid admin password! Only Ganjam@123 can unlock.';
-            }
-        }
     }
 
     function launchFeatureByKey(featureKey) {
@@ -7735,9 +7680,6 @@
 
     function confirmMaintenanceAccessOk() {
         sessionStorage.setItem('admin_maintenance_bypass', 'true');
-        if (tempVerifiedMaintenancePass === 'Ganjam@123') {
-            sessionStorage.setItem('admin_credit_unlocked_ganjam', 'true');
-        }
         loggedInUser = 'MASTER';
         document.getElementById('systemMaintenanceOverlay').style.display = 'none';
         document.getElementById('mainLoginOverlay').style.display = 'none';
@@ -7794,16 +7736,6 @@
     }
 
     function applyFeatureUIPermissions() {
-        if (isGanjamAdminUnlocked()) {
-            document.querySelectorAll('.section-disabled-overlay').forEach(el => el.remove());
-            const notifBar = document.querySelector('.notification-marquee');
-            if (notifBar) {
-                notifBar.style.opacity = '1';
-                notifBar.title = '';
-            }
-            return;
-        }
-
         const perms = getAdminFeaturePermissions();
         
         function syncSectionOverlay(sectionId, isEnabled, name, featureKey) {
@@ -7816,10 +7748,9 @@
                     const overlay = document.createElement('div');
                     overlay.className = 'section-disabled-overlay';
                     overlay.innerHTML = `
-                        <div class="section-disabled-badge">
+                        <div class="section-disabled-badge" onclick="showFeatureDisabledNotice('${name}', '${featureKey}')" style="cursor: pointer;">
                             <i class="fa-solid fa-lock"></i>
-                            <span>${name} is disabled &bull; contact admin soumyaranjan@afpl.net.in EMP ID@12687 &bull; Only admin credit password (Ganjam@123) can open</span>
-                            <button onclick="showFeatureDisabledNotice('${name}', '${featureKey}')" style="margin-left: 8px; background: rgba(255,255,255,0.25); border: 1px solid rgba(255,255,255,0.4); color: #fff; padding: 3px 9px; border-radius: 6px; font-weight: 700; cursor: pointer; font-size: 0.74rem;">Admin Unlock</button>
+                            <span>${name} is disabled &bull; Support / Permissions: contact admin soumyaranjan@afpl.net.in EMP ID@12687</span>
                         </div>
                     `;
                     sec.appendChild(overlay);

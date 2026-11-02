@@ -258,17 +258,15 @@ test('isFeatureAccessible: checks disabled permissions and informs user with adm
     assert.ok(regularUserCheck.message?.includes('soumyaranjan@afpl.net.in'));
     assert.ok(regularUserCheck.message?.includes('EMP ID@12687'));
 
-    // Master user is ALSO blocked if disabled in Google Sheet
+    // Master user is ALSO blocked if disabled in Google Sheet (access control is only Google Sheet)
     const masterCheck = isFeatureAccessible('matrixCalculator', perms, 'MASTER');
     assert.equal(masterCheck.allowed, false);
     assert.ok(masterCheck.message?.includes('soumyaranjan@afpl.net.in'));
+    assert.ok(masterCheck.message?.includes('EMP ID@12687'));
 
-    // Only Ganjam Admin credentials can bypass / unlock disabled feature
-    const ganjamCheck = isFeatureAccessible('matrixCalculator', perms, 'MASTER', true);
-    assert.equal(ganjamCheck.allowed, true);
-
-    const ganjamRoleCheck = isFeatureAccessible('matrixCalculator', perms, 'GANJAM_ADMIN');
-    assert.equal(ganjamRoleCheck.allowed, true);
+    // When feature is enabled in Google Sheet, access is granted
+    const enabledCheck = isFeatureAccessible('emiCalculator', perms, 'Odagaon');
+    assert.equal(enabledCheck.allowed, true);
 });
 
 test('isMaintenanceActive: activates for all passwords including master when enabled, and allows bypass', () => {
