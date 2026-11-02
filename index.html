@@ -50,7 +50,7 @@
             position: relative;
         }
 
-        /* OFFICIAL BANKING ENTERPRISE WORKSPACE LAYOUT */
+        /* OFFICIAL ENTERPRISE WORKSPACE LAYOUT */
         .workspace-layout {
             display: flex;
             min-height: 100vh;
@@ -3989,6 +3989,53 @@
     </div>
 </div>
 
+<!-- Modal 3.6: LOGIN OFFICIAL BROADCAST NOTIFICATION MODAL -->
+<div class="modal" id="loginNotificationModal" style="display: none; align-items: center; justify-content: center; z-index: 100010; background: rgba(15, 23, 42, 0.75); backdrop-filter: blur(8px);">
+    <div class="modal-content" style="max-width: 540px; border-radius: 20px; box-shadow: 0 25px 50px -12px rgba(0, 0, 0, 0.4); border: 1px solid rgba(255, 255, 255, 0.2); overflow: hidden; padding: 0;">
+        <div style="background: linear-gradient(135deg, #4f46e5, #7c3aed, #a855f7); padding: 22px 24px; color: #fff; position: relative;">
+            <div style="display: flex; align-items: center; justify-content: space-between;">
+                <div style="display: flex; align-items: center; gap: 12px;">
+                    <div style="width: 44px; height: 44px; border-radius: 12px; background: rgba(255, 255, 255, 0.2); backdrop-filter: blur(4px); display: flex; align-items: center; justify-content: center; font-size: 1.35rem; color: #fff; box-shadow: 0 4px 12px rgba(0,0,0,0.15);">
+                        <i class="fa-solid fa-bullhorn"></i>
+                    </div>
+                    <div>
+                        <h3 style="margin: 0; font-size: 1.18rem; font-weight: 800; color: #fff; letter-spacing: -0.2px;">Official Bank Notification</h3>
+                        <span style="font-size: 0.78rem; color: rgba(255,255,255,0.85); font-weight: 600;" id="loginNotifTimestamp">Live Broadcast Notice</span>
+                    </div>
+                </div>
+                <button onclick="closeLoginNotificationModal()" style="background: rgba(255,255,255,0.15); border: none; width: 32px; height: 32px; border-radius: 50%; color: #fff; font-size: 1.1rem; cursor: pointer; display: flex; align-items: center; justify-content: center; transition: all 0.2s;" title="Close Notice">
+                    <i class="fa-solid fa-xmark"></i>
+                </button>
+            </div>
+        </div>
+
+        <div style="padding: 24px; background: var(--bg-card, #ffffff);">
+            <div style="display: flex; align-items: center; gap: 8px; margin-bottom: 12px;">
+                <span style="display: inline-flex; align-items: center; gap: 6px; padding: 4px 10px; border-radius: 20px; font-size: 0.74rem; font-weight: 700; background: #ecfdf5; color: #047857;">
+                    <span style="width: 7px; height: 7px; border-radius: 50%; background: #10b981; display: inline-block;"></span>
+                    Live Broadcast &bull; Notification Card Notice
+                </span>
+                <span style="font-size: 0.75rem; color: var(--text-secondary, #64748b);">Synced from Google Sheet</span>
+            </div>
+
+            <div style="background: #f8fafc; border-left: 4px solid #6366f1; padding: 18px; border-radius: 0 12px 12px 0; border-top: 1px solid #e2e8f0; border-right: 1px solid #e2e8f0; border-bottom: 1px solid #e2e8f0; margin-bottom: 22px;">
+                <p id="loginNotificationMessageText" style="margin: 0; font-size: 0.98rem; line-height: 1.65; color: #1e293b; font-weight: 600;">
+                    All systems operational
+                </p>
+            </div>
+
+            <div style="display: flex; align-items: center; justify-content: space-between; gap: 12px;">
+                <span style="font-size: 0.76rem; color: var(--text-secondary, #64748b);">
+                    <i class="fa-solid fa-circle-check" style="color: #10b981; margin-right: 4px;"></i>Broadcast Verified
+                </span>
+                <button class="btn btn-refresh" onclick="closeLoginNotificationModal()" style="background: linear-gradient(135deg, #4f46e5, #6366f1); color: #fff; padding: 10px 24px; font-size: 0.88rem; font-weight: 700; border-radius: 10px; box-shadow: 0 4px 12px rgba(99, 102, 241, 0.35); border: none; cursor: pointer;">
+                    Acknowledge & Continue
+                </button>
+            </div>
+        </div>
+    </div>
+</div>
+
 <!-- Modal 4: ROBOTIC BRANCH DETAILS DIALOG MODAL -->
 <div class="modal" id="branchDialogModal">
     <div class="modal-content">
@@ -4350,67 +4397,6 @@
                     </tbody>
                     <tfoot id="creditBranchTableFoot"></tfoot>
                 </table>
-            </div>
-        </div>
-
-        <!-- ENTERPRISE ADMIN CONTROL PANEL (Credit Portal Section) -->
-        <div class="table-card mesh-container admin-panel-box" id="creditAdminPanelCard">
-            <canvas class="mesh-canvas"></canvas>
-            <div class="table-header" style="flex-wrap: wrap; gap: 10px;">
-                <div style="display: flex; align-items: center; gap: 10px;">
-                    <div style="width: 42px; height: 42px; border-radius: 12px; background: linear-gradient(135deg, #6366f1, #a855f7); display: flex; align-items: center; justify-content: center; color: #fff; font-size: 1.25rem; box-shadow: 0 4px 12px rgba(99, 102, 241, 0.35);">
-                        <i class="fa-solid fa-user-shield"></i>
-                    </div>
-                    <div>
-                        <h3 style="margin: 0; font-size: 1.12rem; color: #1e1b4b; font-weight: 800;">Enterprise Admin Control Panel</h3>
-                        <p style="margin: 2px 0 0; font-size: 0.76rem; color: #64748b; font-weight: 600;">System Governance, Feature Availability & Maintenance Controller</p>
-                    </div>
-                </div>
-                <div class="admin-identity-badge">
-                    <span class="admin-badge-dot"></span>
-                    <span>Admin: Soumyaranjan Sahu &bull; soumyaranjan@afpl.net.in &bull; EMP ID@12687</span>
-                </div>
-            </div>
-
-            <!-- Maintenance Mode Master Strip -->
-            <div class="admin-maintenance-banner" id="adminMaintenanceBanner">
-                <div class="admin-maint-left">
-                    <div class="maint-icon-badge">
-                        <i class="fa-solid fa-triangle-exclamation"></i>
-                    </div>
-                    <div>
-                        <h4 style="margin: 0; font-size: 0.98rem; font-weight: 800; color: #1e1b4b;">System Maintenance Mode</h4>
-                        <p style="margin: 3px 0 0; font-size: 0.8rem; color: #64748b; line-height: 1.4;">
-                            When enabled, any user opening this webpage will see the full-screen maintenance notice directing them to contact admin: <strong>soumyaranjan@afpl.net.in</strong> (EMP ID@12687).
-                        </p>
-                    </div>
-                </div>
-                <div class="admin-maint-right">
-                    <label class="admin-switch">
-                        <input type="checkbox" id="adminMaintenanceToggle" onchange="toggleAdminMaintenance(this.checked)">
-                        <span class="admin-slider"></span>
-                    </label>
-                    <span class="admin-switch-status" id="adminMaintenanceStatusText">Inactive</span>
-                </div>
-            </div>
-
-            <!-- Features Enable / Disable Matrix Grid -->
-            <div class="admin-features-header">
-                <div>
-                    <h4 style="margin: 0; font-size: 0.96rem; font-weight: 800; color: #1e1b4b;">All Options Enable & Disable Control Matrix</h4>
-                    <p style="margin: 2px 0 0; font-size: 0.78rem; color: #64748b;">
-                        If any option is disabled, other users will see: <em>"This option is disabled. Please contact admin soumyaranjan@afpl.net.in EMP ID@12687"</em>
-                    </p>
-                </div>
-                <div class="admin-actions-group">
-                    <button class="btn-admin-action" onclick="setAllAdminFeatures(true)"><i class="fa-solid fa-check-double" style="color: #10b981;"></i> Enable All</button>
-                    <button class="btn-admin-action" onclick="setAllAdminFeatures(false)"><i class="fa-solid fa-ban" style="color: #ef4444;"></i> Disable All</button>
-                    <button class="btn-admin-action btn-admin-reset" onclick="resetAdminFeaturesDefault()"><i class="fa-solid fa-rotate-left"></i> Reset Defaults</button>
-                </div>
-            </div>
-
-            <div class="admin-features-grid" id="adminFeaturesGridContainer">
-                <!-- Dynamically rendered and interactive in JS -->
             </div>
         </div>
     </div>
@@ -4942,19 +4928,35 @@
         },
         {
             id: 'adminPanel',
-            title: 'Admin Control Panel & Maintenance',
+            title: 'Sheet Feature Manager (Enable/disable)',
             category: 'OPERATIONS',
             categoryLabel: 'Operations & Records',
-            badge: 'Admin Access',
+            badge: 'Google Sheet Managed',
             badgeBg: '#fee2e2',
             badgeColor: '#991b1b',
             icon: 'fa-shield-halved',
             iconBg: 'rgba(220, 38, 38, 0.12)',
             iconColor: '#dc2626',
-            description: 'Granular control to enable or disable any individual portal option, system-wide maintenance mode lockdown with admin contact soumyaranjan@afpl.net.in EMP ID@12687.',
-            actionText: 'Open in Credit Portal',
-            actionIcon: 'fa-lock',
-            actionHandler: "closeAllFeaturesModal(); openLoginModal();"
+            description: 'Centralized live configuration from Google Sheet ("Enable/disable" tab) to enable/disable features and manage maintenance mode. Admin contact: soumyaranjan@afpl.net.in EMP ID@12687.',
+            actionText: 'Sync Settings Now',
+            actionIcon: 'fa-arrows-rotate',
+            actionHandler: "closeAllFeaturesModal(); fetchEnableDisableConfig(); refreshDashboard();"
+        },
+        {
+            id: 'notification',
+            title: 'Broadcast Notice & Login Popup',
+            category: 'EXPERIENCE',
+            categoryLabel: 'Portal & Experience',
+            badge: 'Live Broadcast',
+            badgeBg: '#ede9fe',
+            badgeColor: '#5b21b6',
+            icon: 'fa-bullhorn',
+            iconBg: 'rgba(99, 102, 241, 0.12)',
+            iconColor: '#6366f1',
+            description: 'Real-time broadcast notice shown on topbar and as a popup on user login when enabled in the Google Sheet.',
+            actionText: 'View Current Notice',
+            actionIcon: 'fa-bullhorn',
+            actionHandler: "closeAllFeaturesModal(); showLoginNotificationPopup();"
         },
         {
             id: 'darkMode',
@@ -5040,28 +5042,35 @@
             return;
         }
 
-        container.innerHTML = filtered.map(item => `
-            <div class="feature-item-card">
+        const perms = getAdminFeaturePermissions();
+        container.innerHTML = filtered.map(item => {
+            const isFeatureActive = perms[item.id] !== false;
+            return `
+            <div class="feature-item-card ${isFeatureActive ? '' : 'is-disabled'}" style="${isFeatureActive ? '' : 'opacity: 0.88; border-color: #fecaca; background: #fffaf0;'}">
                 <div class="feature-card-header">
-                    <div class="feature-icon-box" style="background: ${item.iconBg}; color: ${item.iconColor};">
+                    <div class="feature-icon-box" style="background: ${isFeatureActive ? item.iconBg : '#fee2e2'}; color: ${isFeatureActive ? item.iconColor : '#dc2626'};">
                         <i class="fa-solid ${item.icon}"></i>
                     </div>
                     <div style="flex: 1; min-width: 0;">
                         <h3 class="feature-item-title">${item.title}</h3>
-                        <span class="feature-category-badge" style="background: ${item.badgeBg}; color: ${item.badgeColor};">
-                            ${item.badge}
-                        </span>
+                        <div style="display: flex; gap: 6px; flex-wrap: wrap; align-items: center;">
+                            <span class="feature-category-badge" style="background: ${item.badgeBg}; color: ${item.badgeColor};">
+                                ${item.badge}
+                            </span>
+                            ${isFeatureActive ? '' : '<span class="feature-category-badge" style="background: #fee2e2; color: #dc2626; font-weight: 800;"><i class="fa-solid fa-lock" style="margin-right: 3px;"></i>Disabled in Sheet</span>'}
+                        </div>
                     </div>
                 </div>
                 <p class="feature-item-desc">${item.description}</p>
                 <div class="feature-action-bar">
-                    <button class="feature-launch-btn" onclick="${item.actionHandler}">
-                        <i class="fa-solid ${item.actionIcon}"></i>
-                        <span>${item.actionText}</span>
+                    <button class="feature-launch-btn" onclick="${item.actionHandler}" style="${isFeatureActive ? '' : 'background: #fee2e2; color: #991b1b; border-color: #fca5a5;'}">
+                        <i class="fa-solid ${isFeatureActive ? item.actionIcon : 'fa-lock'}"></i>
+                        <span>${isFeatureActive ? item.actionText : 'Disabled (Contact Admin)'}</span>
                     </button>
                 </div>
             </div>
-        `).join('');
+            `;
+        }).join('');
     }
 
     /* WORKSPACE SIDEBAR & FILTER CONTROLLERS */
@@ -5131,13 +5140,24 @@
         dashContainer.style.display = (window.innerWidth >= 1025 ? 'flex' : 'block');
         applyFeatureUIPermissions();
         
-        // Check accurate particular festival day vs daily time-of-day shayari wish
+        // Initialize Festive Occasion dates
         initFestiveOccasion();
-        const festiveInfo = getFestivalAndOccasionClient(new Date());
-        if (festiveInfo.isFestival) {
-            showFestiveOccasionModal();
+
+        // Check if notification is enabled in Google Sheet
+        const perms = getAdminFeaturePermissions();
+        const isNotifEnabled = perms.notification !== false;
+        const notifText = currentLiveNotificationRemark || (document.getElementById('notificationCount')?.textContent || '').trim();
+
+        if (isNotifEnabled && notifText && notifText !== '' && notifText !== '-' && !notifText.toLowerCase().includes('disabled')) {
+            showLoginNotificationPopup(notifText);
         } else {
-            checkShowCatalogue(true);
+            // If notification not enabled, show festival celebration if accurate festival date, else show daily shayari catalogue
+            const festiveInfo = getFestivalAndOccasionClient(new Date());
+            if (festiveInfo.isFestival) {
+                showFestiveOccasionModal();
+            } else {
+                checkShowCatalogue(true);
+            }
         }
         
         // Initialize everything now that we are logged in
@@ -5728,6 +5748,8 @@
         document.body.appendChild(script);
     }
 
+    let currentLiveNotificationRemark = "All systems operational";
+
     function fetchNotification() {
         loadGoogleSheetData('Notification', 'handleNotificationData', 'A1');
     }
@@ -5740,11 +5762,166 @@
                 remark = String(cell.f || cell.v).trim();
             }
         }
+        currentLiveNotificationRemark = remark;
         const notifMain = document.getElementById('notificationCount');
         const notifCredit = document.getElementById('creditNotificationCount');
+        const notifMsg = document.getElementById('loginNotificationMessageText');
         if (notifMain) notifMain.textContent = remark;
         if (notifCredit) notifCredit.textContent = remark;
+        if (notifMsg) notifMsg.textContent = remark;
     };
+
+    function showLoginNotificationPopup(messageText) {
+        const modal = document.getElementById('loginNotificationModal');
+        const msgEl = document.getElementById('loginNotificationMessageText');
+        const timeEl = document.getElementById('loginNotifTimestamp');
+        if (msgEl) msgEl.textContent = messageText || currentLiveNotificationRemark || "All systems operational";
+        if (timeEl) {
+            const now = new Date();
+            timeEl.textContent = `${now.toLocaleDateString([], { month: 'short', day: 'numeric', year: 'numeric' })} · ${now.toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' })}`;
+        }
+        if (modal) modal.style.display = 'flex';
+    }
+
+    function closeLoginNotificationModal() {
+        const modal = document.getElementById('loginNotificationModal');
+        if (modal) modal.style.display = 'none';
+
+        // Proceed to show festive celebration if today is an accurate festival, or daily time-of-day shayari catalogue
+        const festiveInfo = getFestivalAndOccasionClient(new Date());
+        if (festiveInfo.isFestival) {
+            showFestiveOccasionModal();
+        } else {
+            checkShowCatalogue(true);
+        }
+    }
+
+    /* GOOGLE SHEET "Enable/disable" INTEGRATION */
+    function fetchEnableDisableConfig() {
+        loadGoogleSheetData('Enable/disable', 'handleEnableDisableData');
+    }
+
+    window.handleEnableDisableData = function(json) {
+        if (!json || !json.table) return;
+
+        const cols = json.table.cols || [];
+        const rows = json.table.rows || [];
+
+        const parsed = parseEnableDisableSheetData(cols, rows);
+        
+        saveAdminFeaturePermissions(parsed.permissions);
+
+        if (parsed.maintenanceMode !== undefined) {
+            localStorage.setItem('app_maintenance_mode', parsed.maintenanceMode ? 'true' : 'false');
+            checkAndApplyMaintenanceMode();
+        }
+
+        applyFeatureUIPermissions();
+
+        if (typeof renderFeaturesDirectoryGrid === 'function') {
+            renderFeaturesDirectoryGrid();
+        }
+    };
+
+    function parseEnableDisableSheetData(cols = [], rows = []) {
+        const permissions = getAdminFeaturePermissions();
+        let maintenanceMode = (localStorage.getItem('app_maintenance_mode') === 'true');
+
+        function cleanKey(text) {
+            if (!text) return null;
+            const s = String(text).trim().toLowerCase().replace(/[^a-z0-9]/g, ' ');
+            if (s.includes('notif') || s.includes('announc') || s.includes('broadcast')) return 'notification';
+            if (s.includes('emi') || s.includes('loan calc') || s.includes('lpf')) return 'emiCalculator';
+            if (s.includes('matrix') || s.includes('foir') || s.includes('underwriting')) return 'matrixCalculator';
+            if (s.includes('reject')) return 'rejectionConsole';
+            if (s.includes('pending') || s.includes('application')) return 'pendingRecords';
+            if (s.includes('reply') || s.includes('replies') || s.includes('submission')) return 'branchReplies';
+            if (s.includes('branch') || s.includes('hub')) return 'branchExplorer';
+            if (s.includes('subcat') || s.includes('category') || s.includes('categories')) return 'subcat';
+            if (s.includes('wave') || s.includes('pulse') || s.includes('chart')) return 'wavePulse';
+            if (s.includes('credit')) return 'creditPortal';
+            if (s.includes('rate') || s.includes('rating') || s.includes('feedback') || s.includes('star')) return 'ratingFeedback';
+            if (s.includes('sync') || s.includes('sheet') || s.includes('refresh')) return 'syncSheets';
+            if (s.includes('festiv') || s.includes('wish') || s.includes('shayari') || s.includes('balloon')) return 'festiveWish';
+            if (s.includes('excel') || s.includes('export') || s.includes('download')) return 'excelExport';
+            if (s.includes('maint')) return 'maintenance';
+            if (s.includes('overview') || s.includes('stream') || s.includes('kpi')) return 'overview';
+            return null;
+        }
+
+        function parseBool(val) {
+            if (val === null || val === undefined) return true;
+            if (typeof val === 'boolean') return val;
+            const str = String(val).trim().toLowerCase();
+            if (['disable', 'disabled', 'false', '0', 'no', 'off', 'inactive', 'block', 'blocked', 'closed'].includes(str)) return false;
+            if (['enable', 'enabled', 'true', '1', 'yes', 'on', 'active', 'allow', 'allowed', 'open'].includes(str)) return true;
+            return true;
+        }
+
+        // Case 2: Column headers are feature names
+        let matchedColCount = 0;
+        const colFeatureMap = {};
+        cols.forEach((col, idx) => {
+            const label = col && col.label ? String(col.label).trim() : '';
+            const key = cleanKey(label);
+            if (key) {
+                colFeatureMap[idx] = key;
+                matchedColCount++;
+            }
+        });
+
+        if (matchedColCount >= 2 && rows.length > 0 && rows[0] && rows[0].c) {
+            Object.entries(colFeatureMap).forEach(([cIdxStr, key]) => {
+                const cIdx = parseInt(cIdxStr, 10);
+                const cell = rows[0].c[cIdx];
+                const rawVal = cell && (cell.v !== null && cell.v !== undefined) ? cell.v : (cell ? cell.f : null);
+                const status = parseBool(rawVal);
+                if (key === 'maintenance') {
+                    maintenanceMode = status;
+                } else {
+                    permissions[key] = status;
+                }
+            });
+            return { permissions, maintenanceMode };
+        }
+
+        // Case 1: Rows format
+        rows.forEach(r => {
+            if (!r || !r.c || !Array.isArray(r.c)) return;
+            const cellValues = r.c.map(cell => {
+                if (!cell) return '';
+                return String(cell.v !== null && cell.v !== undefined ? cell.v : (cell.f || '')).trim();
+            });
+
+            let foundKey = null;
+            let foundStatusValue = null;
+
+            cellValues.forEach((val, idx) => {
+                if (!val) return;
+                const key = cleanKey(val);
+                if (key && !foundKey) {
+                    foundKey = key;
+                    for (let j = idx + 1; j < cellValues.length; j++) {
+                        if (cellValues[j]) {
+                            foundStatusValue = cellValues[j];
+                            break;
+                        }
+                    }
+                }
+            });
+
+            if (foundKey && foundStatusValue !== null) {
+                const status = parseBool(foundStatusValue);
+                if (foundKey === 'maintenance') {
+                    maintenanceMode = status;
+                } else {
+                    permissions[foundKey] = status;
+                }
+            }
+        });
+
+        return { permissions, maintenanceMode };
+    }
 
     function refreshDashboard() {
         if (!checkFeaturePermission('syncSheets')) return;
@@ -5752,6 +5929,7 @@
         const icon = document.getElementById('refreshIcon');
         if (icon) icon.classList.add('spin-icon');
         fetchNotification();
+        fetchEnableDisableConfig();
         loadSubmittedRepliesData();
         loadGoogleSheetData('Pending', 'handlePendingData');
         loadGoogleSheetData('Rejection', 'handleRejectionData');
@@ -5762,6 +5940,7 @@
         const icon = document.getElementById('creditRefreshIcon');
         if (icon) icon.classList.add('spin-icon');
         fetchNotification();
+        fetchEnableDisableConfig();
         loadGoogleSheetData('All data', 'handleAllData');
     }
 
@@ -6785,8 +6964,8 @@
             closeLoginModal();
             document.getElementById('creditScreen').style.display = 'block';
             fetchNotification();
+            fetchEnableDisableConfig();
             loadGoogleSheetData('All data', 'handleAllData');
-            renderAdminControlPanel();
             setTimeout(initAllMeshCanvases, 100);
         } else {
             document.getElementById('loginError').style.display = 'block';
@@ -7211,6 +7390,7 @@
        ENTERPRISE ADMIN CONTROL PANEL & MAINTENANCE CONTROLLER
        ============================================================ */
     const ADMIN_FEATURES_LIST = [
+        { key: 'notification', name: 'Notification & Login Notice', icon: 'fa-bullhorn', color: '#6366f1', desc: 'Topbar broadcast and login popup alert' },
         { key: 'overview', name: 'Overview & Key Metrics', icon: 'fa-chart-line', color: '#6366f1', desc: 'KPI counters, running stream, & overview' },
         { key: 'subcat', name: 'Sub-Categories Breakdown', icon: 'fa-chart-pie', color: '#a855f7', desc: 'Category-wise loan distribution' },
         { key: 'branchExplorer', name: 'Branch Explorer & Queue', icon: 'fa-building-circle-check', color: '#06b6d4', desc: 'Branch pending dialogs & direct queue' },
@@ -7235,6 +7415,7 @@
             console.warn(e);
         }
         return {
+            notification: true,
             overview: true,
             subcat: true,
             branchExplorer: true,
@@ -7325,8 +7506,8 @@
             refreshDashboard();
             document.getElementById('creditScreen').style.display = 'block';
             fetchNotification();
+            fetchEnableDisableConfig();
             loadGoogleSheetData('All data', 'handleAllData');
-            renderAdminControlPanel();
         } else {
             if (err) err.style.display = 'block';
         }
@@ -7352,14 +7533,12 @@
         const perms = getAdminFeaturePermissions();
         perms[featureKey] = enabled;
         saveAdminFeaturePermissions(perms);
-        renderAdminControlPanel();
     }
 
     function setAllAdminFeatures(enabled) {
         const perms = {};
         ADMIN_FEATURES_LIST.forEach(f => { perms[f.key] = enabled; });
         saveAdminFeaturePermissions(perms);
-        renderAdminControlPanel();
     }
 
     function resetAdminFeaturesDefault() {
@@ -7368,39 +7547,11 @@
         saveAdminFeaturePermissions(perms);
         localStorage.setItem('app_maintenance_mode', 'false');
         updateMaintenanceUIState(false);
-        renderAdminControlPanel();
     }
 
     function renderAdminControlPanel() {
-        const container = document.getElementById('adminFeaturesGridContainer');
-        if (!container) return;
-
-        const isMaint = localStorage.getItem('app_maintenance_mode') === 'true';
-        updateMaintenanceUIState(isMaint);
-
-        const perms = getAdminFeaturePermissions();
-        container.innerHTML = ADMIN_FEATURES_LIST.map(f => {
-            const isEnabled = perms[f.key] !== false;
-            return `
-                <div class="admin-feature-card ${isEnabled ? '' : 'is-disabled'}">
-                    <div class="feat-meta-left">
-                        <div class="feat-icon-bubble" style="background: ${isEnabled ? `${f.color}15` : '#fee2e2'}; color: ${isEnabled ? f.color : '#dc2626'};">
-                            <i class="fa-solid ${f.icon}"></i>
-                        </div>
-                        <div>
-                            <span class="feat-title-text">${f.name}</span>
-                            <span class="feat-sub-text">${f.desc}</span>
-                        </div>
-                    </div>
-                    <div>
-                        <label class="admin-switch" style="width: 44px; height: 24px;">
-                            <input type="checkbox" ${isEnabled ? 'checked' : ''} onchange="toggleAdminFeature('${f.key}', this.checked)">
-                            <span class="admin-slider" style="border-radius: 24px;"></span>
-                        </label>
-                    </div>
-                </div>
-            `;
-        }).join('');
+        // Enterprise Admin Control Panel UI removed from credit dashboard as requested
+        // Features are now managed directly from Google Sheet tab 'Enable/disable'
     }
 
     function applyFeatureUIPermissions() {
@@ -7436,11 +7587,24 @@
         syncSectionOverlay('subcatSection', perms.subcat !== false, 'Sub-Categories Analytics');
         syncSectionOverlay('wavePulseChartsSection', perms.wavePulse !== false, 'Wave Pulse Charts');
         syncSectionOverlay('branchExplorerSection', perms.branchExplorer !== false, 'Branch Explorer');
+
+        const notifBar = document.querySelector('.notification-marquee');
+        if (notifBar) {
+            if (perms.notification === false) {
+                notifBar.style.opacity = '0.45';
+                notifBar.title = 'Notification disabled by admin in Google Sheet';
+            } else {
+                notifBar.style.opacity = '1';
+                notifBar.title = '';
+            }
+        }
     }
 
     // Initialize ONLY what's needed on window load; data fetch awaits successful login
     window.onload = function() {
         checkAndApplyMaintenanceMode();
+        fetchNotification();
+        fetchEnableDisableConfig();
         document.getElementById('mainLoginPassword').focus();
         initFestiveOccasion();
         updateFeedbackAverageDisplay();
@@ -7467,6 +7631,7 @@
         const feedbackOverlay = document.getElementById('webpageFeedbackOverlay');
         const festiveModal = document.getElementById('festiveCelebrationModal');
         const featuresModal = document.getElementById('allFeaturesDialogModal');
+        const notifModal = document.getElementById('loginNotificationModal');
 
         if (event.target === branchModal) closeBranchDialog();
         if (event.target === clientModal) closeClientDetailDialog();
@@ -7478,10 +7643,16 @@
         if (event.target === feedbackOverlay) closeFeedbackModal();
         if (event.target === festiveModal) closeFestiveOccasionModal();
         if (event.target === featuresModal) closeAllFeaturesModal();
+        if (event.target === notifModal) closeLoginNotificationModal();
     });
 
     window.addEventListener('keydown', function(event) {
         if (event.key === 'Escape') {
+            const notifModal = document.getElementById('loginNotificationModal');
+            if (notifModal && notifModal.style.display === 'flex') {
+                closeLoginNotificationModal();
+                return;
+            }
             const festiveModal = document.getElementById('festiveCelebrationModal');
             if (festiveModal && festiveModal.style.display === 'flex') {
                 closeFestiveOccasionModal();

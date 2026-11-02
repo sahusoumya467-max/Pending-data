@@ -616,6 +616,8 @@ export const CONTACT_ADMIN_INFO = {
 };
 
 export interface AdminFeaturePermissions {
+    [key: string]: boolean | undefined;
+    notification?: boolean;
     overview: boolean;
     subcat: boolean;
     branchExplorer: boolean;
@@ -633,6 +635,7 @@ export interface AdminFeaturePermissions {
 }
 
 export const DEFAULT_ADMIN_PERMISSIONS: AdminFeaturePermissions = {
+    notification: true,
     overview: true,
     subcat: true,
     branchExplorer: true,
@@ -648,6 +651,126 @@ export const DEFAULT_ADMIN_PERMISSIONS: AdminFeaturePermissions = {
     excelExport: true,
     branchReplies: true
 };
+
+export function matchFeatureKey(text: string): keyof AdminFeaturePermissions | 'maintenance' | null {
+    if (!text) return null;
+    const s = text.trim().toLowerCase().replace(/[^a-z0-9]/g, ' ');
+
+    if (s.includes('notif') || s.includes('announc') || s.includes('broadcast')) return 'notification';
+    if (s.includes('emi') || s.includes('loan calc') || s.includes('lpf')) return 'emiCalculator';
+    if (s.includes('matrix') || s.includes('foir') || s.includes('underwriting')) return 'matrixCalculator';
+    if (s.includes('reject')) return 'rejectionConsole';
+    if (s.includes('pending') || s.includes('application')) return 'pendingRecords';
+    if (s.includes('reply') || s.includes('replies') || s.includes('submission')) return 'branchReplies';
+    if (s.includes('branch') || s.includes('hub')) return 'branchExplorer';
+    if (s.includes('subcat') || s.includes('category') || s.includes('categories')) return 'subcat';
+    if (s.includes('wave') || s.includes('pulse') || s.includes('chart')) return 'wavePulse';
+    if (s.includes('credit')) return 'creditPortal';
+    if (s.includes('rate') || s.includes('rating') || s.includes('feedback') || s.includes('star')) return 'ratingFeedback';
+    if (s.includes('sync') || s.includes('sheet') || s.includes('refresh')) return 'syncSheets';
+    if (s.includes('festiv') || s.includes('wish') || s.includes('shayari') || s.includes('balloon')) return 'festiveWish';
+    if (s.includes('excel') || s.includes('export') || s.includes('download')) return 'excelExport';
+    if (s.includes('maint')) return 'maintenance';
+    if (s.includes('overview') || s.includes('stream') || s.includes('kpi')) return 'overview';
+
+    return null;
+}
+
+export function parseStatusValue(val: any): boolean {
+    if (val === null || val === undefined) return true;
+    if (typeof val === 'boolean') return val;
+    const str = String(val).trim().toLowerCase();
+    if (['disable', 'disabled', 'false', '0', 'no', 'off', 'inactive', 'block', 'blocked', 'closed'].includes(str)) {
+        return false;
+    }
+    if (['enable', 'enabled', 'true', '1', 'yes', 'on', 'active', 'allow', 'allowed', 'open'].includes(str)) {
+        return true;
+    }
+    return true; // Default fallback
+}
+
+export function parseEnableDisableSheet(cols: any[] = [], rows: any[] = []): {
+    permissions: AdminFeaturePermissions;
+    maintenanceMode: boolean;
+    notificationEnabled: boolean;
+} {
+    const permissions: AdminFeaturePermissions = { ...DEFAULT_ADMIN_PERMISSIONS };
+    let maintenanceMode = false;
+
+    // Check Case 2: Headers across columns represent features, and row[0] has status
+    let matchedColCount = 0;
+    const colFeatureMap: Record<number, keyof AdminFeaturePermissions | 'maintenance'> = {};
+    cols.forEach((col, idx) => {
+        const label = col && col.label ? String(col.label).trim() : '';
+        const key = matchFeatureKey(label);
+        if (key) {
+            colFeatureMap[idx] = key;
+            matchedColCount++;
+        }
+    });
+
+    if (matchedColCount >= 2 && rows.length > 0 && rows[0] && rows[0].c) {
+        Object.entries(colFeatureMap).forEach(([colIdxStr, key]) => {
+            const cIdx = parseInt(colIdxStr, 10);
+            const cell = rows[0].c[cIdx];
+            const rawVal = cell && (cell.v !== null && cell.v !== undefined) ? cell.v : (cell ? cell.f : null);
+            const status = parseStatusValue(rawVal);
+            if (key === 'maintenance') {
+                maintenanceMode = status;
+            } else {
+                permissions[key] = status;
+            }
+        });
+        return {
+            permissions,
+            maintenanceMode,
+            notificationEnabled: permissions.notification !== false
+        };
+    }
+
+    // Case 1: Rows format: Each row contains Feature Name/Key and Status
+    rows.forEach(r => {
+        if (!r || !r.c || !Array.isArray(r.c)) return;
+        const cellValues = r.c.map((cell: any) => {
+            if (!cell) return '';
+            return String(cell.v !== null && cell.v !== undefined ? cell.v : (cell.f || '')).trim();
+        });
+
+        let foundKey: keyof AdminFeaturePermissions | 'maintenance' | null = null;
+        let foundStatusValue: string | null = null;
+
+        cellValues.forEach((val: string, idx: number) => {
+            if (!val) return;
+            const key = matchFeatureKey(val);
+            if (key && !foundKey) {
+                foundKey = key;
+                // Look for status in remaining cells in the same row
+                for (let j = idx + 1; j < cellValues.length; j++) {
+                    const nextVal = cellValues[j];
+                    if (nextVal) {
+                        foundStatusValue = nextVal;
+                        break;
+                    }
+                }
+            }
+        });
+
+        if (foundKey && foundStatusValue !== null) {
+            const status = parseStatusValue(foundStatusValue);
+            if (foundKey === 'maintenance') {
+                maintenanceMode = status;
+            } else {
+                permissions[foundKey] = status;
+            }
+        }
+    });
+
+    return {
+        permissions,
+        maintenanceMode,
+        notificationEnabled: permissions.notification !== false
+    };
+}
 
 export function isFeatureAccessible(
     featureKey: keyof AdminFeaturePermissions,

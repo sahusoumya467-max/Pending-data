@@ -12,7 +12,8 @@ import {
     getFestivalAndOccasionInfo,
     calculateEmiWithBankingCharges,
     isFeatureAccessible,
-    isMaintenanceActive
+    isMaintenanceActive,
+    parseEnableDisableSheet
 } from './dashboardLogic';
 
 test('authenticateUser: validates master password correctly', () => {
@@ -264,5 +265,44 @@ test('isMaintenanceActive: activates for non-master and allows master bypass', (
     assert.equal(isMaintenanceActive(true, 'Odagaon'), true);
     assert.equal(isMaintenanceActive(true, 'MASTER'), false);
     assert.equal(isMaintenanceActive(false, 'Odagaon'), false);
+});
+
+test('parseEnableDisableSheet: correctly parses row-based feature statuses from Google Sheet', () => {
+    const mockCols = [{ label: 'Feature Name' }, { label: 'Status' }];
+    const mockRows = [
+        { c: [{ v: 'Notification Card' }, { v: 'Enable' }] },
+        { c: [{ v: 'EMI Calculator' }, { v: 'Disable' }] },
+        { c: [{ v: 'Underwriting Matrix' }, { v: 'Enable' }] },
+        { c: [{ v: 'System Maintenance Mode' }, { v: 'Disabled' }] }
+    ];
+
+    const result = parseEnableDisableSheet(mockCols, mockRows);
+    assert.equal(result.notificationEnabled, true);
+    assert.equal(result.permissions.emiCalculator, false);
+    assert.equal(result.permissions.matrixCalculator, true);
+    assert.equal(result.maintenanceMode, false);
+
+    // Check accessibility for regular user
+    const emiAccess = isFeatureAccessible('emiCalculator', result.permissions, 'Odagaon');
+    assert.equal(emiAccess.allowed, false);
+    assert.ok(emiAccess.message?.includes('soumyaranjan@afpl.net.in'));
+});
+
+test('parseEnableDisableSheet: correctly parses column-based feature statuses', () => {
+    const mockCols = [
+        { label: 'Notification' },
+        { label: 'Pending Records' },
+        { label: 'Rejection Feed' },
+        { label: 'Maintenance' }
+    ];
+    const mockRows = [
+        { c: [{ v: 'Disable' }, { v: 'Enable' }, { v: 'Disable' }, { v: 'Enable' }] }
+    ];
+
+    const result = parseEnableDisableSheet(mockCols, mockRows);
+    assert.equal(result.notificationEnabled, false);
+    assert.equal(result.permissions.pendingRecords, true);
+    assert.equal(result.permissions.rejectionConsole, false);
+    assert.equal(result.maintenanceMode, true);
 });
 
