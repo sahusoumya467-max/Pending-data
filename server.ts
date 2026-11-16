@@ -286,6 +286,13 @@ async function aggregateCurrentAffairs(forceRefresh = false) {
     b.dateKey.localeCompare(a.dateKey)
   );
 
+  if (deduped.length === 0 && cachedPayload && cachedPayload.totalItems > 0) {
+    return {
+      ...cachedPayload,
+      expiresAt: now + 60 * 1000
+    };
+  }
+
   const activeSources = Array.from(new Set(deduped.map((d) => d.source)));
 
   cachedPayload = {
@@ -304,10 +311,11 @@ async function startServer() {
   const PORT = Number(process.env.PORT) || 3000;
 
   app.get('/api/current-affairs', async (req, res) => {
+    res.setHeader('Access-Control-Allow-Origin', '*');
+    res.setHeader('Cache-Control', 'no-store');
     try {
       const force = req.query.refresh === '1';
       const data = await aggregateCurrentAffairs(force);
-      res.setHeader('Cache-Control', 'no-store');
       res.json({
         success: true,
         fetchedAt: data.fetchedAt,

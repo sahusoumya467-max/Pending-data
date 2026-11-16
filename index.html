@@ -5275,7 +5275,7 @@
                 <span class="bottom-tool-arrow"><i class="fa-solid fa-arrow-up-right-from-square"></i></span>
             </button>
 
-            <button type="button" class="bottom-tool-btn pdf-theme" onclick="openExternalToolPage('Every tool you need to work with PDFs in one place', 'https://www.ilovepdf.com/', 'fa-file-pdf', '#e11d48', 'iLovePDF · Merge, split, compress & convert PDFs')">
+            <a href="https://www.ilovepdf.com/" target="_blank" rel="noopener noreferrer" class="bottom-tool-btn pdf-theme" style="text-decoration: none;">
                 <div class="bottom-tool-left">
                     <div class="bottom-tool-icon">
                         <i class="fa-solid fa-file-pdf"></i>
@@ -5286,9 +5286,9 @@
                     </div>
                 </div>
                 <span class="bottom-tool-arrow"><i class="fa-solid fa-arrow-up-right-from-square"></i></span>
-            </button>
+            </a>
 
-            <button type="button" class="bottom-tool-btn draw-theme" onclick="openExternalToolPage('Auto Draw', 'https://www.autodraw.com/', 'fa-wand-magic-sparkles', '#0284c7', 'AutoDraw · Fast smart sketching & drawing tool')">
+            <a href="https://www.autodraw.com/" target="_blank" rel="noopener noreferrer" class="bottom-tool-btn draw-theme" style="text-decoration: none;">
                 <div class="bottom-tool-left">
                     <div class="bottom-tool-icon">
                         <i class="fa-solid fa-wand-magic-sparkles"></i>
@@ -5299,9 +5299,9 @@
                     </div>
                 </div>
                 <span class="bottom-tool-arrow"><i class="fa-solid fa-arrow-up-right-from-square"></i></span>
-            </button>
+            </a>
 
-            <button type="button" class="bottom-tool-btn voice-theme" onclick="openExternalToolPage('Voice Notepad', 'https://dictation.io/speech', 'fa-microphone-lines', '#d97706', 'Dictation Voice Notepad · Speech-to-text pad')">
+            <a href="https://dictation.io/speech" target="_blank" rel="noopener noreferrer" class="bottom-tool-btn voice-theme" style="text-decoration: none;">
                 <div class="bottom-tool-left">
                     <div class="bottom-tool-icon">
                         <i class="fa-solid fa-microphone-lines"></i>
@@ -5312,7 +5312,7 @@
                     </div>
                 </div>
                 <span class="bottom-tool-arrow"><i class="fa-solid fa-arrow-up-right-from-square"></i></span>
-            </button>
+            </a>
         </div>
     </div>
 
@@ -5939,38 +5939,6 @@
             <div class="fullpage-table-card" style="text-align: center; padding: 48px 20px;">
                 <i class="fa-solid fa-spinner fa-spin" style="font-size: 1.8rem; color: #0f766e; margin-bottom: 10px;"></i>
                 <p style="font-weight: 700; color: var(--secondary);">Fetching daily Indian Current Affairs with images...</p>
-            </div>
-        </div>
-    </div>
-</div>
-
-<!-- Full-Screen External Web Tool Viewer Page -->
-<div class="fullpage-overlay-screen" id="externalToolScreen">
-    <div class="container">
-        <header class="mesh-container">
-            <canvas class="mesh-canvas"></canvas>
-            <div class="header-title">
-                <h1><i id="externalToolHeaderIcon" class="fa-solid fa-globe" style="color: #0f766e; margin-right: 8px;"></i><span id="externalToolTitle">Web Utility</span></h1>
-                <p id="externalToolSubtitle">Integrated full-page tool viewer</p>
-            </div>
-            <div class="btn-group">
-                <button class="btn btn-refresh" onclick="reloadExternalToolFrame()">
-                    <i class="fa-solid fa-arrows-rotate"></i> Reload
-                </button>
-                <a class="btn btn-branch" id="externalToolDirectLink" href="#" target="_blank" rel="noopener noreferrer" style="text-decoration: none; display: inline-flex; align-items: center; gap: 6px;">
-                    <i class="fa-solid fa-up-right-from-square"></i> Open Directly
-                </a>
-                <button class="btn btn-home" onclick="closeExternalToolPage()">
-                    <i class="fa-solid fa-house"></i> Back to Home Screen
-                </button>
-            </div>
-        </header>
-
-        <div class="external-tool-frame-card">
-            <iframe id="externalToolIframe" class="external-tool-iframe" src="about:blank" title="External Tool Viewer" allow="microphone; camera; clipboard-read; clipboard-write; fullscreen"></iframe>
-            <div class="external-tool-notice">
-                <span><i class="fa-solid fa-circle-info" style="color: #0f766e; margin-right: 5px;"></i>If the tool does not display inside this frame due to browser permissions or microphone access, click <strong>Open Directly</strong> above.</span>
-                <span id="externalToolUrlDisplay" style="font-family: 'JetBrains Mono', monospace; font-size: 0.72rem;"></span>
             </div>
         </div>
     </div>
@@ -9491,42 +9459,184 @@
         if (el) el.style.display = 'none';
     }
 
-    let currentExternalToolUrl = '';
-    function openExternalToolPage(title, url, iconClass = 'fa-globe', iconColor = '#0f766e', subtitle = 'Integrated full-page tool viewer') {
-        const screen = document.getElementById('externalToolScreen');
-        const titleEl = document.getElementById('externalToolTitle');
-        const subEl = document.getElementById('externalToolSubtitle');
-        const iconEl = document.getElementById('externalToolHeaderIcon');
-        const iframeEl = document.getElementById('externalToolIframe');
-        const directEl = document.getElementById('externalToolDirectLink');
-        const urlDispEl = document.getElementById('externalToolUrlDisplay');
-
-        currentExternalToolUrl = url;
-        if (titleEl) titleEl.textContent = title;
-        if (subEl) subEl.textContent = subtitle;
-        if (iconEl) {
-            iconEl.className = `fa-solid ${iconClass}`;
-            iconEl.style.color = iconColor;
-        }
-        if (directEl) directEl.href = url;
-        if (urlDispEl) urlDispEl.textContent = url;
-        if (iframeEl) iframeEl.src = url;
-        if (screen) screen.style.display = 'block';
+    function formatCaDateInIst(ts) {
+        const d = new Date(ts);
+        const parts = new Intl.DateTimeFormat('en-CA', {
+            timeZone: 'Asia/Kolkata',
+            year: 'numeric',
+            month: '2-digit',
+            day: '2-digit'
+        }).formatToParts(d);
+        const y = parts.find(p => p.type === 'year')?.value || '2026';
+        const m = parts.find(p => p.type === 'month')?.value || '01';
+        const day = parts.find(p => p.type === 'day')?.value || '01';
+        const dateKey = `${y}-${m}-${day}`;
+        const dateLabel = new Intl.DateTimeFormat('en-IN', {
+            timeZone: 'Asia/Kolkata',
+            weekday: 'long',
+            day: 'numeric',
+            month: 'long',
+            year: 'numeric'
+        }).format(d);
+        const timeDisplay = new Intl.DateTimeFormat('en-IN', {
+            timeZone: 'Asia/Kolkata',
+            hour: '2-digit',
+            minute: '2-digit',
+            hour12: true
+        }).format(d);
+        return { dateKey, dateLabel, timeDisplay };
     }
 
-    function reloadExternalToolFrame() {
-        const iframeEl = document.getElementById('externalToolIframe');
-        if (iframeEl && currentExternalToolUrl) {
-            iframeEl.src = 'about:blank';
-            setTimeout(() => { iframeEl.src = currentExternalToolUrl; }, 60);
-        }
+    function stripCaHtml(raw) {
+        const tmp = document.createElement('div');
+        tmp.innerHTML = raw || '';
+        return (tmp.textContent || tmp.innerText || '').replace(/\s+/g, ' ').trim();
     }
 
-    function closeExternalToolPage() {
-        const screen = document.getElementById('externalToolScreen');
-        const iframeEl = document.getElementById('externalToolIframe');
-        if (screen) screen.style.display = 'none';
-        if (iframeEl) iframeEl.src = 'about:blank';
+    function parseCaTimestamp(rawDate) {
+        if (!rawDate) return Date.now();
+        const trimmed = String(rawDate).trim();
+        let ts = Date.parse(trimmed);
+        if (!Number.isFinite(ts) && /^\d{4}-\d{2}-\d{2}\s+\d{2}:\d{2}/.test(trimmed)) {
+            ts = Date.parse(trimmed.replace(' ', 'T') + 'Z');
+        }
+        return Number.isFinite(ts) ? ts : Date.now();
+    }
+
+    function buildCaPayloadFromItems(flatItems) {
+        const seen = new Set();
+        const sorted = [...flatItems].sort((a, b) => b.timestamp - a.timestamp);
+        const deduped = [];
+        for (const item of sorted) {
+            const key = (item.title || '').toLowerCase().replace(/[^a-z0-9]/g, '').slice(0, 64);
+            if (!key || seen.has(key)) continue;
+            seen.add(key);
+            deduped.push(item);
+        }
+
+        const now = Date.now();
+        const todayKey = formatCaDateInIst(now).dateKey;
+        const yesterdayKey = formatCaDateInIst(now - 24 * 60 * 60 * 1000).dateKey;
+        const groupMap = new Map();
+
+        for (const item of deduped) {
+            let group = groupMap.get(item.dateKey);
+            if (!group) {
+                const { dateLabel } = formatCaDateInIst(item.timestamp);
+                let decorated = dateLabel;
+                if (item.dateKey === todayKey) decorated = `Today · ${dateLabel}`;
+                else if (item.dateKey === yesterdayKey) decorated = `Yesterday · ${dateLabel}`;
+                group = { dateKey: item.dateKey, dateLabel: decorated, items: [] };
+                groupMap.set(item.dateKey, group);
+            }
+            group.items.push(item);
+        }
+
+        const days = Array.from(groupMap.values()).sort((a, b) => b.dateKey.localeCompare(a.dateKey));
+        return {
+            success: true,
+            fetchedAt: new Date(now).toISOString(),
+            sources: Array.from(new Set(deduped.map(i => i.source))),
+            totalItems: deduped.length,
+            days
+        };
+    }
+
+    async function fetchClientSideIndianCurrentAffairsFallback() {
+        const feeds = [
+            { name: 'The Hindu · India', category: 'National', url: 'https://www.thehindu.com/news/national/feeder/default.rss' },
+            { name: 'The Hindu · Business', category: 'Banking & Economy', url: 'https://www.thehindu.com/business/feeder/default.rss' },
+            { name: 'The Hindu · Science & Tech', category: 'Science & Tech', url: 'https://www.thehindu.com/sci-tech/science/feeder/default.rss' },
+            { name: 'The Hindu · World', category: 'International', url: 'https://www.thehindu.com/news/international/feeder/default.rss' }
+        ];
+
+        const results = await Promise.all(feeds.map(async (f) => {
+            try {
+                const controller = new AbortController();
+                const timer = setTimeout(() => controller.abort(), 7000);
+                const r = await fetch(`https://api.rss2json.com/v1/api.json?rss_url=${encodeURIComponent(f.url)}`, { signal: controller.signal });
+                clearTimeout(timer);
+                if (!r.ok) return [];
+                const json = await r.json();
+                if (json.status !== 'ok' || !Array.isArray(json.items)) return [];
+
+                return json.items.map((it, idx) => {
+                    const timestamp = parseCaTimestamp(it.pubDate);
+                    const { dateKey, timeDisplay } = formatCaDateInIst(timestamp);
+                    const descImgMatch = (it.description || it.content || '').match(/<img[^>]*\bsrc=["']([^"']+)["']/i);
+                    const imgUrl = it.thumbnail || (it.enclosure && it.enclosure.link) || (descImgMatch && descImgMatch[1]) || '';
+                    const cleanSummary = stripCaHtml(it.description || it.content || '');
+                    const summary = cleanSummary.length > 240 ? `${cleanSummary.slice(0, 237).trim()}...` : cleanSummary;
+                    const articleLink = (it.guid && String(it.guid).startsWith('http')) ? it.guid : (it.link || '#');
+                    return {
+                        id: `${f.name}-${idx}`,
+                        title: stripCaHtml(it.title || ''),
+                        summary: summary || `Latest ${f.category.toLowerCase()} update reported by ${f.name}.`,
+                        link: articleLink,
+                        source: f.name,
+                        category: f.category,
+                        image: imgUrl,
+                        pubDate: it.pubDate || '',
+                        timestamp,
+                        dateKey,
+                        timeDisplay
+                    };
+                }).filter(x => x.title);
+            } catch {
+                return [];
+            }
+        }));
+
+        let combined = results.flat();
+
+        // Tier 3 backup via AllOrigins XML proxy if rss2json returns empty
+        if (combined.length === 0) {
+            const xmlResults = await Promise.all(feeds.slice(0, 2).map(async (f) => {
+                try {
+                    const controller = new AbortController();
+                    const timer = setTimeout(() => controller.abort(), 7000);
+                    const r = await fetch(`https://api.allorigins.win/raw?url=${encodeURIComponent(f.url)}`, { signal: controller.signal });
+                    clearTimeout(timer);
+                    if (!r.ok) return [];
+                    const xmlText = await r.text();
+                    const doc = new DOMParser().parseFromString(xmlText, 'text/xml');
+                    const nodes = Array.from(doc.querySelectorAll('item')).slice(0, 15);
+                    return nodes.map((node, idx) => {
+                        const title = (node.querySelector('title')?.textContent || '').trim();
+                        const link = (node.querySelector('link')?.textContent || '#').trim();
+                        const rawDesc = node.querySelector('description')?.textContent || '';
+                        const rawPub = node.querySelector('pubDate')?.textContent || '';
+                        const mediaEl = node.getElementsByTagName('media:content')[0] || node.querySelector('enclosure');
+                        const imgUrl = (mediaEl && mediaEl.getAttribute('url')) || '';
+                        const timestamp = parseCaTimestamp(rawPub);
+                        const { dateKey, timeDisplay } = formatCaDateInIst(timestamp);
+                        const cleanSummary = stripCaHtml(rawDesc);
+                        return {
+                            id: `ao-${f.name}-${idx}`,
+                            title,
+                            summary: cleanSummary.length > 240 ? `${cleanSummary.slice(0, 237).trim()}...` : (cleanSummary || `Latest update from ${f.name}.`),
+                            link,
+                            source: f.name,
+                            category: f.category,
+                            image: imgUrl,
+                            pubDate: rawPub,
+                            timestamp,
+                            dateKey,
+                            timeDisplay
+                        };
+                    }).filter(x => x.title);
+                } catch {
+                    return [];
+                }
+            }));
+            combined = xmlResults.flat();
+        }
+
+        if (combined.length === 0) {
+            throw new Error('All live Indian current affairs feeds were unreachable.');
+        }
+
+        return buildCaPayloadFromItems(combined);
     }
 
     async function loadCurrentAffairsData(forceRefresh = false) {
@@ -9546,10 +9656,31 @@
         }
 
         try {
-            const url = forceRefresh ? `/api/current-affairs?refresh=1&t=${Date.now()}` : `/api/current-affairs`;
-            const res = await fetch(url);
-            if (!res.ok) throw new Error(`HTTP ${res.status}`);
-            const data = await res.json();
+            let data = null;
+
+            // Tier 1: Server endpoint (/api/current-affairs)
+            try {
+                const apiUrl = forceRefresh ? `/api/current-affairs?refresh=1&t=${Date.now()}` : `/api/current-affairs`;
+                const controller = new AbortController();
+                const timer = setTimeout(() => controller.abort(), 7000);
+                const res = await fetch(apiUrl, { credentials: 'include', signal: controller.signal });
+                clearTimeout(timer);
+                const contentType = res.headers.get('content-type') || '';
+                if (res.ok && contentType.includes('application/json')) {
+                    const json = await res.json();
+                    if (json && json.success && Array.isArray(json.days) && json.days.length > 0) {
+                        data = json;
+                    }
+                }
+            } catch (backendErr) {
+                console.warn('Backend /api/current-affairs unavailable, switching to direct client feed:', backendErr);
+            }
+
+            // Tier 2 & 3: Direct browser live Indian RSS fallback
+            if (!data) {
+                data = await fetchClientSideIndianCurrentAffairsFallback();
+            }
+
             caCachedPayload = data;
             caSelectedDateKey = 'ALL';
             caSelectedCategory = 'ALL';
@@ -11100,10 +11231,6 @@
             if (caFull && caFull.style.display === 'block') {
                 closeCurrentAffairsPage();
             }
-            const extFull = document.getElementById('externalToolScreen');
-            if (extFull && extFull.style.display === 'block') {
-                closeExternalToolPage();
-            }
         }
     });
 
@@ -11129,7 +11256,6 @@
         closePendingFullPage();
         closeRejectionFullPage();
         closeCurrentAffairsPage();
-        closeExternalToolPage();
         closeCreditScreen();
         document.getElementById('mainDashboardContainer').style.display = 'none';
         document.getElementById('mainLoginOverlay').style.display = 'flex';
