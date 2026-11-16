@@ -459,7 +459,14 @@
         .topbar-title-group {
             display: flex;
             align-items: center;
-            gap: 10px;
+            gap: 12px;
+        }
+
+        .topbar-title-stack {
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+            line-height: 1.12;
         }
 
         .topbar-main-title {
@@ -470,8 +477,22 @@
             letter-spacing: -0.3px;
         }
 
+        .topbar-dev-credit {
+            font-size: 0.63rem;
+            font-weight: 600;
+            color: #5c6f68;
+            letter-spacing: 0.15px;
+            margin-top: 2px;
+            display: block;
+            line-height: 1.1;
+        }
+
         body.dark-mode .topbar-main-title {
             color: #f8fafc;
+        }
+
+        body.dark-mode .topbar-dev-credit {
+            color: #94a3b8;
         }
 
         .topbar-live-status-pill {
@@ -640,6 +661,68 @@
             color: #ffffff;
             border: none;
             box-shadow: 0 2px 6px rgba(180, 83, 9, 0.22);
+        }
+
+        .topbar-action-btn.btn-ca-theme {
+            background: linear-gradient(135deg, #0f766e, #059669);
+            color: #ffffff;
+            border: 1px solid rgba(16, 185, 129, 0.45);
+            box-shadow: 0 2px 6px rgba(15, 118, 110, 0.22);
+            position: relative;
+        }
+
+        .topbar-action-btn.btn-ca-theme:hover {
+            background: linear-gradient(135deg, #115e59, #047857);
+            box-shadow: 0 4px 10px rgba(15, 118, 110, 0.3);
+        }
+
+        .new-sticker-badge {
+            display: inline-flex;
+            align-items: center;
+            justify-content: center;
+            background: linear-gradient(135deg, #f97316, #dc2626);
+            color: #ffffff;
+            font-size: 0.56rem;
+            font-weight: 900;
+            letter-spacing: 0.45px;
+            padding: 1.5px 5px;
+            border-radius: 5px;
+            line-height: 1.15;
+            text-transform: uppercase;
+            box-shadow: 0 2px 6px rgba(220, 38, 38, 0.38);
+            border: 1px solid rgba(255, 255, 255, 0.45);
+            animation: newStickerPulse 2.1s ease-in-out infinite;
+        }
+
+        .ca-icon-sticker-wrap {
+            position: relative;
+            display: inline-flex;
+            align-items: center;
+            justify-content: center;
+        }
+
+        .ca-icon-corner-sticker {
+            position: absolute;
+            top: -7px;
+            right: -11px;
+            background: linear-gradient(135deg, #f97316, #dc2626);
+            color: #ffffff;
+            font-size: 0.48rem;
+            font-weight: 900;
+            letter-spacing: 0.35px;
+            padding: 1px 4px;
+            border-radius: 4px;
+            line-height: 1.1;
+            text-transform: uppercase;
+            box-shadow: 0 2px 5px rgba(220, 38, 38, 0.45);
+            border: 1px solid rgba(255, 255, 255, 0.75);
+            pointer-events: none;
+            animation: newStickerPulse 2.1s ease-in-out infinite;
+        }
+
+        @keyframes newStickerPulse {
+            0%, 100% { transform: scale(1); }
+            50% { transform: scale(1.08); }
         }
 
         .topbar-action-btn.btn-logout-theme {
@@ -2084,6 +2167,39 @@
         .analytics-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 16px; margin-bottom: 18px; }
         @media (max-width: 1024px) { .analytics-grid { grid-template-columns: 1fr; } }
 
+        /* STACKED FULL-WIDTH BRANCH BAR CHARTS */
+        #wavePulseChartsSection {
+            display: grid;
+            grid-template-columns: 1fr !important;
+            gap: 18px;
+        }
+
+        .branch-bar-scroll-wrap {
+            width: 100%;
+            overflow-x: auto;
+            overflow-y: hidden;
+            -webkit-overflow-scrolling: touch;
+            padding-bottom: 4px;
+        }
+
+        .branch-bar-inner {
+            width: 100%;
+            min-width: 100%;
+        }
+
+        #wavePulseChartsSection .chart-container {
+            position: relative;
+            height: 360px;
+            width: 100%;
+            z-index: 1;
+        }
+
+        @media (max-width: 768px) {
+            #wavePulseChartsSection .chart-container {
+                height: 290px;
+            }
+        }
+
         .floating-window-card {
             background: #ffffff;
             padding: 16px 18px;
@@ -2100,6 +2216,692 @@
         .infographic-tag { font-size: 0.68rem; font-weight: 700; letter-spacing: 0.4px; text-transform: uppercase; padding: 3px 9px; border-radius: 6px; background: #eef3f1; color: #334155; }
         .chart-container { position: relative; height: 240px; width: 100%; z-index: 1; }
         .chart-container canvas { will-change: auto; }
+
+        /* RECORDS LAUNCHER BUTTONS BELOW SUB-CATEGORY BREAKDOWN */
+        .records-launcher-section {
+            margin: 16px 0 18px;
+        }
+
+        .records-launcher-grid {
+            display: grid;
+            grid-template-columns: repeat(2, minmax(0, 1fr));
+            gap: 14px;
+        }
+
+        @media (max-width: 768px) {
+            .records-launcher-grid {
+                grid-template-columns: 1fr;
+            }
+        }
+
+        .records-launcher-btn {
+            position: relative;
+            width: 100%;
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            gap: 14px;
+            padding: 16px 20px;
+            border-radius: 14px;
+            border: 1px solid #d9e2de;
+            background: #ffffff;
+            cursor: pointer;
+            text-align: left;
+            transition: transform 0.18s ease, box-shadow 0.18s ease, border-color 0.18s ease;
+            box-shadow: 0 2px 8px rgba(19, 34, 31, 0.05);
+            overflow: hidden;
+        }
+
+        .records-launcher-btn.pending-theme {
+            border-left: 5px solid #0f766e;
+            background: linear-gradient(135deg, #ffffff 0%, #f0fdfa 100%);
+        }
+
+        .records-launcher-btn.rejection-theme {
+            border-left: 5px solid #e11d48;
+            background: linear-gradient(135deg, #ffffff 0%, #fff1f2 100%);
+        }
+
+        .records-launcher-btn:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 10px 24px -6px rgba(19, 34, 31, 0.14);
+        }
+
+        .records-launcher-left {
+            display: flex;
+            align-items: center;
+            gap: 14px;
+            min-width: 0;
+        }
+
+        .records-launcher-icon {
+            width: 48px;
+            height: 48px;
+            border-radius: 12px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 1.35rem;
+            color: #ffffff;
+            flex-shrink: 0;
+            box-shadow: 0 4px 12px rgba(0, 0, 0, 0.14);
+        }
+
+        .records-launcher-btn.pending-theme .records-launcher-icon {
+            background: linear-gradient(135deg, #0f766e, #059669);
+        }
+
+        .records-launcher-btn.rejection-theme .records-launcher-icon {
+            background: linear-gradient(135deg, #e11d48, #be123c);
+        }
+
+        .records-launcher-meta {
+            display: flex;
+            flex-direction: column;
+            gap: 3px;
+            min-width: 0;
+        }
+
+        .records-launcher-title {
+            font-size: 1rem;
+            font-weight: 800;
+            color: #132522;
+            letter-spacing: -0.2px;
+        }
+
+        .records-launcher-sub {
+            font-size: 0.76rem;
+            font-weight: 600;
+            color: #5c6f68;
+        }
+
+        .records-launcher-right {
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            flex-shrink: 0;
+        }
+
+        .records-launcher-badge {
+            padding: 5px 12px;
+            border-radius: 10px;
+            font-size: 0.76rem;
+            font-weight: 800;
+            font-family: 'JetBrains Mono', monospace;
+            white-space: nowrap;
+        }
+
+        .records-launcher-btn.pending-theme .records-launcher-badge {
+            background: #e6f4f1;
+            color: #0f766e;
+            border: 1px solid #99f6e4;
+        }
+
+        .records-launcher-btn.rejection-theme .records-launcher-badge {
+            background: #ffe4e6;
+            color: #be123c;
+            border: 1px solid #fecdd3;
+        }
+
+        .records-launcher-arrow {
+            width: 32px;
+            height: 32px;
+            border-radius: 8px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            background: #f1f5f9;
+            color: #334155;
+            font-size: 0.84rem;
+            transition: transform 0.18s ease;
+        }
+
+        .records-launcher-btn:hover .records-launcher-arrow {
+            transform: translateX(3px);
+        }
+
+        body.dark-mode .records-launcher-btn {
+            background: #14221f;
+            border-color: #243935;
+        }
+        body.dark-mode .records-launcher-btn.pending-theme {
+            background: linear-gradient(135deg, #14221f 0%, #102a26 100%);
+        }
+        body.dark-mode .records-launcher-btn.rejection-theme {
+            background: linear-gradient(135deg, #14221f 0%, #2a141c 100%);
+        }
+        body.dark-mode .records-launcher-title { color: #f8fafc; }
+        body.dark-mode .records-launcher-sub { color: #94a3b8; }
+        body.dark-mode .records-launcher-arrow { background: #1e293b; color: #e2e8f0; }
+
+        /* FULL-SCREEN RECORDS & CURRENT AFFAIRS OVERLAYS */
+        .fullpage-overlay-screen {
+            display: none;
+            position: fixed;
+            inset: 0;
+            width: 100%;
+            height: 100%;
+            background: linear-gradient(135deg, #f4f7f5 0%, #f8faf9 50%, #eef5f2 100%);
+            z-index: 998;
+            overflow-y: auto;
+            padding: 18px 22px 36px;
+            box-sizing: border-box;
+        }
+
+        body.dark-mode .fullpage-overlay-screen {
+            background: linear-gradient(135deg, #0d1514 0%, #13221f 100%);
+        }
+
+        .fullpage-table-card {
+            background: #ffffff;
+            border: 1px solid #d9e2de;
+            border-radius: 14px;
+            padding: 16px 18px;
+            box-shadow: 0 4px 16px rgba(19, 34, 31, 0.06);
+        }
+
+        body.dark-mode .fullpage-table-card {
+            background: #14221f;
+            border-color: #243935;
+        }
+
+        .fullpage-table-scroll {
+            max-height: calc(100vh - 265px);
+            min-height: 320px;
+            overflow: auto;
+            border: 1px solid #d9e2de;
+            border-radius: 10px;
+        }
+
+        body.dark-mode .fullpage-table-scroll {
+            border-color: #243935;
+        }
+
+        @media (max-width: 768px) {
+            .fullpage-overlay-screen { padding: 12px 12px 28px; }
+            .fullpage-table-scroll { max-height: calc(100vh - 300px); }
+        }
+
+        /* CURRENT AFFAIRS FULL-PAGE READER STYLES */
+        .ca-toolbar-card {
+            background: #ffffff;
+            border: 1px solid #d9e2de;
+            border-radius: 14px;
+            padding: 14px 16px;
+            margin-bottom: 18px;
+            box-shadow: 0 2px 10px rgba(19, 34, 31, 0.05);
+            display: flex;
+            flex-direction: column;
+            gap: 12px;
+        }
+
+        body.dark-mode .ca-toolbar-card {
+            background: #14221f;
+            border-color: #243935;
+        }
+
+        .ca-toolbar-top {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            gap: 12px;
+            flex-wrap: wrap;
+        }
+
+        .ca-search-wrap {
+            position: relative;
+            flex: 1;
+            min-width: 220px;
+            max-width: 440px;
+        }
+
+        .ca-search-wrap i {
+            position: absolute;
+            left: 12px;
+            top: 50%;
+            transform: translateY(-50%);
+            color: #64748b;
+            font-size: 0.85rem;
+        }
+
+        .ca-search-wrap input {
+            width: 100%;
+            padding: 8px 12px 8px 34px;
+            border: 1.5px solid #cbd5e1;
+            border-radius: 9px;
+            font-size: 0.82rem;
+            outline: none;
+            background: #f8fafc;
+            color: #13221f;
+        }
+
+        body.dark-mode .ca-search-wrap input {
+            background: #0d1514;
+            border-color: #243935;
+            color: #f8fafc;
+        }
+
+        .ca-search-wrap input:focus {
+            border-color: #0f766e;
+            background: #ffffff;
+        }
+
+        .ca-filter-strip {
+            display: flex;
+            align-items: center;
+            gap: 8px;
+            overflow-x: auto;
+            padding-bottom: 2px;
+        }
+
+        .ca-filter-btn {
+            padding: 5px 12px;
+            border-radius: 8px;
+            border: 1px solid #d9e2de;
+            background: #f6f8f7;
+            color: #3c4d48;
+            font-size: 0.75rem;
+            font-weight: 700;
+            cursor: pointer;
+            white-space: nowrap;
+            transition: all 0.16s ease;
+        }
+
+        .ca-filter-btn.active {
+            background: linear-gradient(135deg, #0f766e, #059669);
+            color: #ffffff;
+            border-color: #0f766e;
+            box-shadow: 0 2px 8px rgba(15, 118, 110, 0.24);
+        }
+
+        body.dark-mode .ca-filter-btn {
+            background: #0d1514;
+            border-color: #243935;
+            color: #cbd5e1;
+        }
+
+        body.dark-mode .ca-filter-btn.active {
+            background: linear-gradient(135deg, #0f766e, #059669);
+            color: #ffffff;
+        }
+
+        .ca-day-group {
+            margin-bottom: 24px;
+        }
+
+        .ca-day-header {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            gap: 10px;
+            padding: 10px 16px;
+            background: linear-gradient(135deg, #132522, #1b3833);
+            color: #ffffff;
+            border-radius: 12px;
+            margin-bottom: 14px;
+            box-shadow: 0 4px 12px rgba(13, 21, 20, 0.14);
+        }
+
+        .ca-day-title {
+            display: flex;
+            align-items: center;
+            gap: 9px;
+            font-size: 0.96rem;
+            font-weight: 800;
+        }
+
+        .ca-day-count {
+            background: rgba(255, 255, 255, 0.16);
+            border: 1px solid rgba(255, 255, 255, 0.24);
+            color: #ecfdf5;
+            padding: 3px 10px;
+            border-radius: 8px;
+            font-size: 0.74rem;
+            font-weight: 700;
+        }
+
+        .ca-articles-grid {
+            display: grid;
+            grid-template-columns: repeat(3, minmax(0, 1fr));
+            gap: 16px;
+        }
+
+        @media (max-width: 1120px) {
+            .ca-articles-grid {
+                grid-template-columns: repeat(2, minmax(0, 1fr));
+            }
+        }
+
+        @media (max-width: 680px) {
+            .ca-articles-grid {
+                grid-template-columns: 1fr;
+            }
+        }
+
+        .ca-card {
+            background: #ffffff;
+            border: 1px solid #d9e2de;
+            border-radius: 14px;
+            overflow: hidden;
+            display: flex;
+            flex-direction: column;
+            transition: transform 0.18s ease, box-shadow 0.18s ease;
+            box-shadow: 0 2px 8px rgba(19, 34, 31, 0.05);
+        }
+
+        .ca-card:hover {
+            transform: translateY(-3px);
+            box-shadow: 0 12px 26px -8px rgba(19, 34, 31, 0.16);
+        }
+
+        body.dark-mode .ca-card {
+            background: #14221f;
+            border-color: #243935;
+        }
+
+        .ca-card-img-wrap {
+            position: relative;
+            width: 100%;
+            aspect-ratio: 16 / 9;
+            background: linear-gradient(135deg, #132522 0%, #0f766e 100%);
+            overflow: hidden;
+        }
+
+        .ca-card-img-wrap img {
+            width: 100%;
+            height: 100%;
+            object-fit: cover;
+            display: block;
+        }
+
+        .ca-card-badges {
+            position: absolute;
+            top: 10px;
+            left: 10px;
+            right: 10px;
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            gap: 6px;
+            pointer-events: none;
+        }
+
+        .ca-source-tag {
+            background: rgba(13, 21, 20, 0.82);
+            color: #ffffff;
+            font-size: 0.68rem;
+            font-weight: 700;
+            padding: 3px 8px;
+            border-radius: 6px;
+            backdrop-filter: blur(4px);
+        }
+
+        .ca-cat-tag {
+            background: rgba(15, 118, 110, 0.9);
+            color: #ffffff;
+            font-size: 0.66rem;
+            font-weight: 800;
+            padding: 3px 8px;
+            border-radius: 6px;
+            text-transform: uppercase;
+            letter-spacing: 0.3px;
+        }
+
+        .ca-card-body {
+            padding: 14px 16px;
+            display: flex;
+            flex-direction: column;
+            gap: 8px;
+            flex: 1;
+        }
+
+        .ca-card-time {
+            font-size: 0.71rem;
+            font-weight: 700;
+            color: #0f766e;
+            display: flex;
+            align-items: center;
+            gap: 5px;
+        }
+
+        body.dark-mode .ca-card-time {
+            color: #5eead4;
+        }
+
+        .ca-card-title {
+            font-size: 0.94rem;
+            font-weight: 800;
+            color: #132522;
+            line-height: 1.38;
+            margin: 0;
+        }
+
+        body.dark-mode .ca-card-title {
+            color: #f8fafc;
+        }
+
+        .ca-card-desc {
+            font-size: 0.79rem;
+            color: #5c6f68;
+            line-height: 1.5;
+            margin: 0;
+            flex: 1;
+        }
+
+        body.dark-mode .ca-card-desc {
+            color: #cbd5e1;
+        }
+
+        .ca-card-footer {
+            padding: 10px 16px 13px;
+            border-top: 1px solid #eef2f0;
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            gap: 8px;
+        }
+
+        body.dark-mode .ca-card-footer {
+            border-color: #243935;
+        }
+
+        .ca-read-link {
+            display: inline-flex;
+            align-items: center;
+            gap: 6px;
+            font-size: 0.78rem;
+            font-weight: 800;
+            color: #0f766e;
+            text-decoration: none;
+        }
+
+        .ca-read-link:hover {
+            color: #047857;
+            text-decoration: underline;
+        }
+
+        body.dark-mode .ca-read-link {
+            color: #5eead4;
+        }
+
+        /* BOTTOM SMART UTILITIES & QUICK TOOLS SECTION */
+        .bottom-tools-section {
+            background: #ffffff;
+            border: 1px solid #d9e2de;
+            border-radius: 14px;
+            padding: 18px 20px;
+            margin-top: 22px;
+            box-shadow: 0 2px 10px rgba(19, 34, 31, 0.05);
+        }
+
+        body.dark-mode .bottom-tools-section {
+            background: #14221f;
+            border-color: #243935;
+        }
+
+        .bottom-tools-header {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            flex-wrap: wrap;
+            gap: 10px;
+            margin-bottom: 14px;
+        }
+
+        .bottom-tools-header h3 {
+            font-size: 1rem;
+            font-weight: 800;
+            color: #132522;
+            margin: 0;
+            display: flex;
+            align-items: center;
+            gap: 8px;
+        }
+
+        body.dark-mode .bottom-tools-header h3 {
+            color: #f8fafc;
+        }
+
+        .bottom-tools-grid {
+            display: grid;
+            grid-template-columns: repeat(4, minmax(0, 1fr));
+            gap: 12px;
+        }
+
+        @media (max-width: 1120px) {
+            .bottom-tools-grid {
+                grid-template-columns: repeat(2, minmax(0, 1fr));
+            }
+        }
+
+        @media (max-width: 600px) {
+            .bottom-tools-grid {
+                grid-template-columns: 1fr;
+            }
+        }
+
+        .bottom-tool-btn {
+            position: relative;
+            width: 100%;
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            gap: 12px;
+            padding: 14px 16px;
+            border-radius: 12px;
+            border: 1px solid #d9e2de;
+            background: #f8faf9;
+            cursor: pointer;
+            text-align: left;
+            transition: transform 0.18s ease, box-shadow 0.18s ease, border-color 0.18s ease;
+        }
+
+        .bottom-tool-btn:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 10px 22px -6px rgba(19, 34, 31, 0.14);
+        }
+
+        .bottom-tool-btn.ca-theme { border-top: 3px solid #0f766e; background: linear-gradient(135deg, #ffffff 0%, #f0fdfa 100%); }
+        .bottom-tool-btn.pdf-theme { border-top: 3px solid #e11d48; background: linear-gradient(135deg, #ffffff 0%, #fff1f2 100%); }
+        .bottom-tool-btn.draw-theme { border-top: 3px solid #0284c7; background: linear-gradient(135deg, #ffffff 0%, #f0f9ff 100%); }
+        .bottom-tool-btn.voice-theme { border-top: 3px solid #d97706; background: linear-gradient(135deg, #ffffff 0%, #fffbeb 100%); }
+
+        body.dark-mode .bottom-tool-btn {
+            background: #0d1514;
+            border-color: #243935;
+        }
+
+        .bottom-tool-left {
+            display: flex;
+            align-items: center;
+            gap: 12px;
+            min-width: 0;
+        }
+
+        .bottom-tool-icon {
+            position: relative;
+            width: 44px;
+            height: 44px;
+            border-radius: 11px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            color: #ffffff;
+            font-size: 1.2rem;
+            flex-shrink: 0;
+            box-shadow: 0 4px 10px rgba(0, 0, 0, 0.14);
+        }
+
+        .bottom-tool-btn.ca-theme .bottom-tool-icon { background: linear-gradient(135deg, #0f766e, #059669); }
+        .bottom-tool-btn.pdf-theme .bottom-tool-icon { background: linear-gradient(135deg, #e11d48, #be123c); }
+        .bottom-tool-btn.draw-theme .bottom-tool-icon { background: linear-gradient(135deg, #0284c7, #0369a1); }
+        .bottom-tool-btn.voice-theme .bottom-tool-icon { background: linear-gradient(135deg, #d97706, #b45309); }
+
+        .bottom-tool-text {
+            display: flex;
+            flex-direction: column;
+            gap: 3px;
+            min-width: 0;
+        }
+
+        .bottom-tool-title {
+            font-size: 0.86rem;
+            font-weight: 800;
+            color: #132522;
+            line-height: 1.25;
+        }
+
+        .bottom-tool-sub {
+            font-size: 0.72rem;
+            font-weight: 600;
+            color: #5c6f68;
+            line-height: 1.25;
+        }
+
+        body.dark-mode .bottom-tool-title { color: #f8fafc; }
+        body.dark-mode .bottom-tool-sub { color: #94a3b8; }
+
+        .bottom-tool-arrow {
+            color: #64748b;
+            font-size: 0.85rem;
+            flex-shrink: 0;
+        }
+
+        /* FULL-SCREEN EXTERNAL WEB TOOL VIEWER */
+        .external-tool-frame-card {
+            background: #ffffff;
+            border: 1px solid #d9e2de;
+            border-radius: 14px;
+            padding: 10px;
+            box-shadow: 0 4px 16px rgba(19, 34, 31, 0.08);
+        }
+
+        body.dark-mode .external-tool-frame-card {
+            background: #14221f;
+            border-color: #243935;
+        }
+
+        .external-tool-iframe {
+            width: 100%;
+            height: calc(100vh - 175px);
+            min-height: 460px;
+            border: none;
+            border-radius: 10px;
+            background: #ffffff;
+            display: block;
+        }
+
+        .external-tool-notice {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            flex-wrap: wrap;
+            gap: 8px;
+            padding: 8px 12px 2px;
+            font-size: 0.76rem;
+            font-weight: 600;
+            color: var(--secondary);
+        }
 
         .subcat-table-wrap { max-height: 240px; overflow-y: auto; position: relative; z-index: 1; }
         .subcat-table { width: 100%; border-collapse: collapse; font-size: 0.74rem; }
@@ -4032,22 +4834,30 @@
                 <i class="fa-solid fa-cubes-stacked"></i>
                 <span>Rejection Console</span>
             </button>
-            <button class="nav-item" onclick="activateNavItem(this, 'pendingTableSection')">
+            <button class="nav-item" onclick="openPendingFullPage(); toggleWorkspaceSidebar(false);">
                 <i class="fa-solid fa-table-list"></i>
                 <span>Pending Records</span>
             </button>
-            <button class="nav-item" onclick="activateNavItem(this, 'rejectionSection')">
+            <button class="nav-item" onclick="openRejectionFullPage(); toggleWorkspaceSidebar(false);">
                 <i class="fa-solid fa-circle-xmark"></i>
-                <span>Rejections Feed</span>
+                <span>Rejection Records</span>
             </button>
             <button class="nav-item" onclick="activateNavItem(this, 'wavePulseChartsSection')">
-                <i class="fa-solid fa-wave-square"></i>
-                <span>Wave Pulse Flow</span>
+                <i class="fa-solid fa-chart-column"></i>
+                <span>Branch Bar Charts</span>
+            </button>
+            <button class="nav-item" onclick="openCurrentAffairsPage(); toggleWorkspaceSidebar(false);">
+                <span class="ca-icon-sticker-wrap">
+                    <i class="fa-solid fa-newspaper" style="color: #0d9488;"></i>
+                    <span class="ca-icon-corner-sticker" style="top: -7px; right: -10px;">NEW</span>
+                </span>
+                <span>Current Affairs</span>
+                <span class="new-sticker-badge">NEW</span>
             </button>
             <button class="nav-item" onclick="openAllFeaturesModal(); toggleWorkspaceSidebar(false);">
                 <i class="fa-solid fa-shapes"></i>
                 <span>All Features</span>
-                <span class="nav-badge-pill" style="background: linear-gradient(135deg, #0d9488, #0f766e); color: #fff;">15</span>
+                <span class="nav-badge-pill" style="background: linear-gradient(135deg, #0d9488, #0f766e); color: #fff;">16</span>
             </button>
 
             <div class="nav-section-title" style="margin-top: 14px;">Productivity Tools</div>
@@ -4099,7 +4909,10 @@
                     <i class="fa-solid fa-bars"></i>
                 </button>
                 <div class="topbar-title-group">
-                    <h1 class="topbar-main-title">Credit & Pending Intelligence</h1>
+                    <div class="topbar-title-stack">
+                        <h1 class="topbar-main-title">Credit & Pending Intelligence</h1>
+                        <span class="topbar-dev-credit">developed by Soumya@12687</span>
+                    </div>
                     <div class="topbar-live-status-pill">
                         <span class="pulse-live-dot"></span>
                         <span id="roboticTimeDisplay">SYSTEM SYNCING...</span>
@@ -4111,8 +4924,13 @@
                 <button class="topbar-nav-btn" onclick="activateNavItem(null, 'workspaceBodyTop')"><i class="fa-solid fa-chart-line" style="color: #0f766e;"></i> Overview</button>
                 <button class="topbar-nav-btn" onclick="activateNavItem(null, 'subcatSection')"><i class="fa-solid fa-chart-pie" style="color: #b45309;"></i> Categories</button>
                 <button class="topbar-nav-btn" onclick="activateNavItem(null, 'branchExplorerSection')"><i class="fa-solid fa-building-circle-check" style="color: #059669;"></i> Branches</button>
-                <button class="topbar-nav-btn" onclick="activateNavItem(null, 'rejectionConsoleSection')"><i class="fa-solid fa-ban" style="color: #e11d48;"></i> Rejections</button>
-                <button class="topbar-nav-btn" onclick="activateNavItem(null, 'pendingTableSection')"><i class="fa-solid fa-clock" style="color: #d97706;"></i> Pending</button>
+                <button class="topbar-nav-btn" onclick="openRejectionFullPage()"><i class="fa-solid fa-ban" style="color: #e11d48;"></i> Rejections</button>
+                <button class="topbar-nav-btn" onclick="openPendingFullPage()"><i class="fa-solid fa-clock" style="color: #d97706;"></i> Pending</button>
+                <button class="topbar-nav-btn" onclick="openCurrentAffairsPage()">
+                    <span class="ca-icon-sticker-wrap"><i class="fa-solid fa-newspaper" style="color: #0f766e;"></i></span>
+                    Current Affairs
+                    <span class="new-sticker-badge">NEW</span>
+                </button>
                 <button class="topbar-nav-btn" onclick="openAllFeaturesModal()"><i class="fa-solid fa-shapes" style="color: #0f766e;"></i> Features</button>
             </nav>
 
@@ -4124,6 +4942,13 @@
             </div>
 
             <div class="topbar-right-actions">
+                <button class="topbar-action-btn btn-ca-theme" onclick="openCurrentAffairsPage()" title="Indian Daily Current Affairs (NEW)">
+                    <span class="ca-icon-sticker-wrap">
+                        <i class="fa-solid fa-newspaper"></i>
+                        <span class="ca-icon-corner-sticker">NEW</span>
+                    </span>
+                    <span class="action-btn-label">Current Affairs</span>
+                </button>
                 <button class="topbar-action-btn btn-features-theme" onclick="openAllFeaturesModal()" title="View All Portal Features Directory">
                     <i class="fa-solid fa-shapes"></i>
                     <span class="action-btn-label">Features</span>
@@ -4295,6 +5120,43 @@
         </div>
     </div>
 
+    <!-- RECORDS LAUNCHER BUTTONS (Pending Applications Records & Rejection Records) -->
+    <div class="records-launcher-section" id="recordsLauncherSection">
+        <div class="records-launcher-grid">
+            <button type="button" class="records-launcher-btn pending-theme" id="btnOpenPendingRecordsPage" onclick="openPendingFullPage()">
+                <div class="records-launcher-left">
+                    <div class="records-launcher-icon">
+                        <i class="fa-solid fa-table-list"></i>
+                    </div>
+                    <div class="records-launcher-meta">
+                        <span class="records-launcher-title">Pending Applications Records</span>
+                        <span class="records-launcher-sub" id="pendingScopeTag">Full-screen records · Branch filter, search & Excel</span>
+                    </div>
+                </div>
+                <div class="records-launcher-right">
+                    <span class="records-launcher-badge" id="launcherPendingCountBadge">0 Records</span>
+                    <span class="records-launcher-arrow"><i class="fa-solid fa-arrow-up-right-from-square"></i></span>
+                </div>
+            </button>
+
+            <button type="button" class="records-launcher-btn rejection-theme" id="btnOpenRejectionRecordsPage" onclick="openRejectionFullPage()">
+                <div class="records-launcher-left">
+                    <div class="records-launcher-icon">
+                        <i class="fa-solid fa-circle-xmark"></i>
+                    </div>
+                    <div class="records-launcher-meta">
+                        <span class="records-launcher-title">Rejection Records</span>
+                        <span class="records-launcher-sub" id="rejectionScopeTag">Full-screen records · Branch filter, search & Excel</span>
+                    </div>
+                </div>
+                <div class="records-launcher-right">
+                    <span class="records-launcher-badge" id="launcherRejectionCountBadge">0 Records</span>
+                    <span class="records-launcher-arrow"><i class="fa-solid fa-arrow-up-right-from-square"></i></span>
+                </div>
+            </button>
+        </div>
+    </div>
+
     <!-- INTERACTIVE BRANCHES DIRECTORY SECTION -->
     <div class="table-card mesh-container" id="branchExplorerSection">
         <canvas class="mesh-canvas"></canvas>
@@ -4340,76 +5202,8 @@
         </div>
     </div>
 
-    <!-- Pending Applications Records Section -->
-    <div class="table-card mesh-container pending-apps-reduced-card" id="pendingTableSection">
-        <canvas class="mesh-canvas"></canvas>
-        <div class="table-header">
-            <h3><i class="fa-solid fa-table-list" style="color: #0f766e; margin-right: 8px;"></i>Pending Applications Records</h3>
-            <span id="recordCountDisplay" style="color: var(--secondary); font-size: 0.82rem; font-weight: 700;">Showing 0 records</span>
-        </div>
-        
-        <div class="app-filters-container">
-            <div class="filter-item">
-                <label><i class="fa-solid fa-filter" style="color: #0f766e;"></i> Branch:</label>
-                <select id="appBranchFilter" class="filter-select" onchange="applyPendingAppFilters()">
-                    <option value="ALL">All Branches</option>
-                </select>
-            </div>
-            <div class="filter-item" style="flex: 1; min-width: 180px;">
-                <label><i class="fa-solid fa-magnifying-glass" style="color: #059669;"></i> Search:</label>
-                <input type="text" id="appGeneralSearch" class="filter-input" style="width: 100%;" placeholder="Search Loan ID, Product, Remark..." oninput="debouncedPendingSearchFilter()">
-            </div>
-            <button class="btn btn-branch" onclick="downloadPendingFilteredExcel()" style="padding: 7px 14px; font-size: 0.8rem;">
-                <i class="fa-solid fa-file-excel"></i> Download Excel
-            </button>
-        </div>
-
-        <div class="table-scroll pending-apps-scroll-reduced">
-            <table class="data-table">
-                <thead id="tableHead"></thead>
-                <tbody id="tableBody">
-                    <tr><td class="status-msg">Fetching records from Google Sheet...</td></tr>
-                </tbody>
-            </table>
-        </div>
-    </div>
-
-    <!-- Rejection Records Section (Below Pending Applications Records) -->
-    <div class="table-card mesh-container pending-apps-reduced-card" id="rejectionSection">
-        <canvas class="mesh-canvas"></canvas>
-        <div class="table-header">
-            <h3><i class="fa-solid fa-circle-xmark" style="color: #f43f5e; margin-right: 8px;"></i>Rejection Records</h3>
-            <span id="rejectionRecordCountDisplay" style="color: var(--secondary); font-size: 0.82rem; font-weight: 700;">Showing 0 records</span>
-        </div>
-        
-        <div class="app-filters-container">
-            <div class="filter-item">
-                <label><i class="fa-solid fa-filter" style="color: #f43f5e;"></i> Branch:</label>
-                <select id="rejBranchFilter" class="filter-select" onchange="applyRejectionAppFilters()">
-                    <option value="ALL">All Branches</option>
-                </select>
-            </div>
-            <div class="filter-item" style="flex: 1; min-width: 180px;">
-                <label><i class="fa-solid fa-magnifying-glass" style="color: #f43f5e;"></i> Search:</label>
-                <input type="text" id="rejGeneralSearch" class="filter-input" style="width: 100%;" placeholder="Search Rejection Loan ID, Product, Remark..." oninput="debouncedRejectionSearchFilter()">
-            </div>
-            <button class="btn" onclick="downloadRejectionFilteredExcel()" style="padding: 7px 14px; font-size: 0.8rem; background: linear-gradient(135deg, #f43f5e, #be123c); color: #fff;">
-                <i class="fa-solid fa-file-excel"></i> Download Excel
-            </button>
-        </div>
-
-        <div class="table-scroll pending-apps-scroll-reduced">
-            <table class="data-table">
-                <thead id="rejTableHead"></thead>
-                <tbody id="rejTableBody">
-                    <tr><td class="status-msg">Fetching rejection records from Google Sheet...</td></tr>
-                </tbody>
-            </table>
-        </div>
-    </div>
-
-    <!-- MODERN GRAPH CHARTS SECTION (MOVED TO BOTTOM LAST SECTION) -->
-    <div class="analytics-grid" id="wavePulseChartsSection" style="margin-top: 24px;">
+    <!-- STACKED FULL-WIDTH BRANCH BAR CHARTS SECTION (1st Pending, 2nd Rejection Below) -->
+    <div id="wavePulseChartsSection" style="margin-top: 20px;">
         <div class="floating-window-card mesh-container">
             <canvas class="mesh-canvas"></canvas>
             <div class="floating-window-header">
@@ -4418,17 +5212,21 @@
                     <span class="dot dot-yellow"></span>
                     <span class="dot dot-green"></span>
                 </div>
-                <h3 style="font-size: 0.95rem; font-weight: 800; color: #132522;">
-                    <i class="fa-solid fa-chart-line" style="color: #0f766e; margin-right: 6px;"></i>Branch-Wise Pending Count
+                <h3 style="font-size: 0.96rem; font-weight: 800; color: #132522;">
+                    <i class="fa-solid fa-chart-column" style="color: #0f766e; margin-right: 6px;"></i>Branch-Wise Pending Count
                 </h3>
-                <span class="infographic-tag" style="background: #e6f4f1; color: #0f766e;">Wave Pulse Flow</span>
+                <span class="infographic-tag" style="background: #e6f4f1; color: #0f766e;">Full Branch Bar Chart</span>
             </div>
-            <div class="chart-container">
-                <canvas id="branchChart"></canvas>
+            <div class="branch-bar-scroll-wrap">
+                <div class="branch-bar-inner" id="pendingBarChartInner">
+                    <div class="chart-container">
+                        <canvas id="branchChart"></canvas>
+                    </div>
+                </div>
             </div>
         </div>
 
-        <!-- REJECTION CHART -->
+        <!-- REJECTION BAR CHART BELOW PENDING CHART -->
         <div class="floating-window-card mesh-container">
             <canvas class="mesh-canvas"></canvas>
             <div class="floating-window-header">
@@ -4437,14 +5235,84 @@
                     <span class="dot dot-yellow"></span>
                     <span class="dot dot-green"></span>
                 </div>
-                <h3 style="font-size: 0.95rem; font-weight: 800; color: #132522;">
-                    <i class="fa-solid fa-chart-line" style="color: #f43f5e; margin-right: 6px;"></i>Branch-Wise Rejection Count
+                <h3 style="font-size: 0.96rem; font-weight: 800; color: #132522;">
+                    <i class="fa-solid fa-chart-column" style="color: #f43f5e; margin-right: 6px;"></i>Branch-Wise Rejection Count
                 </h3>
-                <span class="infographic-tag" style="background: #ffe4e6; color: #be123c;">Wave Pulse Flow</span>
+                <span class="infographic-tag" style="background: #ffe4e6; color: #be123c;">Full Branch Bar Chart</span>
             </div>
-            <div class="chart-container">
-                <canvas id="rejectionBranchChart"></canvas>
+            <div class="branch-bar-scroll-wrap">
+                <div class="branch-bar-inner" id="rejectionBarChartInner">
+                    <div class="chart-container">
+                        <canvas id="rejectionBranchChart"></canvas>
+                    </div>
+                </div>
             </div>
+        </div>
+    </div>
+
+    <!-- BOTTOM QUICK TOOLS & INDIAN DAILY CURRENT AFFAIRS SECTION -->
+    <div class="bottom-tools-section" id="bottomQuickToolsSection">
+        <div class="bottom-tools-header">
+            <h3>
+                <i class="fa-solid fa-toolbox" style="color: #0f766e;"></i>
+                Workspace Quick Tools &amp; Daily Current Affairs
+            </h3>
+            <span style="font-size: 0.76rem; font-weight: 700; color: var(--secondary);">Instant full-page access</span>
+        </div>
+
+        <div class="bottom-tools-grid">
+            <button type="button" class="bottom-tool-btn ca-theme" onclick="openCurrentAffairsPage()">
+                <div class="bottom-tool-left">
+                    <div class="bottom-tool-icon">
+                        <i class="fa-solid fa-newspaper"></i>
+                        <span class="ca-icon-corner-sticker" style="top: -6px; right: -8px;">NEW</span>
+                    </div>
+                    <div class="bottom-tool-text">
+                        <span class="bottom-tool-title">Indian Daily Current Affairs</span>
+                        <span class="bottom-tool-sub">Daily India updates with images</span>
+                    </div>
+                </div>
+                <span class="bottom-tool-arrow"><i class="fa-solid fa-arrow-up-right-from-square"></i></span>
+            </button>
+
+            <button type="button" class="bottom-tool-btn pdf-theme" onclick="openExternalToolPage('Every tool you need to work with PDFs in one place', 'https://www.ilovepdf.com/', 'fa-file-pdf', '#e11d48', 'iLovePDF · Merge, split, compress & convert PDFs')">
+                <div class="bottom-tool-left">
+                    <div class="bottom-tool-icon">
+                        <i class="fa-solid fa-file-pdf"></i>
+                    </div>
+                    <div class="bottom-tool-text">
+                        <span class="bottom-tool-title">Every tool you need to work with PDFs in one place</span>
+                        <span class="bottom-tool-sub">Merge, split, compress &amp; edit PDFs</span>
+                    </div>
+                </div>
+                <span class="bottom-tool-arrow"><i class="fa-solid fa-arrow-up-right-from-square"></i></span>
+            </button>
+
+            <button type="button" class="bottom-tool-btn draw-theme" onclick="openExternalToolPage('Auto Draw', 'https://www.autodraw.com/', 'fa-wand-magic-sparkles', '#0284c7', 'AutoDraw · Fast smart sketching & drawing tool')">
+                <div class="bottom-tool-left">
+                    <div class="bottom-tool-icon">
+                        <i class="fa-solid fa-wand-magic-sparkles"></i>
+                    </div>
+                    <div class="bottom-tool-text">
+                        <span class="bottom-tool-title">Auto Draw</span>
+                        <span class="bottom-tool-sub">Fast smart drawing &amp; diagrams</span>
+                    </div>
+                </div>
+                <span class="bottom-tool-arrow"><i class="fa-solid fa-arrow-up-right-from-square"></i></span>
+            </button>
+
+            <button type="button" class="bottom-tool-btn voice-theme" onclick="openExternalToolPage('Voice Notepad', 'https://dictation.io/speech', 'fa-microphone-lines', '#d97706', 'Dictation Voice Notepad · Speech-to-text pad')">
+                <div class="bottom-tool-left">
+                    <div class="bottom-tool-icon">
+                        <i class="fa-solid fa-microphone-lines"></i>
+                    </div>
+                    <div class="bottom-tool-text">
+                        <span class="bottom-tool-title">Voice Notepad</span>
+                        <span class="bottom-tool-sub">Speech-to-text instant notes</span>
+                    </div>
+                </div>
+                <span class="bottom-tool-arrow"><i class="fa-solid fa-arrow-up-right-from-square"></i></span>
+            </button>
         </div>
     </div>
 
@@ -4928,6 +5796,186 @@
     </div>
 </div>
 
+<!-- Full-Screen Pending Applications Records Page -->
+<div class="fullpage-overlay-screen" id="pendingFullPageScreen">
+    <div class="container">
+        <header class="mesh-container">
+            <canvas class="mesh-canvas"></canvas>
+            <div class="header-title">
+                <h1><i class="fa-solid fa-table-list" style="color: #0f766e; margin-right: 8px;"></i>Pending Applications Records</h1>
+                <p id="pendingFullPageSubtitle">Branch-wise filtered records with SLA Forecast, search &amp; Excel export</p>
+            </div>
+            <div class="btn-group">
+                <button class="btn btn-refresh" onclick="refreshDashboard()">
+                    <i class="fa-solid fa-arrows-rotate"></i> Refresh Data
+                </button>
+                <button class="btn btn-home" onclick="closePendingFullPage()">
+                    <i class="fa-solid fa-house"></i> Back to Home Screen
+                </button>
+            </div>
+        </header>
+
+        <div class="fullpage-table-card">
+            <div class="table-header">
+                <h3><i class="fa-solid fa-folder-open" style="color: #0f766e; margin-right: 8px;"></i>Pending Loan Queue</h3>
+                <span id="recordCountDisplay" style="color: var(--secondary); font-size: 0.84rem; font-weight: 700;">Showing 0 records</span>
+            </div>
+
+            <div class="app-filters-container">
+                <div class="filter-item">
+                    <label><i class="fa-solid fa-filter" style="color: #0f766e;"></i> Branch:</label>
+                    <select id="appBranchFilter" class="filter-select" onchange="applyPendingAppFilters()">
+                        <option value="ALL">All Branches</option>
+                    </select>
+                </div>
+                <div class="filter-item" style="flex: 1; min-width: 200px;">
+                    <label><i class="fa-solid fa-magnifying-glass" style="color: #059669;"></i> Search:</label>
+                    <input type="text" id="appGeneralSearch" class="filter-input" style="width: 100%;" placeholder="Search Loan ID, Member, Product, Remark..." oninput="debouncedPendingSearchFilter()">
+                </div>
+                <button class="btn btn-branch" onclick="downloadPendingFilteredExcel()" style="padding: 8px 16px; font-size: 0.82rem;">
+                    <i class="fa-solid fa-file-excel"></i> Download to Excel
+                </button>
+            </div>
+
+            <div class="table-scroll fullpage-table-scroll">
+                <table class="data-table">
+                    <thead id="tableHead"></thead>
+                    <tbody id="tableBody">
+                        <tr><td class="status-msg">Fetching records from Google Sheet...</td></tr>
+                    </tbody>
+                </table>
+            </div>
+        </div>
+    </div>
+</div>
+
+<!-- Full-Screen Rejection Records Page -->
+<div class="fullpage-overlay-screen" id="rejectionFullPageScreen">
+    <div class="container">
+        <header class="mesh-container">
+            <canvas class="mesh-canvas"></canvas>
+            <div class="header-title">
+                <h1><i class="fa-solid fa-circle-xmark" style="color: #e11d48; margin-right: 8px;"></i>Rejection Records</h1>
+                <p id="rejectionFullPageSubtitle">Branch-wise filtered rejection audit with search &amp; Excel export</p>
+            </div>
+            <div class="btn-group">
+                <button class="btn btn-refresh" onclick="refreshDashboard()">
+                    <i class="fa-solid fa-arrows-rotate"></i> Refresh Data
+                </button>
+                <button class="btn btn-home" onclick="closeRejectionFullPage()">
+                    <i class="fa-solid fa-house"></i> Back to Home Screen
+                </button>
+            </div>
+        </header>
+
+        <div class="fullpage-table-card">
+            <div class="table-header">
+                <h3><i class="fa-solid fa-ban" style="color: #e11d48; margin-right: 8px;"></i>Rejected Applications Log</h3>
+                <span id="rejectionRecordCountDisplay" style="color: var(--secondary); font-size: 0.84rem; font-weight: 700;">Showing 0 records</span>
+            </div>
+
+            <div class="app-filters-container">
+                <div class="filter-item">
+                    <label><i class="fa-solid fa-filter" style="color: #e11d48;"></i> Branch:</label>
+                    <select id="rejBranchFilter" class="filter-select" onchange="applyRejectionAppFilters()">
+                        <option value="ALL">All Branches</option>
+                    </select>
+                </div>
+                <div class="filter-item" style="flex: 1; min-width: 200px;">
+                    <label><i class="fa-solid fa-magnifying-glass" style="color: #e11d48;"></i> Search:</label>
+                    <input type="text" id="rejGeneralSearch" class="filter-input" style="width: 100%;" placeholder="Search Rejection Loan ID, Member, Product, Remark..." oninput="debouncedRejectionSearchFilter()">
+                </div>
+                <button class="btn" onclick="downloadRejectionFilteredExcel()" style="padding: 8px 16px; font-size: 0.82rem; background: linear-gradient(135deg, #f43f5e, #be123c); color: #fff;">
+                    <i class="fa-solid fa-file-excel"></i> Download to Excel
+                </button>
+            </div>
+
+            <div class="table-scroll fullpage-table-scroll">
+                <table class="data-table">
+                    <thead id="rejTableHead"></thead>
+                    <tbody id="rejTableBody">
+                        <tr><td class="status-msg">Fetching rejection records from Google Sheet...</td></tr>
+                    </tbody>
+                </table>
+            </div>
+        </div>
+    </div>
+</div>
+
+<!-- Full-Screen Indian Daily Current Affairs Page -->
+<div class="fullpage-overlay-screen" id="currentAffairsScreen">
+    <div class="container">
+        <header class="mesh-container">
+            <canvas class="mesh-canvas"></canvas>
+            <div class="header-title">
+                <h1><i class="fa-solid fa-newspaper" style="color: #0f766e; margin-right: 8px;"></i>Indian Daily Current Affairs</h1>
+                <p>Daily India news, economy, banking &amp; science updates curated live from Indian portals</p>
+            </div>
+            <div class="btn-group">
+                <button class="btn btn-refresh" id="caRefreshBtn" onclick="loadCurrentAffairsData(true)">
+                    <i class="fa-solid fa-arrows-rotate" id="caRefreshIcon"></i> Refresh Feed
+                </button>
+                <button class="btn btn-home" onclick="closeCurrentAffairsPage()">
+                    <i class="fa-solid fa-house"></i> Back to Home Screen
+                </button>
+            </div>
+        </header>
+
+        <div class="ca-toolbar-card">
+            <div class="ca-toolbar-top">
+                <div class="ca-search-wrap">
+                    <i class="fa-solid fa-magnifying-glass"></i>
+                    <input type="text" id="caSearchInput" placeholder="Search daily headlines, economy, policy, science..." oninput="renderCurrentAffairsList()">
+                </div>
+                <div style="display: flex; align-items: center; gap: 10px; flex-wrap: wrap;">
+                    <span id="caStatsMeta" style="font-size: 0.78rem; font-weight: 700; color: var(--secondary);">Loading Indian current affairs...</span>
+                </div>
+            </div>
+            <div class="ca-filter-strip" id="caDateFilterStrip"></div>
+            <div class="ca-filter-strip" id="caCategoryFilterStrip"></div>
+        </div>
+
+        <div id="currentAffairsBody">
+            <div class="fullpage-table-card" style="text-align: center; padding: 48px 20px;">
+                <i class="fa-solid fa-spinner fa-spin" style="font-size: 1.8rem; color: #0f766e; margin-bottom: 10px;"></i>
+                <p style="font-weight: 700; color: var(--secondary);">Fetching daily Indian Current Affairs with images...</p>
+            </div>
+        </div>
+    </div>
+</div>
+
+<!-- Full-Screen External Web Tool Viewer Page -->
+<div class="fullpage-overlay-screen" id="externalToolScreen">
+    <div class="container">
+        <header class="mesh-container">
+            <canvas class="mesh-canvas"></canvas>
+            <div class="header-title">
+                <h1><i id="externalToolHeaderIcon" class="fa-solid fa-globe" style="color: #0f766e; margin-right: 8px;"></i><span id="externalToolTitle">Web Utility</span></h1>
+                <p id="externalToolSubtitle">Integrated full-page tool viewer</p>
+            </div>
+            <div class="btn-group">
+                <button class="btn btn-refresh" onclick="reloadExternalToolFrame()">
+                    <i class="fa-solid fa-arrows-rotate"></i> Reload
+                </button>
+                <a class="btn btn-branch" id="externalToolDirectLink" href="#" target="_blank" rel="noopener noreferrer" style="text-decoration: none; display: inline-flex; align-items: center; gap: 6px;">
+                    <i class="fa-solid fa-up-right-from-square"></i> Open Directly
+                </a>
+                <button class="btn btn-home" onclick="closeExternalToolPage()">
+                    <i class="fa-solid fa-house"></i> Back to Home Screen
+                </button>
+            </div>
+        </header>
+
+        <div class="external-tool-frame-card">
+            <iframe id="externalToolIframe" class="external-tool-iframe" src="about:blank" title="External Tool Viewer" allow="microphone; camera; clipboard-read; clipboard-write; fullscreen"></iframe>
+            <div class="external-tool-notice">
+                <span><i class="fa-solid fa-circle-info" style="color: #0f766e; margin-right: 5px;"></i>If the tool does not display inside this frame due to browser permissions or microphone access, click <strong>Open Directly</strong> above.</span>
+                <span id="externalToolUrlDisplay" style="font-family: 'JetBrains Mono', monospace; font-size: 0.72rem;"></span>
+            </div>
+        </div>
+    </div>
+</div>
+
 <!-- Credit Dashboard Screen -->
 <div class="credit-screen" id="creditScreen">
     <div class="container">
@@ -5269,8 +6317,9 @@
     function initMatrixAccountDropdown() {
         const select = document.getElementById('matrixAccountType');
         if (!select) return;
+        const sortedCategories = [...matrixAccountCategories].sort((a, b) => a.name.localeCompare(b.name));
         select.innerHTML = `<option value="">-- Choose Account Type --</option>` + 
-            matrixAccountCategories.map(a => `<option value="${a.name}">${a.name}</option>`).join('');
+            sortedCategories.map(a => `<option value="${a.name}">${a.name}</option>`).join('');
     }
 
     function computeMatrixDialogValues() {
@@ -5524,35 +6573,51 @@
         },
         {
             id: 'pendingRecords',
-            title: 'Pending Applications Live Table',
+            title: 'Pending Applications Records (Full Screen)',
             category: 'OPERATIONS',
             categoryLabel: 'Operations & Records',
-            badge: 'Full Records',
+            badge: 'Full Screen',
             badgeBg: '#fef3c7',
             badgeColor: '#b45309',
             icon: 'fa-table-list',
             iconBg: 'rgba(245, 158, 11, 0.12)',
             iconColor: '#f59e0b',
-            description: 'Complete searchable records table of pending loan files with real-time multi-field search query, branch filtering, loan details dialog, and status tracking.',
-            actionText: 'Jump to Pending Table',
+            description: 'Open full-screen Pending Applications Records filtered by your login branch with SLA Forecast, multi-field search, and Excel export.',
+            actionText: 'Open Pending Records',
             actionIcon: 'fa-table',
-            actionHandler: "closeAllFeaturesModal(); document.getElementById('pendingTableSection')?.scrollIntoView({ behavior: 'smooth' });"
+            actionHandler: "closeAllFeaturesModal(); openPendingFullPage();"
         },
         {
             id: 'rejectionConsole',
-            title: 'Rejection Feed & Comparison Feed',
+            title: 'Rejection Records & Console (Full Screen)',
             category: 'OPERATIONS',
             categoryLabel: 'Operations & Records',
-            badge: 'Audit & Feed',
+            badge: 'Full Screen',
             badgeBg: '#ffe4e6',
             badgeColor: '#be123c',
             icon: 'fa-ban',
             iconBg: 'rgba(225, 29, 72, 0.12)',
             iconColor: '#e11d48',
-            description: 'Rejection analytics feed detailing loan rejections, credit manager remarks, branch rejection comparison graphs, and client-level dispute replies.',
-            actionText: 'View Rejections Feed',
+            description: 'Open full-screen Rejection Records filtered by branch login with live search, remark tracking, and one-click Excel download.',
+            actionText: 'Open Rejection Records',
             actionIcon: 'fa-list-check',
-            actionHandler: "closeAllFeaturesModal(); document.getElementById('rejectionSection')?.scrollIntoView({ behavior: 'smooth' });"
+            actionHandler: "closeAllFeaturesModal(); openRejectionFullPage();"
+        },
+        {
+            id: 'currentAffairs',
+            title: 'Indian Daily Current Affairs',
+            category: 'EXPERIENCE',
+            categoryLabel: 'Portal & Experience',
+            badge: 'Daily With Images',
+            badgeBg: '#e6f4f1',
+            badgeColor: '#0f766e',
+            icon: 'fa-newspaper',
+            iconBg: 'rgba(15, 118, 110, 0.12)',
+            iconColor: '#0f766e',
+            description: 'Full-screen Indian Current Affairs reader organized day-by-day with news images from leading Indian portals across National, Economy, and Science & Tech.',
+            actionText: 'Open Current Affairs',
+            actionIcon: 'fa-newspaper',
+            actionHandler: "closeAllFeaturesModal(); openCurrentAffairsPage();"
         },
         {
             id: 'excelExport',
@@ -5620,18 +6685,18 @@
         },
         {
             id: 'wavePulse',
-            title: 'Wave Pulse Visual Flow Charts',
+            title: 'Branch-Wise Bar Charts (Pending & Rejection)',
             category: 'ANALYTICS',
             categoryLabel: 'Visual & Analytics',
-            badge: 'Branch Trends',
+            badge: 'Full-Width Bars',
             badgeBg: '#ecfdf5',
             badgeColor: '#047857',
-            icon: 'fa-wave-square',
+            icon: 'fa-chart-column',
             iconBg: 'rgba(4, 120, 87, 0.12)',
             iconColor: '#047857',
-            description: 'Smooth gradient curved line charts illustrating the volume trajectory of pending files across all operating branch networks.',
-            actionText: 'View Charts',
-            actionIcon: 'fa-chart-area',
+            description: 'Stacked full-width bar charts displaying Branch-Wise Pending Count on top and Branch-Wise Rejection Count below for clear visibility across every branch.',
+            actionText: 'View Bar Charts',
+            actionIcon: 'fa-chart-column',
             actionHandler: "closeAllFeaturesModal(); document.getElementById('wavePulseChartsSection')?.scrollIntoView({ behavior: 'smooth' });"
         },
         {
@@ -7001,6 +8066,23 @@
 
         filteredRows = [...allRows];
 
+        const pendingLauncherBadge = document.getElementById('launcherPendingCountBadge');
+        if (pendingLauncherBadge) {
+            pendingLauncherBadge.textContent = `${allRows.length.toLocaleString()} Records`;
+        }
+        const pendingScopeTag = document.getElementById('pendingScopeTag');
+        if (pendingScopeTag) {
+            pendingScopeTag.textContent = (loggedInUser && loggedInUser !== 'MASTER')
+                ? `Filtered for ${loggedInUser} Branch · Search & Excel`
+                : `All Branches · Branch filter, search & Excel`;
+        }
+        const pendingSubEl = document.getElementById('pendingFullPageSubtitle');
+        if (pendingSubEl) {
+            pendingSubEl.textContent = (loggedInUser && loggedInUser !== 'MASTER')
+                ? `Showing Pending Applications for ${loggedInUser} Branch (${allRows.length.toLocaleString()} records)`
+                : `Showing all branches (${allRows.length.toLocaleString()} records) with SLA Forecast, search & Excel export`;
+        }
+
         renderAnalytics();
         renderRunningTickerBar();
         populateAppFilters();
@@ -7036,6 +8118,23 @@
 
         filteredRejRows = [...allRejRows];
 
+        const rejLauncherBadge = document.getElementById('launcherRejectionCountBadge');
+        if (rejLauncherBadge) {
+            rejLauncherBadge.textContent = `${allRejRows.length.toLocaleString()} Records`;
+        }
+        const rejScopeTag = document.getElementById('rejectionScopeTag');
+        if (rejScopeTag) {
+            rejScopeTag.textContent = (loggedInUser && loggedInUser !== 'MASTER')
+                ? `Filtered for ${loggedInUser} Branch · Search & Excel`
+                : `All Branches · Branch filter, search & Excel`;
+        }
+        const rejSubEl = document.getElementById('rejectionFullPageSubtitle');
+        if (rejSubEl) {
+            rejSubEl.textContent = (loggedInUser && loggedInUser !== 'MASTER')
+                ? `Showing Rejection Records for ${loggedInUser} Branch (${allRejRows.length.toLocaleString()} records)`
+                : `Showing all branches (${allRejRows.length.toLocaleString()} records) with search & Excel export`;
+        }
+
         populateRejFilters();
         renderRejectionTable(filteredRejRows);
 
@@ -7048,34 +8147,34 @@
         });
 
         const sortedBranches = Object.entries(branchCounts).sort((a, b) => b[1] - a[1]);
+        const rejInnerEl = document.getElementById('rejectionBarChartInner');
+        if (rejInnerEl) {
+            rejInnerEl.style.minWidth = sortedBranches.length > 14 ? `${Math.max(760, sortedBranches.length * 44)}px` : '100%';
+        }
 
         const ctx = document.getElementById('rejectionBranchChart').getContext('2d');
         if (rejectionChartInstance) rejectionChartInstance.destroy();
 
-        const gradRejWave = ctx.createLinearGradient(0, 0, 0, 240);
-        gradRejWave.addColorStop(0, 'rgba(244, 63, 94, 0.55)');
-        gradRejWave.addColorStop(0.5, 'rgba(251, 113, 133, 0.25)');
-        gradRejWave.addColorStop(1, 'rgba(255, 241, 242, 0.02)');
+        const gradRejBar = ctx.createLinearGradient(0, 0, 0, 340);
+        gradRejBar.addColorStop(0, 'rgba(225, 29, 72, 0.92)');
+        gradRejBar.addColorStop(1, 'rgba(251, 113, 133, 0.65)');
+
+        const maxRejVal = Math.max(...sortedBranches.map(b => b[1]), 1);
 
         rejectionChartInstance = new Chart(ctx, {
-            type: 'line',
+            type: 'bar',
             data: {
                 labels: sortedBranches.map(b => b[0]),
                 datasets: [{
                     label: 'Rejections',
                     data: sortedBranches.map(b => b[1]),
-                    fill: true,
-                    backgroundColor: gradRejWave,
-                    borderColor: '#f43f5e',
-                    borderWidth: 3.5,
-                    tension: 0.42,
-                    pointBackgroundColor: '#ffffff',
-                    pointBorderColor: '#be123c',
-                    pointBorderWidth: 3,
-                    pointRadius: 5,
-                    pointHoverRadius: 8,
-                    pointHoverBackgroundColor: '#be123c',
-                    pointHoverBorderColor: '#ffffff'
+                    backgroundColor: gradRejBar,
+                    borderColor: '#be123c',
+                    borderWidth: 1.5,
+                    borderRadius: 6,
+                    borderSkipped: false,
+                    barPercentage: 0.72,
+                    categoryPercentage: 0.82
                 }]
             },
             options: {
@@ -7086,7 +8185,7 @@
                     easing: 'easeOutQuart'
                 },
                 layout: {
-                    padding: { top: 20, right: 12, left: 12, bottom: 2 }
+                    padding: { top: 26, right: 14, left: 10, bottom: 4 }
                 },
                 plugins: {
                     legend: { display: false },
@@ -7100,14 +8199,14 @@
                             label: function(context) {
                                 const val = context.raw;
                                 const pct = totalRej > 0 ? ((val / totalRej) * 100).toFixed(1) : 0;
-                                return `Rejection Budget: ${val} (${pct}%)`;
+                                return `Rejection Count: ${val} (${pct}%)`;
                             }
                         }
                     },
                     datalabels: {
                         anchor: 'end',
                         align: 'top',
-                        offset: 4,
+                        offset: 3,
                         formatter: (val) => {
                             const pct = totalRej > 0 ? ((val / totalRej) * 100).toFixed(1) : 0;
                             return `${val} (${pct}%)`;
@@ -7118,13 +8217,14 @@
                 },
                 scales: {
                     y: { 
-                        beginAtZero: true, 
+                        beginAtZero: true,
+                        suggestedMax: Math.ceil(maxRejVal * 1.18) + 1,
                         grid: { color: 'rgba(226, 232, 240, 0.7)', strokeDashArray: [4, 4] },
-                        ticks: { precision: 0, color: '#64748b', font: { weight: '600', size: 10 } } 
+                        ticks: { precision: 0, color: '#64748b', font: { weight: '600', size: 10.5 } } 
                     },
                     x: { 
                         grid: { display: false },
-                        ticks: { autoSkip: false, maxRotation: 40, minRotation: 20, color: '#334155', font: { size: 9.5, weight: '700' } } 
+                        ticks: { autoSkip: false, maxRotation: 50, minRotation: 25, color: '#334155', font: { size: 10, weight: '700' } } 
                     }
                 }
             }
@@ -7139,6 +8239,10 @@
         const branches = [...new Set(allRejRows.map(r => r[branchIdx]).filter(Boolean))].sort();
         branchDropdown.innerHTML = `<option value="ALL">All Branches</option>` + 
             branches.map(b => `<option value="${b}">${b}</option>`).join('');
+
+        if (loggedInUser && loggedInUser !== 'MASTER') {
+            branchDropdown.value = loggedInUser;
+        }
     }
 
     function applyRejectionAppFilters() {
@@ -7576,33 +8680,34 @@
         updateMetricGrowthIndicator('topBranchesGrowth', top1Count, 'topBranches');
         updateMetricGrowthIndicator('notificationGrowth', 100, 'notificationAlerts');
 
+        const pendInnerEl = document.getElementById('pendingBarChartInner');
+        if (pendInnerEl) {
+            pendInnerEl.style.minWidth = sortedBranches.length > 14 ? `${Math.max(760, sortedBranches.length * 44)}px` : '100%';
+        }
+
         const ctx = document.getElementById('branchChart').getContext('2d');
         if (chartInstance) chartInstance.destroy();
 
-        const gradientWaveFill = ctx.createLinearGradient(0, 0, 0, 240);
-        gradientWaveFill.addColorStop(0, 'rgba(15, 118, 110, 0.42)');
-        gradientWaveFill.addColorStop(0.5, 'rgba(16, 185, 129, 0.2)');
-        gradientWaveFill.addColorStop(1, 'rgba(236, 253, 245, 0.02)');
+        const gradientBarFill = ctx.createLinearGradient(0, 0, 0, 340);
+        gradientBarFill.addColorStop(0, 'rgba(15, 118, 110, 0.92)');
+        gradientBarFill.addColorStop(1, 'rgba(16, 185, 129, 0.65)');
+
+        const maxPendingVal = Math.max(...sortedBranches.map(b => b[1]), 1);
 
         chartInstance = new Chart(ctx, {
-            type: 'line',
+            type: 'bar',
             data: {
                 labels: sortedBranches.map(b => b[0]),
                 datasets: [{
                     label: 'Pending Loans',
                     data: sortedBranches.map(b => b[1]),
-                    fill: true,
-                    backgroundColor: gradientWaveFill,
+                    backgroundColor: gradientBarFill,
                     borderColor: '#0f766e',
-                    borderWidth: 3,
-                    tension: 0.42,
-                    pointBackgroundColor: '#ffffff',
-                    pointBorderColor: '#047857',
-                    pointBorderWidth: 2.5,
-                    pointRadius: 4.5,
-                    pointHoverRadius: 7,
-                    pointHoverBackgroundColor: '#047857',
-                    pointHoverBorderColor: '#ffffff'
+                    borderWidth: 1.5,
+                    borderRadius: 6,
+                    borderSkipped: false,
+                    barPercentage: 0.72,
+                    categoryPercentage: 0.82
                 }]
             },
             options: {
@@ -7613,7 +8718,7 @@
                     easing: 'easeOutQuart'
                 },
                 layout: {
-                    padding: { top: 20, right: 12, left: 12, bottom: 2 }
+                    padding: { top: 26, right: 14, left: 10, bottom: 4 }
                 },
                 plugins: {
                     legend: { display: false },
@@ -7627,14 +8732,14 @@
                             label: function(context) {
                                 const val = context.raw;
                                 const pct = total > 0 ? ((val / total) * 100).toFixed(1) : 0;
-                                return `Pending Budget: ${val} (${pct}%)`;
+                                return `Pending Count: ${val} (${pct}%)`;
                             }
                         }
                     },
                     datalabels: {
                         anchor: 'end',
                         align: 'top',
-                        offset: 4,
+                        offset: 3,
                         formatter: (val) => {
                             const pct = total > 0 ? ((val / total) * 100).toFixed(1) : 0;
                             return `${val} (${pct}%)`;
@@ -7645,13 +8750,14 @@
                 },
                 scales: {
                     y: { 
-                        beginAtZero: true, 
+                        beginAtZero: true,
+                        suggestedMax: Math.ceil(maxPendingVal * 1.18) + 1,
                         grid: { color: 'rgba(226, 232, 240, 0.7)', strokeDashArray: [4, 4] },
-                        ticks: { precision: 0, color: '#64748b', font: { weight: '600', size: 10 } } 
+                        ticks: { precision: 0, color: '#64748b', font: { weight: '600', size: 10.5 } } 
                     },
                     x: { 
                         grid: { display: false },
-                        ticks: { autoSkip: false, maxRotation: 40, minRotation: 20, color: '#334155', font: { size: 9.5, weight: '700' } } 
+                        ticks: { autoSkip: false, maxRotation: 50, minRotation: 25, color: '#334155', font: { size: 10, weight: '700' } } 
                     }
                 }
             }
@@ -8314,8 +9420,8 @@
             return;
         }
 
-        // Access when creditPortal is enabled in Google Sheet
-        if (pass === "Ganjam@123" || MASTER_PASSWORDS.includes(pass) || pass === "Credit@12687" || pass === "Credit@123" || pass === "Soumya@123") {
+        // Credit Dashboard opens ONLY with password Soumya@12687
+        if (pass === "Soumya@12687") {
             closeLoginModal();
             document.getElementById('creditScreen').style.display = 'block';
             fetchNotification();
@@ -8324,12 +9430,282 @@
             setTimeout(initAllMeshCanvases, 100);
         } else {
             if (errEl) {
-                errEl.textContent = 'Invalid Password! Please check your credentials.';
+                errEl.textContent = 'Invalid Password!';
                 errEl.style.display = 'block';
             }
         }
     }
     function closeCreditScreen() { document.getElementById('creditScreen').style.display = 'none'; }
+
+    /* ============================================================
+       FULL-SCREEN PAGES CONTROLLERS (PENDING, REJECTION, CURRENT AFFAIRS)
+       ============================================================ */
+    function openPendingFullPage() {
+        if (!checkFeaturePermission('pendingRecords')) return;
+        const el = document.getElementById('pendingFullPageScreen');
+        if (el) {
+            el.style.display = 'block';
+            populateAppFilters();
+            applyPendingAppFilters();
+        }
+    }
+
+    function closePendingFullPage() {
+        const el = document.getElementById('pendingFullPageScreen');
+        if (el) el.style.display = 'none';
+    }
+
+    function openRejectionFullPage() {
+        if (!checkFeaturePermission('rejectionConsole')) return;
+        const el = document.getElementById('rejectionFullPageScreen');
+        if (el) {
+            el.style.display = 'block';
+            populateRejFilters();
+            applyRejectionAppFilters();
+        }
+    }
+
+    function closeRejectionFullPage() {
+        const el = document.getElementById('rejectionFullPageScreen');
+        if (el) el.style.display = 'none';
+    }
+
+    let caCachedPayload = null;
+    let caSelectedDateKey = 'ALL';
+    let caSelectedCategory = 'ALL';
+
+    function openCurrentAffairsPage() {
+        if (!checkFeaturePermission('currentAffairs')) return;
+        const el = document.getElementById('currentAffairsScreen');
+        if (el) el.style.display = 'block';
+        if (!caCachedPayload) {
+            loadCurrentAffairsData(false);
+        } else {
+            renderCurrentAffairsFilters();
+            renderCurrentAffairsList();
+        }
+    }
+
+    function closeCurrentAffairsPage() {
+        const el = document.getElementById('currentAffairsScreen');
+        if (el) el.style.display = 'none';
+    }
+
+    let currentExternalToolUrl = '';
+    function openExternalToolPage(title, url, iconClass = 'fa-globe', iconColor = '#0f766e', subtitle = 'Integrated full-page tool viewer') {
+        const screen = document.getElementById('externalToolScreen');
+        const titleEl = document.getElementById('externalToolTitle');
+        const subEl = document.getElementById('externalToolSubtitle');
+        const iconEl = document.getElementById('externalToolHeaderIcon');
+        const iframeEl = document.getElementById('externalToolIframe');
+        const directEl = document.getElementById('externalToolDirectLink');
+        const urlDispEl = document.getElementById('externalToolUrlDisplay');
+
+        currentExternalToolUrl = url;
+        if (titleEl) titleEl.textContent = title;
+        if (subEl) subEl.textContent = subtitle;
+        if (iconEl) {
+            iconEl.className = `fa-solid ${iconClass}`;
+            iconEl.style.color = iconColor;
+        }
+        if (directEl) directEl.href = url;
+        if (urlDispEl) urlDispEl.textContent = url;
+        if (iframeEl) iframeEl.src = url;
+        if (screen) screen.style.display = 'block';
+    }
+
+    function reloadExternalToolFrame() {
+        const iframeEl = document.getElementById('externalToolIframe');
+        if (iframeEl && currentExternalToolUrl) {
+            iframeEl.src = 'about:blank';
+            setTimeout(() => { iframeEl.src = currentExternalToolUrl; }, 60);
+        }
+    }
+
+    function closeExternalToolPage() {
+        const screen = document.getElementById('externalToolScreen');
+        const iframeEl = document.getElementById('externalToolIframe');
+        if (screen) screen.style.display = 'none';
+        if (iframeEl) iframeEl.src = 'about:blank';
+    }
+
+    async function loadCurrentAffairsData(forceRefresh = false) {
+        const icon = document.getElementById('caRefreshIcon');
+        const body = document.getElementById('currentAffairsBody');
+        const metaEl = document.getElementById('caStatsMeta');
+        if (icon) icon.classList.add('spin-icon');
+        if (!caCachedPayload || forceRefresh) {
+            if (body) {
+                body.innerHTML = `
+                    <div class="fullpage-table-card" style="text-align: center; padding: 48px 20px;">
+                        <i class="fa-solid fa-spinner fa-spin" style="font-size: 1.8rem; color: #0f766e; margin-bottom: 10px;"></i>
+                        <p style="font-weight: 700; color: var(--secondary);">Loading daily Indian Current Affairs with images...</p>
+                    </div>
+                `;
+            }
+        }
+
+        try {
+            const url = forceRefresh ? `/api/current-affairs?refresh=1&t=${Date.now()}` : `/api/current-affairs`;
+            const res = await fetch(url);
+            if (!res.ok) throw new Error(`HTTP ${res.status}`);
+            const data = await res.json();
+            caCachedPayload = data;
+            caSelectedDateKey = 'ALL';
+            caSelectedCategory = 'ALL';
+            if (metaEl && data.fetchedAt) {
+                const updatedTime = new Date(data.fetchedAt).toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' });
+                metaEl.textContent = `${data.totalItems || 0} Indian Current Affairs · Updated ${updatedTime}`;
+            }
+            renderCurrentAffairsFilters();
+            renderCurrentAffairsList();
+        } catch (err) {
+            console.error('Current Affairs fetch failed:', err);
+            if (metaEl) metaEl.textContent = 'Unable to reach live Indian news feeds';
+            if (body) {
+                body.innerHTML = `
+                    <div class="fullpage-table-card" style="text-align: center; padding: 40px 20px;">
+                        <i class="fa-solid fa-circle-exclamation" style="font-size: 2rem; color: #e11d48; margin-bottom: 10px;"></i>
+                        <h3 style="margin-bottom: 6px;">Could not load Current Affairs</h3>
+                        <p style="color: var(--secondary); font-size: 0.85rem; margin-bottom: 16px;">Please check network connectivity and try refreshing.</p>
+                        <button class="btn btn-refresh" onclick="loadCurrentAffairsData(true)">
+                            <i class="fa-solid fa-arrows-rotate"></i> Retry Feed
+                        </button>
+                    </div>
+                `;
+            }
+        } finally {
+            if (icon) icon.classList.remove('spin-icon');
+        }
+    }
+
+    function setCaDateFilter(dateKey) {
+        caSelectedDateKey = dateKey;
+        renderCurrentAffairsFilters();
+        renderCurrentAffairsList();
+    }
+
+    function setCaCatFilter(cat) {
+        caSelectedCategory = cat;
+        renderCurrentAffairsFilters();
+        renderCurrentAffairsList();
+    }
+
+    function escapeCaAttr(str) {
+        return String(str || '').replace(/&/g, '&amp;').replace(/"/g, '&quot;').replace(/</g, '&lt;').replace(/>/g, '&gt;');
+    }
+
+    function getCaFallbackSvgDataUri(title, category) {
+        const label = String(category || 'INDIA CURRENT AFFAIRS').toUpperCase().slice(0, 26);
+        const svg = `<svg xmlns="http://www.w3.org/2000/svg" width="640" height="360" viewBox="0 0 640 360"><defs><linearGradient id="g" x1="0" y1="0" x2="1" y2="1"><stop offset="0%" stop-color="#132522"/><stop offset="100%" stop-color="#0f766e"/></linearGradient></defs><rect width="640" height="360" fill="url(#g)"/><circle cx="540" cy="70" r="90" fill="rgba(255,255,255,0.06)"/><circle cx="90" cy="300" r="110" fill="rgba(217,119,6,0.12)"/><text x="50%" y="46%" dominant-baseline="middle" text-anchor="middle" fill="#a7f3d0" font-family="Inter,Arial,sans-serif" font-size="22" font-weight="800" letter-spacing="2">${label}</text><text x="50%" y="58%" dominant-baseline="middle" text-anchor="middle" fill="#e2e8f0" font-family="Inter,Arial,sans-serif" font-size="14" font-weight="600">Indian Daily Current Affairs Desk</text></svg>`;
+        return 'data:image/svg+xml;charset=UTF-8,' + encodeURIComponent(svg);
+    }
+
+    function renderCurrentAffairsFilters() {
+        const dateStrip = document.getElementById('caDateFilterStrip');
+        const catStrip = document.getElementById('caCategoryFilterStrip');
+        const days = caCachedPayload?.days || [];
+
+        if (dateStrip) {
+            const dateButtons = [
+                `<button class="ca-filter-btn ${caSelectedDateKey === 'ALL' ? 'active' : ''}" onclick="setCaDateFilter('ALL')"><i class="fa-regular fa-calendar"></i> All Days (${caCachedPayload?.totalItems || 0})</button>`,
+                ...days.map(d => `<button class="ca-filter-btn ${caSelectedDateKey === d.dateKey ? 'active' : ''}" onclick="setCaDateFilter('${escapeCaAttr(d.dateKey)}')">${escapeCaAttr(d.dateLabel)} (${d.items.length})</button>`)
+            ];
+            dateStrip.innerHTML = dateButtons.join('');
+        }
+
+        if (catStrip) {
+            const dynamicCats = new Set();
+            days.forEach(d => (d.items || []).forEach(it => { if (it.category) dynamicCats.add(it.category); }));
+            const categories = ['ALL', ...Array.from(dynamicCats)];
+            catStrip.innerHTML = categories.map(cat =>
+                `<button class="ca-filter-btn ${caSelectedCategory === cat ? 'active' : ''}" onclick="setCaCatFilter('${escapeCaAttr(cat)}')">${cat === 'ALL' ? 'All Topics' : escapeCaAttr(cat)}</button>`
+            ).join('');
+        }
+    }
+
+    function renderCurrentAffairsList() {
+        const body = document.getElementById('currentAffairsBody');
+        const searchQ = (document.getElementById('caSearchInput')?.value || '').trim().toLowerCase();
+        const days = caCachedPayload?.days || [];
+        if (!body) return;
+
+        const filteredDays = days
+            .filter(d => caSelectedDateKey === 'ALL' || d.dateKey === caSelectedDateKey)
+            .map(d => {
+                const items = (d.items || []).filter(item => {
+                    const matchCat = caSelectedCategory === 'ALL' || item.category === caSelectedCategory;
+                    const matchQuery = !searchQ ||
+                        (item.title || '').toLowerCase().includes(searchQ) ||
+                        (item.summary || '').toLowerCase().includes(searchQ) ||
+                        (item.source || '').toLowerCase().includes(searchQ);
+                    return matchCat && matchQuery;
+                });
+                return { ...d, items };
+            })
+            .filter(d => d.items.length > 0);
+
+        if (filteredDays.length === 0) {
+            body.innerHTML = `
+                <div class="fullpage-table-card" style="text-align: center; padding: 40px 20px;">
+                    <i class="fa-regular fa-newspaper" style="font-size: 2rem; color: #64748b; margin-bottom: 10px;"></i>
+                    <p style="font-weight: 700; color: var(--secondary);">No current affairs articles match the selected date, topic, or search query.</p>
+                </div>
+            `;
+            return;
+        }
+
+        body.innerHTML = filteredDays.map(day => {
+            const cardsHtml = day.items.map(item => {
+                const safeTitle = escapeCaAttr(item.title);
+                const safeSummary = escapeCaAttr(item.summary || 'Click below to read the complete Indian current affairs briefing.');
+                const safeSource = escapeCaAttr(item.source);
+                const safeCat = escapeCaAttr(item.category);
+                const safeTime = escapeCaAttr(item.timeDisplay || item.publishedTimeLabel || day.dateLabel);
+                const safeLink = escapeCaAttr(item.link || '#');
+                const fallbackUri = getCaFallbackSvgDataUri(item.title, item.category);
+                const imgSrc = item.image ? escapeCaAttr(item.image) : fallbackUri;
+
+                return `
+                    <article class="ca-card">
+                        <div class="ca-card-img-wrap">
+                            <img src="${imgSrc}" alt="${safeTitle}" referrerpolicy="no-referrer" loading="lazy" onerror="this.onerror=null; this.src='${fallbackUri}';">
+                            <div class="ca-card-badges">
+                                <span class="ca-source-tag"><i class="fa-solid fa-globe" style="margin-right:4px;"></i>${safeSource}</span>
+                                <span class="ca-cat-tag">${safeCat}</span>
+                            </div>
+                        </div>
+                        <div class="ca-card-body">
+                            <div class="ca-card-time"><i class="fa-regular fa-clock"></i> ${escapeCaAttr(day.dateLabel)} &middot; ${safeTime}</div>
+                            <h3 class="ca-card-title">${safeTitle}</h3>
+                            <p class="ca-card-desc">${safeSummary}</p>
+                        </div>
+                        <div class="ca-card-footer">
+                            <span style="font-size: 0.72rem; font-weight: 700; color: var(--secondary);">${safeSource}</span>
+                            <a class="ca-read-link" href="${safeLink}" target="_blank" rel="noopener noreferrer">
+                                Read Full Article <i class="fa-solid fa-arrow-up-right-from-square"></i>
+                            </a>
+                        </div>
+                    </article>
+                `;
+            }).join('');
+
+            return `
+                <section class="ca-day-group">
+                    <div class="ca-day-header">
+                        <div class="ca-day-title">
+                            <i class="fa-regular fa-calendar-days" style="color: #5eead4;"></i>
+                            <span>${escapeCaAttr(day.dateLabel)}</span>
+                        </div>
+                        <span class="ca-day-count">${day.items.length} Updates</span>
+                    </div>
+                    <div class="ca-articles-grid">
+                        ${cardsHtml}
+                    </div>
+                </section>
+            `;
+        }).join('');
+    }
 
     /* Credit Dashboard Analytics & Render */
     window.handleAllData = function(json) {
@@ -8769,6 +10145,7 @@
         { key: 'ratingFeedback', name: 'Webpage Rating & Feedback', icon: 'fa-star', color: '#ec4899', desc: 'Community star ratings submission' },
         { key: 'syncSheets', name: 'Google Sheets Live Sync', icon: 'fa-arrows-rotate', color: '#0f766e', desc: 'Direct Google Sheet data refresh' },
         { key: 'festiveWish', name: 'Festival & Occasion Wishes', icon: 'fa-wand-magic-sparkles', color: '#f59e0b', desc: 'Sky lights & balloon wishes' },
+        { key: 'currentAffairs', name: 'Indian Daily Current Affairs', icon: 'fa-newspaper', color: '#0f766e', desc: 'Daily India news & updates with images' },
         { key: 'excelExport', name: 'Pending Excel Export', icon: 'fa-file-excel', color: '#059669', desc: 'Excel spreadsheet download' },
         { key: 'branchReplies', name: 'Branch Reply Submissions', icon: 'fa-paper-plane', color: '#047857', desc: 'Queue reply submission webhook' }
     ];
@@ -8794,6 +10171,7 @@
             ratingFeedback: true,
             syncSheets: true,
             festiveWish: true,
+            currentAffairs: true,
             excelExport: true,
             branchReplies: true
         };
@@ -8847,8 +10225,13 @@
     function launchFeatureByKey(featureKey) {
         if (!featureKey) return;
         if (featureKey === 'creditPortal') {
-            document.getElementById('creditScreen').style.display = 'block';
-            refreshCreditDashboard();
+            openLoginModal();
+        } else if (featureKey === 'pendingRecords') {
+            openPendingFullPage();
+        } else if (featureKey === 'rejectionConsole') {
+            openRejectionFullPage();
+        } else if (featureKey === 'currentAffairs') {
+            openCurrentAffairsPage();
         } else if (featureKey === 'matrixCalculator') {
             openMatrixDialog();
         } else if (featureKey === 'emiCalculator') {
@@ -9050,11 +10433,11 @@
             }
         }
 
-        syncSectionOverlay('pendingTableSection', perms.pendingRecords !== false, 'Pending Records Table', 'pendingRecords');
-        syncSectionOverlay('rejectionSection', perms.rejectionConsole !== false, 'Rejections Feed', 'rejectionConsole');
+        syncSectionOverlay('btnOpenPendingRecordsPage', perms.pendingRecords !== false, 'Pending Records', 'pendingRecords');
+        syncSectionOverlay('btnOpenRejectionRecordsPage', perms.rejectionConsole !== false, 'Rejection Records', 'rejectionConsole');
         syncSectionOverlay('branchCompareSection', perms.rejectionConsole !== false, 'Rejections Console', 'rejectionConsole');
         syncSectionOverlay('subcatSection', perms.subcat !== false, 'Sub-Categories Analytics', 'subcat');
-        syncSectionOverlay('wavePulseChartsSection', perms.wavePulse !== false, 'Wave Pulse Charts', 'wavePulse');
+        syncSectionOverlay('wavePulseChartsSection', perms.wavePulse !== false, 'Branch Bar Charts', 'wavePulse');
         syncSectionOverlay('branchExplorerSection', perms.branchExplorer !== false, 'Branch Explorer', 'branchExplorer');
 
         const notifBar = document.querySelector('.notification-marquee');
@@ -9705,6 +11088,22 @@
             if (featuresModal && featuresModal.style.display === 'flex') {
                 closeAllFeaturesModal();
             }
+            const pendingFull = document.getElementById('pendingFullPageScreen');
+            if (pendingFull && pendingFull.style.display === 'block') {
+                closePendingFullPage();
+            }
+            const rejFull = document.getElementById('rejectionFullPageScreen');
+            if (rejFull && rejFull.style.display === 'block') {
+                closeRejectionFullPage();
+            }
+            const caFull = document.getElementById('currentAffairsScreen');
+            if (caFull && caFull.style.display === 'block') {
+                closeCurrentAffairsPage();
+            }
+            const extFull = document.getElementById('externalToolScreen');
+            if (extFull && extFull.style.display === 'block') {
+                closeExternalToolPage();
+            }
         }
     });
 
@@ -9727,6 +11126,11 @@
         sessionStorage.removeItem('admin_credit_unlocked_ganjam');
         sessionStorage.removeItem('admin_maintenance_bypass');
         sessionHasShownWelcomeCredit = false;
+        closePendingFullPage();
+        closeRejectionFullPage();
+        closeCurrentAffairsPage();
+        closeExternalToolPage();
+        closeCreditScreen();
         document.getElementById('mainDashboardContainer').style.display = 'none';
         document.getElementById('mainLoginOverlay').style.display = 'flex';
         document.getElementById('mainLoginPassword').value = '';
@@ -9743,6 +11147,10 @@
         filteredRows = [];
         allRejRows = [];
         filteredRejRows = [];
+        const pendingLauncherBadge = document.getElementById('launcherPendingCountBadge');
+        if (pendingLauncherBadge) pendingLauncherBadge.textContent = '0 Records';
+        const rejLauncherBadge = document.getElementById('launcherRejectionCountBadge');
+        if (rejLauncherBadge) rejLauncherBadge.textContent = '0 Records';
         
         document.getElementById('tableBody').innerHTML = '<tr><td class="status-msg">Fetching records from Google Sheet...</td></tr>';
         document.getElementById('rejTableBody').innerHTML = '<tr><td class="status-msg">Fetching rejection records from Google Sheet...</td></tr>';
