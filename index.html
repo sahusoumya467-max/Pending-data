@@ -2406,15 +2406,399 @@
         }
 
         .fullpage-table-scroll {
+            width: 100%;
             max-height: calc(100vh - 265px);
             min-height: 320px;
-            overflow: auto;
-            border: 1px solid #d9e2de;
+            overflow-x: scroll;
+            overflow-y: scroll;
+            -webkit-overflow-scrolling: touch;
+            border: 1px solid #cbd5e1;
             border-radius: 10px;
+            scrollbar-width: auto;
+            scrollbar-color: #0f766e #e6efeb;
+            scroll-behavior: smooth;
+        }
+
+        .fullpage-table-scroll .data-table {
+            width: max-content;
+            min-width: 100%;
+        }
+
+        .fullpage-table-scroll::-webkit-scrollbar {
+            width: 11px;
+            height: 11px;
+        }
+
+        .fullpage-table-scroll::-webkit-scrollbar-track {
+            background: #e6efeb;
+            border-radius: 8px;
+        }
+
+        .fullpage-table-scroll::-webkit-scrollbar-thumb {
+            background: linear-gradient(135deg, #0f766e, #059669);
+            border-radius: 8px;
+            border: 2px solid #e6efeb;
+        }
+
+        .fullpage-table-scroll::-webkit-scrollbar-thumb:hover {
+            background: #047857;
         }
 
         body.dark-mode .fullpage-table-scroll {
             border-color: #243935;
+            scrollbar-color: #14b8a6 #0f1b19;
+        }
+
+        body.dark-mode .fullpage-table-scroll::-webkit-scrollbar-track {
+            background: #0f1b19;
+        }
+
+        body.dark-mode .fullpage-table-scroll::-webkit-scrollbar-thumb {
+            background: linear-gradient(135deg, #0d9488, #10b981);
+            border-color: #0f1b19;
+        }
+
+        .table-scroll-controls {
+            display: inline-flex;
+            align-items: center;
+            gap: 5px;
+            flex-wrap: wrap;
+        }
+
+        .table-scroll-btn {
+            display: inline-flex;
+            align-items: center;
+            gap: 4px;
+            padding: 4px 9px;
+            border-radius: 7px;
+            border: 1px solid #cbd5e1;
+            background: #f8faf9;
+            color: #132522;
+            font-size: 0.72rem;
+            font-weight: 700;
+            cursor: pointer;
+            transition: transform 0.15s ease, background-color 0.15s ease, border-color 0.15s ease;
+        }
+
+        .table-scroll-btn:hover {
+            background: #e6f4f1;
+            border-color: #0f766e;
+            color: #0f766e;
+            transform: translateY(-1px);
+        }
+
+        body.dark-mode .table-scroll-btn {
+            background: #1a2d29;
+            border-color: #2d4640;
+            color: #e2e8f0;
+        }
+
+        body.dark-mode .table-scroll-btn:hover {
+            background: #233c37;
+            border-color: #2dd4bf;
+            color: #5eead4;
+        }
+
+        /* PROFESSIONAL ANIMATED EXECUTIVE VISUALIZATIONS */
+        .exec-vis-section {
+            margin: 0 0 16px;
+        }
+
+        .exec-vis-grid {
+            display: grid;
+            grid-template-columns: repeat(3, minmax(0, 1fr));
+            gap: 14px;
+        }
+
+        @media (max-width: 1120px) {
+            .exec-vis-grid {
+                grid-template-columns: repeat(2, minmax(0, 1fr));
+            }
+            .exec-vis-grid .exec-vis-card:last-child {
+                grid-column: 1 / -1;
+            }
+        }
+
+        @media (max-width: 720px) {
+            .exec-vis-grid {
+                grid-template-columns: 1fr;
+            }
+            .exec-vis-grid .exec-vis-card:last-child {
+                grid-column: auto;
+            }
+        }
+
+        @keyframes execCardFadeUp {
+            0% {
+                opacity: 0;
+                transform: translateY(12px);
+            }
+            100% {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
+
+        @keyframes execBarSweep {
+            0% {
+                transform: scaleX(0);
+            }
+            100% {
+                transform: scaleX(1);
+            }
+        }
+
+        @keyframes execShimmerSheen {
+            0% {
+                transform: translateX(-120%);
+            }
+            100% {
+                transform: translateX(220%);
+            }
+        }
+
+        .exec-vis-card {
+            background: #ffffff;
+            border: 1px solid #d9e2de;
+            border-radius: 13px;
+            padding: 15px 16px;
+            box-shadow: 0 2px 8px rgba(19, 34, 31, 0.045);
+            display: flex;
+            flex-direction: column;
+            gap: 10px;
+            position: relative;
+            overflow: hidden;
+            animation: execCardFadeUp 0.55s cubic-bezier(0.16, 1, 0.3, 1) both;
+            transition: transform 0.2s cubic-bezier(0.16, 1, 0.3, 1), box-shadow 0.2s ease, border-color 0.2s ease;
+        }
+
+        .exec-vis-card:nth-child(2) { animation-delay: 0.08s; }
+        .exec-vis-card:nth-child(3) { animation-delay: 0.16s; }
+
+        .exec-vis-card:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 10px 24px -8px rgba(15, 118, 110, 0.14);
+            border-color: rgba(15, 118, 110, 0.4);
+        }
+
+        .exec-vis-card::after {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 45%;
+            height: 2px;
+            background: linear-gradient(90deg, transparent, rgba(15, 118, 110, 0.65), rgba(217, 119, 6, 0.55), transparent);
+            animation: execShimmerSheen 4.5s ease-in-out infinite;
+            pointer-events: none;
+        }
+
+        body.dark-mode .exec-vis-card {
+            background: #14221f;
+            border-color: #243935;
+        }
+
+        .exec-vis-head {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            gap: 8px;
+            border-bottom: 1px solid #eef2f0;
+            padding-bottom: 8px;
+        }
+
+        body.dark-mode .exec-vis-head {
+            border-color: #243935;
+        }
+
+        .exec-vis-title {
+            font-size: 0.88rem;
+            font-weight: 800;
+            color: #132522;
+            display: flex;
+            align-items: center;
+            gap: 7px;
+            margin: 0;
+        }
+
+        body.dark-mode .exec-vis-title {
+            color: #f8fafc;
+        }
+
+        .exec-vis-kicker {
+            font-size: 0.7rem;
+            font-weight: 700;
+            color: #5c6f68;
+            font-family: 'JetBrains Mono', monospace;
+            font-variant-numeric: tabular-nums;
+            white-space: nowrap;
+        }
+
+        body.dark-mode .exec-vis-kicker {
+            color: #94a3b8;
+        }
+
+        .exec-donut-layout {
+            display: flex;
+            align-items: center;
+            gap: 14px;
+            min-height: 158px;
+        }
+
+        .exec-donut-canvas-wrap {
+            position: relative;
+            width: 142px;
+            height: 142px;
+            flex-shrink: 0;
+        }
+
+        .exec-donut-center {
+            position: absolute;
+            inset: 0;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            pointer-events: none;
+            text-align: center;
+        }
+
+        .exec-donut-pct {
+            font-size: 1.18rem;
+            font-weight: 900;
+            color: #0f766e;
+            font-family: 'JetBrains Mono', monospace;
+            font-variant-numeric: tabular-nums;
+            line-height: 1.1;
+        }
+
+        body.dark-mode .exec-donut-pct {
+            color: #2dd4bf;
+        }
+
+        .exec-donut-sub {
+            font-size: 0.63rem;
+            font-weight: 700;
+            color: #5c6f68;
+            text-transform: uppercase;
+            letter-spacing: 0.4px;
+            margin-top: 2px;
+        }
+
+        .exec-stat-stack {
+            flex: 1;
+            display: flex;
+            flex-direction: column;
+            gap: 8px;
+            min-width: 0;
+        }
+
+        .exec-stat-row {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            gap: 8px;
+            padding: 7px 10px;
+            border-radius: 8px;
+            background: #f6f8f7;
+            border: 1px solid #e6efeb;
+            font-size: 0.76rem;
+        }
+
+        body.dark-mode .exec-stat-row {
+            background: #192b27;
+            border-color: #263e39;
+        }
+
+        .exec-stat-label {
+            font-weight: 700;
+            color: #3c4d48;
+            white-space: nowrap;
+            overflow: hidden;
+            text-overflow: ellipsis;
+        }
+
+        body.dark-mode .exec-stat-label {
+            color: #cbd5e1;
+        }
+
+        .exec-stat-val {
+            font-family: 'JetBrains Mono', monospace;
+            font-variant-numeric: tabular-nums;
+            font-weight: 800;
+            color: #132522;
+        }
+
+        body.dark-mode .exec-stat-val {
+            color: #f8fafc;
+        }
+
+        .exec-vis-chart-wrap {
+            position: relative;
+            height: 158px;
+            width: 100%;
+        }
+
+        .exec-sla-bars {
+            display: flex;
+            flex-direction: column;
+            gap: 8px;
+            margin-top: 2px;
+        }
+
+        .exec-sla-item-top {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            font-size: 0.74rem;
+            font-weight: 700;
+            margin-bottom: 4px;
+            color: #243330;
+        }
+
+        body.dark-mode .exec-sla-item-top {
+            color: #e2e8f0;
+        }
+
+        .exec-sla-num {
+            font-family: 'JetBrains Mono', monospace;
+            font-variant-numeric: tabular-nums;
+            font-weight: 800;
+        }
+
+        .exec-meter-track {
+            width: 100%;
+            height: 7px;
+            border-radius: 999px;
+            background: #eaf1ee;
+            overflow: hidden;
+        }
+
+        body.dark-mode .exec-meter-track {
+            background: #1f332f;
+        }
+
+        .exec-meter-fill {
+            height: 100%;
+            border-radius: 999px;
+            transform-origin: left center;
+            animation: execBarSweep 0.85s cubic-bezier(0.16, 1, 0.3, 1) both;
+            transition: width 0.55s cubic-bezier(0.16, 1, 0.3, 1);
+        }
+
+        .progress-bar-fill {
+            transform-origin: left center;
+            animation: execBarSweep 0.75s cubic-bezier(0.16, 1, 0.3, 1) both;
+        }
+
+        @media (prefers-reduced-motion: reduce) {
+            .exec-vis-card,
+            .exec-vis-card::after,
+            .exec-meter-fill,
+            .progress-bar-fill {
+                animation: none !important;
+                transition: none !important;
+            }
         }
 
         @media (max-width: 768px) {
@@ -5094,6 +5478,105 @@
         </div>
     </div>
 
+    <!-- ANIMATED EXECUTIVE PORTFOLIO & SLA VISUALIZATIONS -->
+    <div class="exec-vis-section" id="execVisualAnalyticsSection">
+        <div class="exec-vis-grid">
+            <!-- 1. Portfolio Approval vs Rejection Animated Donut -->
+            <div class="exec-vis-card">
+                <div class="exec-vis-head">
+                    <h3 class="exec-vis-title">
+                        <i class="fa-solid fa-chart-pie" style="color: #0f766e;"></i>
+                        Portfolio Health Ratio
+                    </h3>
+                    <span class="exec-vis-kicker" id="execPortfolioTotalTag">0 Loans</span>
+                </div>
+                <div class="exec-donut-layout">
+                    <div class="exec-donut-canvas-wrap">
+                        <canvas id="execPortfolioDonutChart"></canvas>
+                        <div class="exec-donut-center">
+                            <span class="exec-donut-pct" id="execPortfolioApprovalPct">--%</span>
+                            <span class="exec-donut-sub">Non-Rej</span>
+                        </div>
+                    </div>
+                    <div class="exec-stat-stack">
+                        <div class="exec-stat-row">
+                            <span class="exec-stat-label">Active / Cleared</span>
+                            <span class="exec-stat-val" id="execPortfolioActiveCount" style="color: #059669;">0</span>
+                        </div>
+                        <div class="exec-stat-row">
+                            <span class="exec-stat-label">Rejected Cases</span>
+                            <span class="exec-stat-val" id="execPortfolioRejCount" style="color: #e11d48;">0</span>
+                        </div>
+                        <div class="exec-stat-row">
+                            <span class="exec-stat-label">Active Branches</span>
+                            <span class="exec-stat-val" id="execPortfolioBranchCount" style="color: #0f766e;">0</span>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- 2. Live SLA Turnaround Pipeline Visualizer -->
+            <div class="exec-vis-card">
+                <div class="exec-vis-head">
+                    <h3 class="exec-vis-title">
+                        <i class="fa-solid fa-gauge-high" style="color: #b45309;"></i>
+                        SLA Turnaround Pipeline
+                    </h3>
+                    <span class="exec-vis-kicker" id="execSlaTotalTag">0 Queued</span>
+                </div>
+                <div style="display: flex; flex-direction: column; justify-content: space-between; flex: 1; gap: 8px;">
+                    <div class="exec-sla-bars">
+                        <div>
+                            <div class="exec-sla-item-top">
+                                <span>On Track</span>
+                                <span class="exec-sla-num" id="execSlaOnTrackVal" style="color: #059669;">0 (0%)</span>
+                            </div>
+                            <div class="exec-meter-track">
+                                <div class="exec-meter-fill" id="execSlaOnTrackBar" style="width: 0%; background: linear-gradient(90deg, #059669, #10b981);"></div>
+                            </div>
+                        </div>
+                        <div>
+                            <div class="exec-sla-item-top">
+                                <span>Due Soon (Today / +1d)</span>
+                                <span class="exec-sla-num" id="execSlaDueSoonVal" style="color: #d97706;">0 (0%)</span>
+                            </div>
+                            <div class="exec-meter-track">
+                                <div class="exec-meter-fill" id="execSlaDueSoonBar" style="width: 0%; background: linear-gradient(90deg, #d97706, #f59e0b);"></div>
+                            </div>
+                        </div>
+                        <div>
+                            <div class="exec-sla-item-top">
+                                <span>Overdue / Priority</span>
+                                <span class="exec-sla-num" id="execSlaOverdueVal" style="color: #e11d48;">0 (0%)</span>
+                            </div>
+                            <div class="exec-meter-track">
+                                <div class="exec-meter-fill" id="execSlaOverdueBar" style="width: 0%; background: linear-gradient(90deg, #e11d48, #fb7185);"></div>
+                            </div>
+                        </div>
+                    </div>
+                    <div style="display: flex; align-items: center; justify-content: space-between; padding-top: 6px; border-top: 1px solid #eef2f0; font-size: 0.72rem; font-weight: 700; color: #5c6f68;">
+                        <span>Avg Queue TAT</span>
+                        <span class="exec-sla-num" id="execSlaAvgTat" style="color: #0f766e;">-- days</span>
+                    </div>
+                </div>
+            </div>
+
+            <!-- 3. Top Sub-Categories Animated Velocity Chart -->
+            <div class="exec-vis-card">
+                <div class="exec-vis-head">
+                    <h3 class="exec-vis-title">
+                        <i class="fa-solid fa-chart-simple" style="color: #059669;"></i>
+                        Top Sub-Category Velocity
+                    </h3>
+                    <span class="exec-vis-kicker" id="execSubcatTopTag">Top 6</span>
+                </div>
+                <div class="exec-vis-chart-wrap">
+                    <canvas id="execSubcatBarChart"></canvas>
+                </div>
+            </div>
+        </div>
+    </div>
+
     <!-- Sub-Category Breakdown Card -->
     <div class="table-card mesh-container" id="subcatSection">
         <canvas class="mesh-canvas"></canvas>
@@ -5477,22 +5960,22 @@
                 </div>
             </div>
 
-            <!-- Insurance Option: Single or Double (7.5 per thousand per year for single) -->
+            <!-- Insurance Option: Default Double, switchable to Single or None -->
             <div class="form-group">
-                <label><i class="fa-solid fa-shield-heart" style="color: #059669;"></i> Insurance Option (Single: ₹7.5 / ₹1,000 / Year)</label>
+                <label><i class="fa-solid fa-shield-heart" style="color: #059669;"></i> Insurance Option (Default: Double ₹15/k · Single ₹7.5/k)</label>
                 <div style="display: grid; grid-template-columns: 1fr 1fr 1fr; gap: 6px; margin-top: 4px;">
-                    <button type="button" class="insurance-opt-btn active" id="insBtnSingle" onclick="setInsuranceOption('single')">
-                        Single (₹7.5/k)
-                    </button>
-                    <button type="button" class="insurance-opt-btn" id="insBtnDouble" onclick="setInsuranceOption('double')">
+                    <button type="button" class="insurance-opt-btn active" id="insBtnDouble" onclick="setInsuranceOption('double')">
                         Double (₹15/k)
+                    </button>
+                    <button type="button" class="insurance-opt-btn" id="insBtnSingle" onclick="setInsuranceOption('single')">
+                        Single (₹7.5/k)
                     </button>
                     <button type="button" class="insurance-opt-btn" id="insBtnNone" onclick="setInsuranceOption('none')">
                         None (₹0)
                     </button>
                 </div>
                 <div style="display: flex; justify-content: space-between; align-items: center; margin-top: 6px; padding: 5px 9px; background: #ecfdf5; border-radius: 7px; border: 1px solid #a7f3d0;">
-                    <span style="font-size: 0.74rem; font-weight: 600; color: #065f46;" id="dialogEmiInsLabel">Single Member Insurance (₹7.5 per 1k/yr):</span>
+                    <span style="font-size: 0.74rem; font-weight: 600; color: #065f46;" id="dialogEmiInsLabel">Double Member Insurance (₹15 per 1k/yr):</span>
                     <span style="font-size: 0.82rem; font-weight: 800; color: #047857;" id="dialogEmiInsVal">₹ 0</span>
                 </div>
             </div>
@@ -5818,7 +6301,15 @@
         <div class="fullpage-table-card">
             <div class="table-header">
                 <h3><i class="fa-solid fa-folder-open" style="color: #0f766e; margin-right: 8px;"></i>Pending Loan Queue</h3>
-                <span id="recordCountDisplay" style="color: var(--secondary); font-size: 0.84rem; font-weight: 700;">Showing 0 records</span>
+                <div style="display: flex; align-items: center; gap: 10px; flex-wrap: wrap;">
+                    <div class="table-scroll-controls" aria-label="Table scroll navigation">
+                        <button type="button" class="table-scroll-btn" onclick="scrollPendingTableEdge('top')" title="Scroll Up / Top"><i class="fa-solid fa-arrow-up"></i> Top</button>
+                        <button type="button" class="table-scroll-btn" onclick="scrollPendingTableEdge('bottom')" title="Scroll Down / Bottom"><i class="fa-solid fa-arrow-down"></i> Bottom</button>
+                        <button type="button" class="table-scroll-btn" onclick="scrollPendingTableStep(-360, 0)" title="Scroll Left"><i class="fa-solid fa-arrow-left"></i> Left</button>
+                        <button type="button" class="table-scroll-btn" onclick="scrollPendingTableStep(360, 0)" title="Scroll Right"><i class="fa-solid fa-arrow-right"></i> Right</button>
+                    </div>
+                    <span id="recordCountDisplay" style="color: var(--secondary); font-size: 0.84rem; font-weight: 700;">Showing 0 records</span>
+                </div>
             </div>
 
             <div class="app-filters-container">
@@ -5837,7 +6328,7 @@
                 </button>
             </div>
 
-            <div class="table-scroll fullpage-table-scroll">
+            <div class="table-scroll fullpage-table-scroll" id="pendingFullPageScrollWrap">
                 <table class="data-table">
                     <thead id="tableHead"></thead>
                     <tbody id="tableBody">
@@ -6181,6 +6672,8 @@
     let creditChartInstance = null;
     let miniPieChartInstance = null;
     let branchCompareChartInstance = null;
+    let execPortfolioChartInstance = null;
+    let execSubcatChartInstance = null;
 
     let submittedLoanIdsSet = new Set();
     let currentOpenBranchName = "";
@@ -6350,20 +6843,26 @@
     }
 
     /* EMI CALCULATOR DIALOG LOGIC (LPF, GST & INSURANCE) */
-    let emiSelectedInsurance = 'single';
+    let emiSelectedInsurance = 'double';
 
-    function setInsuranceOption(opt) {
-        emiSelectedInsurance = opt;
+    function syncInsuranceOptionButtons(opt) {
         document.querySelectorAll('.insurance-opt-btn').forEach(btn => btn.classList.remove('active'));
         if (opt === 'single') document.getElementById('insBtnSingle')?.classList.add('active');
         if (opt === 'double') document.getElementById('insBtnDouble')?.classList.add('active');
         if (opt === 'none') document.getElementById('insBtnNone')?.classList.add('active');
+    }
+
+    function setInsuranceOption(opt) {
+        emiSelectedInsurance = opt;
+        syncInsuranceOptionButtons(opt);
         computeDialogQuickEmi();
     }
 
     function openEmiDialog() {
         if (!checkFeaturePermission('emiCalculator')) return;
         document.getElementById('emiCalculatorModal').style.display = 'flex';
+
+        syncInsuranceOptionButtons(emiSelectedInsurance);
         
         // Loan Amount is blank by default as requested
         const amtInput = document.getElementById('dialogEmiLoanAmt');
@@ -8149,8 +8648,9 @@
                 responsive: true,
                 maintainAspectRatio: false,
                 animation: {
-                    duration: 280,
-                    easing: 'easeOutQuart'
+                    duration: 900,
+                    easing: 'easeOutQuart',
+                    delay: (context) => (context.type === 'data' && context.mode === 'default') ? Math.min(context.dataIndex * 18, 420) : 0
                 },
                 layout: {
                     padding: { top: 26, right: 14, left: 10, bottom: 4 }
@@ -8579,9 +9079,29 @@
         updateMetricGrowthIndicator('creditNotificationGrowth', 100, 'notificationAlerts');
     }
 
+    function animateDashboardCount(el, targetVal, suffix = '') {
+        if (!el) return;
+        const end = Number(targetVal) || 0;
+        const prefersReduced = window.matchMedia && window.matchMedia('(prefers-reduced-motion: reduce)').matches;
+        if (prefersReduced || end <= 0) {
+            el.textContent = end.toLocaleString() + suffix;
+            return;
+        }
+        const duration = 680;
+        const startTime = performance.now();
+        function step(now) {
+            const p = Math.min(1, (now - startTime) / duration);
+            const eased = 1 - Math.pow(1 - p, 3);
+            const val = Math.round(end * eased);
+            el.textContent = val.toLocaleString() + suffix;
+            if (p < 1) requestAnimationFrame(step);
+        }
+        requestAnimationFrame(step);
+    }
+
     function renderAnalytics() {
         const total = allRows.length;
-        document.getElementById('totalPendingCount').textContent = total.toLocaleString();
+        animateDashboardCount(document.getElementById('totalPendingCount'), total);
 
         const branchIdx = findColIndex(headers, ['branch name', 'branch', 'location', 'hub', 'office']);
         const subCatIdx = findColIndex(headers, ['sub category', 'sub-category', 'subcategory', 'sub_category', 'reason']);
@@ -8594,7 +9114,7 @@
         });
 
         const sortedBranches = Object.entries(branchCounts).sort((a, b) => b[1] - a[1]);
-        document.getElementById('totalBranchCount').textContent = Object.keys(branchCounts).length;
+        animateDashboardCount(document.getElementById('totalBranchCount'), Object.keys(branchCounts).length);
 
         const top3 = sortedBranches.slice(0, 3);
         const topListEl = document.getElementById('topBranchesList');
@@ -8682,8 +9202,9 @@
                 responsive: true,
                 maintainAspectRatio: false,
                 animation: {
-                    duration: 280,
-                    easing: 'easeOutQuart'
+                    duration: 900,
+                    easing: 'easeOutQuart',
+                    delay: (context) => (context.type === 'data' && context.mode === 'default') ? Math.min(context.dataIndex * 18, 420) : 0
                 },
                 layout: {
                     padding: { top: 26, right: 14, left: 10, bottom: 4 }
@@ -8776,6 +9297,194 @@
         } else {
             subCatFoot.innerHTML = '';
         }
+
+        renderExecVisualAnalytics(sortedSubCats, Object.keys(branchCounts).length);
+    }
+
+    function renderExecVisualAnalytics(sortedSubCats = [], activeBranchesCount = 0) {
+        // 1. SLA Turnaround Pipeline from real allRows
+        const branchIdx = findColIndex(headers, ['branch name', 'branch', 'location', 'hub', 'office']);
+        const productIdx = findColIndex(headers, ['product name', 'product', 'loan product', 'scheme', 'loan_type', 'type']);
+        const dateIdx = findColIndex(headers, ['appraisal date', 'cb check date', 'date', 'created date', 'application date']);
+
+        let onTrackCount = 0;
+        let dueSoonCount = 0;
+        let overdueCount = 0;
+        let totalTatDays = 0;
+
+        allRows.forEach(r => {
+            const branch = (branchIdx !== -1 && r[branchIdx]) ? r[branchIdx] : 'General';
+            const product = (productIdx !== -1 && r[productIdx]) ? r[productIdx] : 'JLG';
+            const rawDate = (dateIdx !== -1 && r[dateIdx]) ? r[dateIdx] : null;
+            const forecast = calculateSlaForecast(rawDate, branch, product);
+            totalTatDays += forecast.turnaroundDays || 3;
+            if (forecast.slaStatus === 'overdue') overdueCount++;
+            else if (forecast.slaStatus === 'due-soon') dueSoonCount++;
+            else onTrackCount++;
+        });
+
+        const totalPending = allRows.length;
+        const onTrackPct = totalPending > 0 ? ((onTrackCount / totalPending) * 100).toFixed(1) : '0.0';
+        const dueSoonPct = totalPending > 0 ? ((dueSoonCount / totalPending) * 100).toFixed(1) : '0.0';
+        const overduePct = totalPending > 0 ? ((overdueCount / totalPending) * 100).toFixed(1) : '0.0';
+        const avgTat = totalPending > 0 ? (totalTatDays / totalPending).toFixed(1) : '0.0';
+
+        const slaTotalEl = document.getElementById('execSlaTotalTag');
+        if (slaTotalEl) slaTotalEl.textContent = `${totalPending.toLocaleString()} Queued`;
+
+        const onTrackValEl = document.getElementById('execSlaOnTrackVal');
+        const dueSoonValEl = document.getElementById('execSlaDueSoonVal');
+        const overdueValEl = document.getElementById('execSlaOverdueVal');
+        const avgTatEl = document.getElementById('execSlaAvgTat');
+        if (onTrackValEl) onTrackValEl.textContent = `${onTrackCount.toLocaleString()} (${onTrackPct}%)`;
+        if (dueSoonValEl) dueSoonValEl.textContent = `${dueSoonCount.toLocaleString()} (${dueSoonPct}%)`;
+        if (overdueValEl) overdueValEl.textContent = `${overdueCount.toLocaleString()} (${overduePct}%)`;
+        if (avgTatEl) avgTatEl.textContent = `${avgTat} days`;
+
+        const onTrackBar = document.getElementById('execSlaOnTrackBar');
+        const dueSoonBar = document.getElementById('execSlaDueSoonBar');
+        const overdueBar = document.getElementById('execSlaOverdueBar');
+        if (onTrackBar) onTrackBar.style.width = `${onTrackPct}%`;
+        if (dueSoonBar) dueSoonBar.style.width = `${dueSoonPct}%`;
+        if (overdueBar) overdueBar.style.width = `${overduePct}%`;
+
+        const branchCountEl = document.getElementById('execPortfolioBranchCount');
+        if (branchCountEl) animateDashboardCount(branchCountEl, activeBranchesCount);
+
+        // 2. Top Sub-Categories Animated Horizontal Bar Chart
+        const subCanvas = document.getElementById('execSubcatBarChart');
+        if (subCanvas) {
+            const top6 = sortedSubCats.slice(0, 6);
+            const tagEl = document.getElementById('execSubcatTopTag');
+            if (tagEl) tagEl.textContent = top6.length > 0 ? `Top ${top6.length}` : 'No Data';
+
+            const subCtx = subCanvas.getContext('2d');
+            if (execSubcatChartInstance) execSubcatChartInstance.destroy();
+
+            const isDark = document.body.classList.contains('dark-mode');
+            const barPalette = ['#0f766e', '#059669', '#0d9488', '#d97706', '#0284c7', '#64748b'];
+            execSubcatChartInstance = new Chart(subCtx, {
+                type: 'bar',
+                data: {
+                    labels: top6.map(([cat]) => cat.length > 18 ? cat.slice(0, 17) + '…' : cat),
+                    datasets: [{
+                        label: 'Applications',
+                        data: top6.map(([, cnt]) => cnt),
+                        backgroundColor: top6.map((_, idx) => barPalette[idx % barPalette.length]),
+                        borderRadius: 6,
+                        barPercentage: 0.68
+                    }]
+                },
+                options: {
+                    indexAxis: 'y',
+                    responsive: true,
+                    maintainAspectRatio: false,
+                    animation: {
+                        duration: 900,
+                        easing: 'easeOutQuart',
+                        delay: (c) => (c.type === 'data' && c.mode === 'default') ? c.dataIndex * 65 : 0
+                    },
+                    layout: { padding: { right: 28, top: 2, bottom: 2 } },
+                    plugins: {
+                        legend: { display: false },
+                        datalabels: {
+                            anchor: 'end',
+                            align: 'right',
+                            offset: 4,
+                            color: isDark ? '#e2e8f0' : '#132522',
+                            font: { size: 10, weight: '800', family: 'JetBrains Mono' },
+                            formatter: (v) => v.toLocaleString()
+                        },
+                        tooltip: {
+                            backgroundColor: 'rgba(15, 23, 42, 0.94)',
+                            callbacks: {
+                                title: (items) => {
+                                    const i = items[0]?.dataIndex ?? 0;
+                                    return top6[i] ? top6[i][0] : '';
+                                },
+                                label: (ctx) => {
+                                    const v = ctx.raw;
+                                    const pct = totalPending > 0 ? ((v / totalPending) * 100).toFixed(1) : '0.0';
+                                    return ` Count: ${v} (${pct}%)`;
+                                }
+                            }
+                        }
+                    },
+                    scales: {
+                        x: {
+                            beginAtZero: true,
+                            grid: { color: isDark ? 'rgba(148, 163, 184, 0.16)' : 'rgba(203, 213, 225, 0.45)' },
+                            ticks: { precision: 0, font: { size: 10 }, color: isDark ? '#94a3b8' : '#64748b' }
+                        },
+                        y: {
+                            grid: { display: false },
+                            ticks: { font: { size: 10.5, weight: '700' }, color: isDark ? '#e2e8f0' : '#334155' }
+                        }
+                    }
+                }
+            });
+        }
+
+        renderExecPortfolioChart();
+    }
+
+    function renderExecPortfolioChart() {
+        const totalLoans = globalTotalLoansCount;
+        const rejectLoans = globalTotalRejectionClientsCount;
+        const otherLoans = Math.max(0, totalLoans - rejectLoans);
+        const approvalPct = totalLoans > 0 ? (((otherLoans) / totalLoans) * 100).toFixed(1) : '0.0';
+
+        const totalTag = document.getElementById('execPortfolioTotalTag');
+        const pctEl = document.getElementById('execPortfolioApprovalPct');
+        const activeEl = document.getElementById('execPortfolioActiveCount');
+        const rejEl = document.getElementById('execPortfolioRejCount');
+
+        if (totalTag) totalTag.textContent = `${totalLoans.toLocaleString()} Loans`;
+        if (pctEl) pctEl.textContent = `${approvalPct}%`;
+        if (activeEl) animateDashboardCount(activeEl, otherLoans);
+        if (rejEl) animateDashboardCount(rejEl, rejectLoans);
+
+        const canvas = document.getElementById('execPortfolioDonutChart');
+        if (!canvas) return;
+        const ctx = canvas.getContext('2d');
+        if (execPortfolioChartInstance) execPortfolioChartInstance.destroy();
+        const isDark = document.body.classList.contains('dark-mode');
+
+        execPortfolioChartInstance = new Chart(ctx, {
+            type: 'doughnut',
+            data: {
+                labels: ['Active / Cleared Loans', 'Rejected Cases'],
+                datasets: [{
+                    data: totalLoans > 0 ? [otherLoans, rejectLoans] : [1, 0],
+                    backgroundColor: ['#0f766e', '#e11d48'],
+                    hoverBackgroundColor: ['#047857', '#be123c'],
+                    borderWidth: 2,
+                    borderColor: isDark ? '#14221f' : '#ffffff',
+                    hoverOffset: 5
+                }]
+            },
+            options: {
+                responsive: true,
+                maintainAspectRatio: false,
+                cutout: '70%',
+                animation: {
+                    duration: 950,
+                    easing: 'easeOutQuart',
+                    animateRotate: true,
+                    animateScale: true
+                },
+                plugins: {
+                    legend: { display: false },
+                    datalabels: { display: false },
+                    tooltip: {
+                        backgroundColor: 'rgba(15, 23, 42, 0.94)',
+                        callbacks: {
+                            label: (c) => ` ${c.label}: ${Number(c.raw).toLocaleString()}`
+                        }
+                    }
+                }
+            }
+        });
     }
 
     /* RENDER BRANCHES MATRIX SECTION */
@@ -9027,7 +9736,12 @@
             options: {
                 responsive: true,
                 maintainAspectRatio: false,
-                animation: { duration: 250 },
+                animation: {
+                    duration: 850,
+                    easing: 'easeOutQuart',
+                    animateRotate: true,
+                    animateScale: true
+                },
                 plugins: {
                     legend: { display: false },
                     tooltip: {
@@ -9042,6 +9756,8 @@
                 }
             }
         });
+
+        renderExecPortfolioChart();
     }
 
     /* RENDER COLORFUL BRANCH BUTTONS */
@@ -9270,15 +9986,61 @@
         }
     }
 
+    const PENDING_HIDDEN_COLUMN_KEYS = new Set([
+        'state',
+        'zone',
+        'appraisal name',
+        'appraisal emp id',
+        'appraisal group remarks',
+        'appraisal member remarks',
+        'category'
+    ]);
+
+    function normalizePendingHeaderKey(header) {
+        return String(header || '')
+            .trim()
+            .toLowerCase()
+            .replace(/[_\s-]+/g, ' ')
+            .trim();
+    }
+
+    function getVisiblePendingColumnIndices(allHeaders) {
+        if (!Array.isArray(allHeaders)) return [];
+        const indices = [];
+        for (let i = 0; i < allHeaders.length; i++) {
+            const norm = normalizePendingHeaderKey(allHeaders[i]);
+            if (!PENDING_HIDDEN_COLUMN_KEYS.has(norm)) {
+                indices.push(i);
+            }
+        }
+        return indices;
+    }
+
+    function scrollPendingTableStep(dx, dy) {
+        const wrap = document.getElementById('pendingFullPageScrollWrap');
+        if (!wrap) return;
+        wrap.scrollBy({ left: dx, top: dy, behavior: 'smooth' });
+    }
+
+    function scrollPendingTableEdge(edge) {
+        const wrap = document.getElementById('pendingFullPageScrollWrap');
+        if (!wrap) return;
+        if (edge === 'top') wrap.scrollTo({ top: 0, behavior: 'smooth' });
+        else if (edge === 'bottom') wrap.scrollTo({ top: wrap.scrollHeight, behavior: 'smooth' });
+        else if (edge === 'left') wrap.scrollTo({ left: 0, behavior: 'smooth' });
+        else if (edge === 'right') wrap.scrollTo({ left: wrap.scrollWidth, behavior: 'smooth' });
+    }
+
     function applyPendingAppFilters() {
         const selectedBranch = document.getElementById('appBranchFilter').value;
         const searchQuery = document.getElementById('appGeneralSearch').value.trim().toLowerCase();
 
         const branchIdx = findColIndex(headers, ['branch name', 'branch', 'location', 'hub', 'office']);
+        const visibleCols = getVisiblePendingColumnIndices(headers);
 
         filteredRows = allRows.filter(r => {
             const matchesBranch = (selectedBranch === 'ALL' || branchIdx === -1) ? true : (r[branchIdx] === selectedBranch);
-            const matchesSearch = (!searchQuery) ? true : r.some(cell => cell.toLowerCase().includes(searchQuery));
+            const matchesSearch = (!searchQuery) ? true : visibleCols.some(colIdx => String(r[colIdx] || '').toLowerCase().includes(searchQuery));
             return matchesBranch && matchesSearch;
         });
 
@@ -9295,11 +10057,12 @@
         const branchIdx = findColIndex(headers, ['branch name', 'branch', 'location', 'hub', 'office']);
         const productIdx = findColIndex(headers, ['product name', 'product', 'loan product', 'scheme', 'loan_type', 'type']);
         const dateIdx = findColIndex(headers, ['appraisal date', 'cb check date', 'date', 'created date', 'application date']);
+        const visibleCols = getVisiblePendingColumnIndices(headers);
 
-        head.innerHTML = `<tr>${headers.map(h => `<th>${h}</th>`).join('')}<th class="sla-forecast-th" style="min-width: 175px;"><i class="fa-solid fa-clock-rotate-left" style="color: #0f766e; margin-right: 5px;"></i>SLA Forecast</th></tr>`;
+        head.innerHTML = `<tr>${visibleCols.map(idx => `<th>${headers[idx]}</th>`).join('')}<th class="sla-forecast-th" style="min-width: 175px;"><i class="fa-solid fa-clock-rotate-left" style="color: #0f766e; margin-right: 5px;"></i>SLA Forecast</th></tr>`;
 
         if (rows.length === 0) {
-            body.innerHTML = `<tr><td colspan="${(headers.length || 1) + 1}" class="status-msg">No matching records found for the applied filters.</td></tr>`;
+            body.innerHTML = `<tr><td colspan="${(visibleCols.length || 1) + 1}" class="status-msg">No matching records found for the applied filters.</td></tr>`;
             return;
         }
 
@@ -9309,7 +10072,7 @@
             const rawDate = (dateIdx !== -1 && r[dateIdx]) ? r[dateIdx] : null;
             const forecast = calculateSlaForecast(rawDate, branch, product);
 
-            const rowCells = r.map(cell => `<td>${cell || '-'}</td>`).join('');
+            const rowCells = visibleCols.map(idx => `<td>${r[idx] || '-'}</td>`).join('');
             const slaCell = `
                 <td class="sla-forecast-cell">
                     <div class="sla-forecast-content">
@@ -9336,14 +10099,15 @@
         const branchIdx = findColIndex(headers, ['branch name', 'branch', 'location', 'hub', 'office']);
         const productIdx = findColIndex(headers, ['product name', 'product', 'loan product', 'scheme', 'loan_type', 'type']);
         const dateIdx = findColIndex(headers, ['appraisal date', 'cb check date', 'date', 'created date', 'application date']);
+        const visibleCols = getVisiblePendingColumnIndices(headers);
 
-        const exportHeaders = [...headers, 'SLA Forecast'];
+        const exportHeaders = [...visibleCols.map(idx => headers[idx]), 'SLA Forecast'];
         const exportRows = filteredRows.map(r => {
             const branch = (branchIdx !== -1 && r[branchIdx]) ? r[branchIdx] : 'General';
             const product = (productIdx !== -1 && r[productIdx]) ? r[productIdx] : 'JLG';
             const rawDate = (dateIdx !== -1 && r[dateIdx]) ? r[dateIdx] : null;
             const forecast = calculateSlaForecast(rawDate, branch, product);
-            return [...r, `${forecast.formattedExpectedDate} (${forecast.statusLabel})`];
+            return [...visibleCols.map(idx => r[idx] || ''), `${forecast.formattedExpectedDate} (${forecast.statusLabel})`];
         });
 
         const wsData = [exportHeaders, ...exportRows];
@@ -11245,6 +12009,10 @@
         }
         if (sidebarLabel) {
             sidebarLabel.textContent = isDark ? 'Light Theme' : 'Dark Theme';
+        }
+        if (allRows.length > 0) {
+            renderAnalytics();
+            renderRejectionPieCard();
         }
     }
 

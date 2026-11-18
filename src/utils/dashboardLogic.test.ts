@@ -22,7 +22,8 @@ import {
     estimateHistoricalTurnaroundTime,
     addBusinessDays,
     parseDateString,
-    calculateSlaForecast
+    calculateSlaForecast,
+    getVisiblePendingColumnIndices
 } from './dashboardLogic';
 
 test('authenticateUser: validates master password correctly', () => {
@@ -480,6 +481,49 @@ test('calculateSlaForecast: forecasts resolution date and computes SLA status', 
     assert.ok(forecastFresh.daysRemaining >= 2);
 });
 
+test('getVisiblePendingColumnIndices: excludes specified columns while preserving Sub Category and rest', () => {
+    const sampleHeaders = [
+        'STATE',
+        'ZONE',
+        'Branch Name',
+        'Loan ID',
+        'Member Name',
+        'Appraisal Name',
+        'Appraisal EMP ID',
+        'Appraisal_Group_Remarks',
+        'Appraisal_Member_Remarks',
+        'Category',
+        'Sub Category',
+        'Product Name',
+        'CM Remarks'
+    ];
+    const visibleIndices = getVisiblePendingColumnIndices(sampleHeaders);
+    const visibleNames = visibleIndices.map(i => sampleHeaders[i]);
+    assert.deepEqual(visibleNames, [
+        'Branch Name',
+        'Loan ID',
+        'Member Name',
+        'Sub Category',
+        'Product Name',
+        'CM Remarks'
+    ]);
+});
 
+test('calculateEmiWithBankingCharges: defaults to double insurance when insuranceType omitted and allows switching', () => {
+    const resDefault = calculateEmiWithBankingCharges({
+        loanAmount: 50000,
+        roiAnnual: 24.49,
+        tenureMonths: 24
+    });
+    assert.equal(resDefault.insuranceType, 'double');
+    assert.equal(resDefault.insuranceAmount, 1500);
 
-
+    const resSingle = calculateEmiWithBankingCharges({
+        loanAmount: 50000,
+        roiAnnual: 24.49,
+        tenureMonths: 24,
+        insuranceType: 'single'
+    });
+    assert.equal(resSingle.insuranceType, 'single');
+    assert.equal(resSingle.insuranceAmount, 750);
+});

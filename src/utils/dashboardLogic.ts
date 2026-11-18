@@ -575,7 +575,7 @@ export function calculateEmiWithBankingCharges(params: EmiCalculatorParams): Emi
     // Insurance calculation:
     // Single: 7.5 per thousand per year -> (loanAmount / 1000) * 7.5 * tenureYears
     // Double: 15 per thousand per year (2 * Single) -> (loanAmount / 1000) * 15 * tenureYears
-    const insuranceType = params.insuranceType || 'single';
+    const insuranceType = params.insuranceType || 'double';
     let insuranceAmount = 0;
     if (loanAmount > 0 && tenureYears > 0) {
         if (insuranceType === 'single') {
@@ -1115,6 +1115,32 @@ export function calculateSlaForecast(
     };
 }
 
+export const PENDING_HIDDEN_COLUMN_KEYS = new Set<string>([
+    'state',
+    'zone',
+    'appraisal name',
+    'appraisal emp id',
+    'appraisal group remarks',
+    'appraisal member remarks',
+    'category'
+]);
 
+export function normalizePendingHeaderKey(header: string): string {
+    return String(header || '')
+        .trim()
+        .toLowerCase()
+        .replace(/[_\s-]+/g, ' ')
+        .trim();
+}
 
-
+export function getVisiblePendingColumnIndices(allHeaders: string[]): number[] {
+    if (!Array.isArray(allHeaders)) return [];
+    const indices: number[] = [];
+    for (let i = 0; i < allHeaders.length; i++) {
+        const norm = normalizePendingHeaderKey(allHeaders[i]);
+        if (!PENDING_HIDDEN_COLUMN_KEYS.has(norm)) {
+            indices.push(i);
+        }
+    }
+    return indices;
+}
