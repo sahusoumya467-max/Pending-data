@@ -3,6 +3,9 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="description" content="Live Pending & Credit Data Dashboard with automated Google Sheets sync, analytics, branch queue explorer, and morning inspiration.">
+    <meta property="og:title" content="Pending & Credit Data Dashboard">
+    <meta property="og:description" content="Live Pending & Credit Data Dashboard with automated Google Sheets sync, analytics, branch queue explorer, and morning inspiration.">
     <link rel="preconnect" href="https://cdn.jsdelivr.net" crossorigin>
     <link rel="preconnect" href="https://cdnjs.cloudflare.com" crossorigin>
     <title>Pending & Credit Data Dashboard</title>
@@ -5206,10 +5209,6 @@
                 <span>Overview</span>
                 <span class="nav-badge-pill">Live</span>
             </button>
-            <button class="nav-item" onclick="activateNavItem(this, 'subcatSection')">
-                <i class="fa-solid fa-chart-pie"></i>
-                <span>Sub-Categories</span>
-            </button>
             <button class="nav-item" onclick="activateNavItem(this, 'branchExplorerSection')">
                 <i class="fa-solid fa-building-circle-check"></i>
                 <span>Branch Explorer</span>
@@ -5241,7 +5240,7 @@
             <button class="nav-item" onclick="openAllFeaturesModal(); toggleWorkspaceSidebar(false);">
                 <i class="fa-solid fa-shapes"></i>
                 <span>All Features</span>
-                <span class="nav-badge-pill" style="background: linear-gradient(135deg, #0d9488, #0f766e); color: #fff;">16</span>
+                <span class="nav-badge-pill" style="background: linear-gradient(135deg, #0d9488, #0f766e); color: #fff;">15</span>
             </button>
 
             <div class="nav-section-title" style="margin-top: 14px;">Productivity Tools</div>
@@ -5306,7 +5305,6 @@
 
             <nav class="topbar-nav-links" aria-label="Quick Navigation">
                 <button class="topbar-nav-btn" onclick="activateNavItem(null, 'workspaceBodyTop')"><i class="fa-solid fa-chart-line" style="color: #0f766e;"></i> Overview</button>
-                <button class="topbar-nav-btn" onclick="activateNavItem(null, 'subcatSection')"><i class="fa-solid fa-chart-pie" style="color: #b45309;"></i> Categories</button>
                 <button class="topbar-nav-btn" onclick="activateNavItem(null, 'branchExplorerSection')"><i class="fa-solid fa-building-circle-check" style="color: #059669;"></i> Branches</button>
                 <button class="topbar-nav-btn" onclick="openRejectionFullPage()"><i class="fa-solid fa-ban" style="color: #e11d48;"></i> Rejections</button>
                 <button class="topbar-nav-btn" onclick="openPendingFullPage()"><i class="fa-solid fa-clock" style="color: #d97706;"></i> Pending</button>
@@ -5574,32 +5572,6 @@
                     <canvas id="execSubcatBarChart"></canvas>
                 </div>
             </div>
-        </div>
-    </div>
-
-    <!-- Sub-Category Breakdown Card -->
-    <div class="table-card mesh-container" id="subcatSection">
-        <canvas class="mesh-canvas"></canvas>
-        <div class="table-header">
-            <h3>
-                <span><i class="fa-solid fa-chart-pie" style="color: #b45309; margin-right: 8px;"></i>Sub-Category Breakdown (%)</span>
-                <span id="subcatCountBadge" style="font-size: 0.8rem; font-weight: 700; color: #0f766e; background: #e6f4f1; padding: 4px 10px; border-radius: 12px; margin-left: 8px;">0 Categories</span>
-            </h3>
-        </div>
-        <div class="subcat-table-wrap">
-            <table class="subcat-table">
-                <thead>
-                    <tr>
-                        <th>Sub-Category</th>
-                        <th style="width: 140px; text-align: center;">Loan ID Count</th>
-                        <th style="width: 180px; text-align: right;">Percentage (%)</th>
-                    </tr>
-                </thead>
-                <tbody id="subCategoryTableBody">
-                    <tr><td colspan="3" class="status-msg">Loading sub-category analytics...</td></tr>
-                </tbody>
-                <tfoot id="subCategoryTableFoot"></tfoot>
-            </table>
         </div>
     </div>
 
@@ -6122,8 +6094,8 @@
                 <i class="fa-solid fa-triangle-exclamation" style="color: #f59e0b;"></i>
                 <span style="font-size: 0.82rem; font-weight: 700; color: #b45309;" id="branchDialogLiveStatus">Branch Submissions Disabled for havey trafic so reply by mail</span>
             </div>
-            <div style="display: flex; align-items: center; gap: 10px;">
-                <input type="text" id="branchDialogSearchInput" oninput="debouncedBranchDialogFilter()" placeholder="Search in this branch..." style="padding: 6px 12px; border-radius: 8px; border: 1.5px solid #cbd5e1; font-size: 0.8rem; outline: none; width: 220px;">
+            <div style="display: flex; align-items: center; gap: 8px; flex-wrap: wrap;">
+                <input type="text" id="branchDialogSearchInput" oninput="debouncedBranchDialogFilter()" placeholder="Search in this branch..." style="padding: 6px 12px; border-radius: 8px; border: 1.5px solid #cbd5e1; font-size: 0.8rem; outline: none; width: 200px;">
                 <button class="btn btn-refresh" onclick="refreshBranchDialogCurrent()" style="padding: 6px 12px; font-size: 0.78rem; border-radius: 8px;">
                     <i class="fa-solid fa-arrows-rotate"></i> Sync
                 </button>
@@ -7113,26 +7085,10 @@
             icon: 'fa-building-circle-check',
             iconBg: 'rgba(15, 118, 110, 0.12)',
             iconColor: '#0f766e',
-            description: 'Explore active branches, view individual branch pending lists, check queue load status, and review submitted query replies.',
+            description: 'Explore active branches, view individual branch pending lists, check queue load status, and inspect branch controls.',
             actionText: 'Open Branch Explorer',
             actionIcon: 'fa-sitemap',
             actionHandler: "closeAllFeaturesModal(); document.getElementById('branchExplorerSection')?.scrollIntoView({ behavior: 'smooth' });"
-        },
-        {
-            id: 'subcat',
-            title: 'Sub-Category Analytics Breakdown',
-            category: 'ANALYTICS',
-            categoryLabel: 'Visual & Analytics',
-            badge: 'Category Share',
-            badgeBg: '#fef3c7',
-            badgeColor: '#b45309',
-            icon: 'fa-chart-pie',
-            iconBg: 'rgba(217, 119, 6, 0.12)',
-            iconColor: '#d97706',
-            description: 'Dynamic visual progress bars and percentage share breakdown of loans categorised by underwriting reasons and operational stages.',
-            actionText: 'View Sub-Categories',
-            actionIcon: 'fa-chart-simple',
-            actionHandler: "closeAllFeaturesModal(); document.getElementById('subcatSection')?.scrollIntoView({ behavior: 'smooth' });"
         },
         {
             id: 'overview',
@@ -7183,22 +7139,6 @@
             actionHandler: "closeAllFeaturesModal(); refreshDashboard();"
         },
         {
-            id: 'adminPanel',
-            title: 'Sheet Feature Manager (Enable/disable)',
-            category: 'OPERATIONS',
-            categoryLabel: 'Operations & Records',
-            badge: 'Google Sheet Managed',
-            badgeBg: '#fee2e2',
-            badgeColor: '#991b1b',
-            icon: 'fa-shield-halved',
-            iconBg: 'rgba(220, 38, 38, 0.12)',
-            iconColor: '#dc2626',
-            description: 'Centralized live configuration from Google Sheet ("Enable/disable" tab) to enable/disable features and manage maintenance mode. Admin contact: soumyaranjan@afpl.net.in EMP ID@12687.',
-            actionText: 'Sync Settings Now',
-            actionIcon: 'fa-arrows-rotate',
-            actionHandler: "closeAllFeaturesModal(); fetchEnableDisableConfig(); refreshDashboard();"
-        },
-        {
             id: 'notification',
             title: 'Broadcast Notice & Login Popup',
             category: 'EXPERIENCE',
@@ -7209,7 +7149,7 @@
             icon: 'fa-bullhorn',
             iconBg: 'rgba(15, 118, 110, 0.12)',
             iconColor: '#0f766e',
-            description: 'Real-time broadcast notice shown on topbar and as a popup on user login when enabled in the Google Sheet.',
+            description: 'Real-time broadcast notice shown on topbar and as a popup on user login.',
             actionText: 'View Current Notice',
             actionIcon: 'fa-bullhorn',
             actionHandler: "closeAllFeaturesModal(); showLoginNotificationPopup();"
@@ -9264,38 +9204,41 @@
             .map(([cat, set]) => [cat, set.size])
             .sort((a, b) => b[1] - a[1]);
 
-        document.getElementById('subcatCountBadge').textContent = `${sortedSubCats.length} Categories`;
+        const subcatBadgeEl = document.getElementById('subcatCountBadge');
         const subCatBody = document.getElementById('subCategoryTableBody');
         const subCatFoot = document.getElementById('subCategoryTableFoot');
+        if (subcatBadgeEl) subcatBadgeEl.textContent = `${sortedSubCats.length} Categories`;
 
-        if (sortedSubCats.length > 0) {
-            let totalLoanIdSum = 0;
-            subCatBody.innerHTML = sortedSubCats.map(([cat, count]) => {
-                totalLoanIdSum += count;
-                const pct = total > 0 ? ((count / total) * 100).toFixed(1) : 0;
-                return `
+        if (subCatBody && subCatFoot) {
+            if (sortedSubCats.length > 0) {
+                let totalLoanIdSum = 0;
+                subCatBody.innerHTML = sortedSubCats.map(([cat, count]) => {
+                    totalLoanIdSum += count;
+                    const pct = total > 0 ? ((count / total) * 100).toFixed(1) : 0;
+                    return `
+                        <tr>
+                            <td>
+                                <strong style="color: #1e293b;">${cat}</strong>
+                                <div class="progress-bar-bg">
+                                    <div class="progress-bar-fill" style="width: ${pct}%;"></div>
+                                </div>
+                            </td>
+                            <td style="text-align: center; font-weight: 700; color: #475569;">${count}</td>
+                            <td style="text-align: right;"><span style="color: #0f766e; font-weight: 800;">${pct}%</span></td>
+                        </tr>
+                    `;
+                }).join('');
+
+                subCatFoot.innerHTML = `
                     <tr>
-                        <td>
-                            <strong style="color: #1e293b;">${cat}</strong>
-                            <div class="progress-bar-bg">
-                                <div class="progress-bar-fill" style="width: ${pct}%;"></div>
-                            </div>
-                        </td>
-                        <td style="text-align: center; font-weight: 700; color: #475569;">${count}</td>
-                        <td style="text-align: right;"><span style="color: #0f766e; font-weight: 800;">${pct}%</span></td>
+                        <td><strong>Total</strong></td>
+                        <td style="text-align: center; font-weight: 800; color: #132522;">${totalLoanIdSum}</td>
+                        <td style="text-align: right; font-weight: 800; color: #0f766e;">100%</td>
                     </tr>
                 `;
-            }).join('');
-
-            subCatFoot.innerHTML = `
-                <tr>
-                    <td><strong>Total</strong></td>
-                    <td style="text-align: center; font-weight: 800; color: #132522;">${totalLoanIdSum}</td>
-                    <td style="text-align: right; font-weight: 800; color: #0f766e;">100%</td>
-                </tr>
-            `;
-        } else {
-            subCatFoot.innerHTML = '';
+            } else {
+                subCatFoot.innerHTML = '';
+            }
         }
 
         renderExecVisualAnalytics(sortedSubCats, Object.keys(branchCounts).length);
@@ -11029,11 +10972,11 @@
     const ADMIN_FEATURES_LIST = [
         { key: 'notification', name: 'Notification & Login Notice', icon: 'fa-bullhorn', color: '#0f766e', desc: 'Topbar broadcast and login popup alert' },
         { key: 'overview', name: 'Overview & Key Metrics', icon: 'fa-chart-line', color: '#047857', desc: 'KPI counters, running stream, & overview' },
-        { key: 'subcat', name: 'Sub-Categories Breakdown', icon: 'fa-chart-pie', color: '#b45309', desc: 'Category-wise loan distribution' },
+        { key: 'execVisualAnalytics', name: 'Executive Visual Analytics', icon: 'fa-chart-pie', color: '#0f766e', desc: 'Portfolio health donut, SLA gauge & velocity' },
         { key: 'branchExplorer', name: 'Branch Explorer & Queue', icon: 'fa-building-circle-check', color: '#0f766e', desc: 'Branch pending dialogs & direct queue' },
         { key: 'rejectionConsole', name: 'Rejection Console & Feed', icon: 'fa-ban', color: '#e11d48', desc: 'Rejection graphs & comparison feed' },
         { key: 'pendingRecords', name: 'Pending Records Table', icon: 'fa-table-list', color: '#d97706', desc: 'Interactive search table & loan list' },
-        { key: 'wavePulse', name: 'Wave Pulse Flow Charts', icon: 'fa-wave-square', color: '#059669', desc: 'Visual trajectory flow graphs' },
+        { key: 'wavePulse', name: 'Branch Bar Charts', icon: 'fa-chart-column', color: '#059669', desc: 'Pending & rejection bar chart analytics' },
         { key: 'creditPortal', name: 'Credit Dashboard Portal', icon: 'fa-user-lock', color: '#132522', desc: 'Sanction & business analytics' },
         { key: 'matrixCalculator', name: 'Underwriting Matrix Calculator', icon: 'fa-calculator', color: '#10b981', desc: 'Slab-wise borrower installment matrix' },
         { key: 'emiCalculator', name: 'EMI Calculator (LPF, GST & Ins)', icon: 'fa-coins', color: '#d97706', desc: 'Installment, LPF, GST, & insurance' },
@@ -11055,7 +10998,7 @@
         return {
             notification: true,
             overview: true,
-            subcat: true,
+            execVisualAnalytics: true,
             branchExplorer: true,
             rejectionConsole: true,
             pendingRecords: true,
@@ -11331,7 +11274,7 @@
         syncSectionOverlay('btnOpenPendingRecordsPage', perms.pendingRecords !== false, 'Pending Records', 'pendingRecords');
         syncSectionOverlay('btnOpenRejectionRecordsPage', perms.rejectionConsole !== false, 'Rejection Records', 'rejectionConsole');
         syncSectionOverlay('branchCompareSection', perms.rejectionConsole !== false, 'Rejections Console', 'rejectionConsole');
-        syncSectionOverlay('subcatSection', perms.subcat !== false, 'Sub-Categories Analytics', 'subcat');
+        syncSectionOverlay('execVisualAnalyticsSection', perms.execVisualAnalytics !== false, 'Executive Visual Analytics', 'execVisualAnalytics');
         syncSectionOverlay('wavePulseChartsSection', perms.wavePulse !== false, 'Branch Bar Charts', 'wavePulse');
         syncSectionOverlay('branchExplorerSection', perms.branchExplorer !== false, 'Branch Explorer', 'branchExplorer');
 
@@ -11339,7 +11282,7 @@
         if (notifBar) {
             if (perms.notification === false) {
                 notifBar.style.opacity = '0.45';
-                notifBar.title = 'Notification disabled by admin in Google Sheet';
+                notifBar.title = 'Notification disabled by admin';
             } else {
                 notifBar.style.opacity = '1';
                 notifBar.title = '';
@@ -12036,7 +11979,6 @@
             postLogin3dAnimId = null;
         }
         
-        // Clear tables to prevent data viewing before next valid login
         allRows = [];
         filteredRows = [];
         allRejRows = [];
@@ -12049,6 +11991,7 @@
         document.getElementById('tableBody').innerHTML = '<tr><td class="status-msg">Fetching records from Google Sheet...</td></tr>';
         document.getElementById('rejTableBody').innerHTML = '<tr><td class="status-msg">Fetching rejection records from Google Sheet...</td></tr>';
     }
+
 </script>
 </body>
 </html>
